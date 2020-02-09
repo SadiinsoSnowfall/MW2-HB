@@ -1,0 +1,5 @@
+﻿{
+	"cors_whitelist": "*",
+	"front_address": "localhost:4200",
+	"server_port": 4000
+}
