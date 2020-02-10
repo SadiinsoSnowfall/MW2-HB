@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "NODE_ENV=development webpack-dev-server -d --hot --config webpack.config.js --watch",
-    "build": "webpack"
+    "serve": "NODE_ENV=development webpack-dev-server -d --hot --watch",
+    "build": "NODE_ENV=production webpack -p"
   },
   "author": "",
   "license": "ISC",

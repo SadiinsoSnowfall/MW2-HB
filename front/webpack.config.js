@@ -6,7 +6,6 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const {
     NODE_ENV = 'production',
 } = process.env;
-const devMode = NODE_ENV !== 'production';
 
 module.exports = {
     entry: "./src/index.ts",
@@ -20,14 +19,25 @@ module.exports = {
                 test: /\.(sa|sc|c)ss$/,
                 use: [
                     'style-loader',
-                    'css-loader',
-                    'sass-loader',
-                ],
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            sourceMap: false
+                        }
+                    },
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: true
+                        }
+                    }
+                ]
             }
         ],
     },
     plugins: [
     ],
+    devtool: false,
     mode: NODE_ENV,
     devServer: {
         contentBase: path.resolve(__dirname, "./public"),
@@ -36,30 +46,32 @@ module.exports = {
         open: true,
         hot: true
     },
-    resolve: {
-        extensions: ['.tsx', '.ts', '.js'],
-    },
     output: {
         path: path.resolve(__dirname, './public'),
         filename: 'bundle.js',
     },
     optimization: {
+        minimize: true,
         minimizer: [
             new TerserPlugin({
                 cache: true,
                 parallel: true,
-                sourceMap: true,
+                sourceMap: false,
                 terserOptions: {
-                    ecma: 8,
+                    ecma: 2018,
                     toplevel: true,
                     mangle: true,
                     compress: {
-                        passes: 2,
-                        pure_getters: true
+                        passes: 3,
+                        pure_getters: true,
                     }
                 }
             }),
-            new OptimizeCSSAssetsPlugin({})
+            new OptimizeCSSAssetsPlugin({
+                cssProcessorOptions: {
+                    sourcemap: false
+                },
+            })
         ]
     }
 };
