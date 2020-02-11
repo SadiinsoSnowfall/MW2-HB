@@ -5,15 +5,18 @@
   "main": "index.js",
   "scripts": {
     "serve": "NODE_ENV=development webpack-dev-server -d --hot --watch",
-    "build": "NODE_ENV=production webpack -p"
+    "build": "NODE_ENV=production webpack -p --mode=production"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "css-hot-loader": "^1.4.4",
     "css-loader": "^3.4.2",
+    "file-loader": "^5.0.2",
+    "html-loader": "^0.5.5",
     "node-sass": "^4.13.1",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "raw-loader": "^4.0.0",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.1.3",
     "ts-loader": "^6.2.1",

@@ -7,16 +7,18 @@ const {
     NODE_ENV = 'production',
 } = process.env;
 
+const devmode = NODE_ENV !== 'production';
+
 module.exports = {
     entry: "./src/index.ts",
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
-                use: 'ts-loader'
+                test: /\.ts$/,
+                loader: 'ts-loader'
             },
             {
-                test: /\.(sa|sc|c)ss$/,
+                test: /\.(scss|css)$/,
                 use: [
                     'style-loader',
                     {
@@ -28,12 +30,23 @@ module.exports = {
                     {
                         loader: 'sass-loader',
                         options: {
-                            sourceMap: true
+                            sourceMap: false
                         }
                     }
                 ]
-            }
+            },
+            {
+                test: /\.(png|svg|jpg|gif)$/,
+                loader: 'file-loader'
+            },
+            {
+                test: /\.html$/i,
+                loader: 'html-loader',
+            },
         ],
+    },
+    resolve: {
+        extensions: ['.ts', '.js', '.json']
     },
     plugins: [
     ],
@@ -51,19 +64,42 @@ module.exports = {
         filename: 'bundle.js',
     },
     optimization: {
-        minimize: true,
-        minimizer: [
+        minimize: !devmode,
+        minimizer: devmode ? [] : [
             new TerserPlugin({
                 cache: true,
                 parallel: true,
                 sourceMap: false,
                 terserOptions: {
                     ecma: 2018,
-                    toplevel: true,
-                    mangle: true,
+                    mangle: {
+                        eval: !devmode,
+                        toplevel: true,
+                        keep_fnames: false,
+                        keep_classnames: false,
+                    },
                     compress: {
                         passes: 3,
+                        toplevel: true,
+                        evaluate: true,
                         pure_getters: true,
+                        unused: true,
+                        sequences: false,
+                        dead_code: true,
+
+                        booleans_as_integers: true,
+                        keep_fargs: false,
+                        module: true,
+
+                        unsafe: true,
+                        unsafe_arrows: true,
+                        unsafe_comps: true,
+                        unsafe_Function: true,
+                        unsafe_math: true,
+                        unsafe_methods: true,
+                        unsafe_proto: true,
+                        unsafe_regexp: true,
+                        unsafe_undefined: true,
                     }
                 }
             }),
