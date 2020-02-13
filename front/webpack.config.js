@@ -2,15 +2,20 @@ const webpack = require('webpack');
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const JavaScriptObfuscator = require('webpack-obfuscator');
 
 const {
     NODE_ENV = 'production',
 } = process.env;
 
 const devmode = NODE_ENV !== 'production';
+const obfuscate = false;
 
 module.exports = {
     entry: "./src/index.ts",
+    performance: {
+        hints: false
+    },
     module: {
         rules: [
             {
@@ -36,20 +41,25 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(png|svg|jpg|gif)$/,
-                loader: 'file-loader'
+                test: /\.(png|svg|jpe?g|gif)$/,
+                loader: 'file-loader',
+                options: {
+                    name: 'assets/[hash].[ext]',
+                },
             },
             {
                 test: /\.html$/i,
-                loader: 'html-loader',
+                loader: 'html-loader'
+            },
+            {
+                test: /\.(ogg)$/i,
+                loader: 'file-loader',
             },
         ],
     },
     resolve: {
         extensions: ['.ts', '.js', '.json']
     },
-    plugins: [
-    ],
     devtool: false,
     mode: NODE_ENV,
     devServer: {
@@ -63,6 +73,17 @@ module.exports = {
         path: path.resolve(__dirname, './public'),
         filename: 'bundle.js',
     },
+    plugins: devmode || !obfuscate ? [] : [
+        new JavaScriptObfuscator ({
+            debugProtection: false,
+            debugProtectionInterval: false,
+            selfDefending: false,
+            identifierNamesGenerator: 'mangled',
+            stringArray: true,
+            shuffleStringArray: true,
+            stringArrayThreshold: 1.0,
+        })
+    ],
     optimization: {
         minimize: !devmode,
         minimizer: devmode ? [] : [
@@ -77,6 +98,7 @@ module.exports = {
                         toplevel: true,
                         keep_fnames: false,
                         keep_classnames: false,
+                        properties: true, // /!\ MAY CAUSE INSTABILITY /!\
                     },
                     compress: {
                         passes: 3,
