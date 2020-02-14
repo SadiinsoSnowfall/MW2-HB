@@ -1,7 +1,7 @@
 import './assets/stylesheets/styles.scss';
 
 import { screen } from './screen';
-import { range } from './utils';
+import { Vec2 } from './engine/utils/vec2';
 
 console.log(screen.width + " " + screen.height);
 
@@ -19,12 +19,6 @@ gradient.addColorStop(1, 'red');
 ctx.fillStyle = gradient;
 ctx.fillRect(0, 0, screen.width, screen.height);
 
-ctx.fillStyle = 'black';
-
-for (const x of range(screen.width)) {
-    for (const y of range(screen.height)) {
-        if (Math.cos(x) > Math.cos(y)) {
-            ctx.fillRect(x, y, 1, 1);
-        }
-    }
-}
+let v = new Vec2(5, 5);
+v.mul(2);
+console.log(v);
