@@ -1,7 +1,7 @@
 import './assets/stylesheets/styles.scss';
 
 import { screen } from './screen';
-import { Vec2 } from './utils/Vec2';
+import { Vec2 } from './engine/utils/vec2';
 
 console.log(screen.width + " " + screen.height);
 
