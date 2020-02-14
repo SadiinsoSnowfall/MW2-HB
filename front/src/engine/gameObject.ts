@@ -1,13 +1,16 @@
 import { Transform } from './utils';
-import { ObjectComponent } from './components';
+import { RigidBody, Display, Collider } from './components';
 
 export class GameObject {
     transform: Transform;
-    components: ObjectComponent[];
 
-    constructor(transform: Transform = Transform.Neutral, components: ObjectComponent[] = []) {
+    displayComponent: Display | null;
+    rididBody: RigidBody | null;
+    collider: Collider | null;
+
+    constructor(transform: Transform = Transform.Neutral) {
         this.transform = transform;
-        this.components = components;
+        this.displayComponent = this.rididBody = this.collider = null;
     }
 
     public tick(): void {
