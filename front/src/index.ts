@@ -3,6 +3,8 @@ import './assets/stylesheets/styles.scss';
 import { screen } from './screen';
 import { range } from './utils';
 
+import * as http from './XHRHelper';
+
 console.log(screen.width + " " + screen.height);
 
 const ctx = screen.getContext();
@@ -27,4 +29,11 @@ for (const x of range(screen.width)) {
             ctx.fillRect(x, y, 1, 1);
         }
     }
+}
+
+test();
+async function test() {
+    console.log('sending query...');
+    let res = await http.get('https://jsonplaceholder.typicode.com/posts/1');
+    console.log(res);
 }
