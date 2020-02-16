@@ -7,4 +7,8 @@ export class ObjectComponent {
         this.object = object;
     }
 
+    public update(): void {
+        
+    }
+
 }
