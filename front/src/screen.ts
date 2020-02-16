@@ -65,4 +65,8 @@ export class CScreen {
 
 let canvas = document.getElementsByTagName('canvas')[0];
 
-export const screen: CScreen = new CScreen(canvas, 1080, 16/9, new DullScene());
+let scene = new DullScene();
+scene.addWigglyThingy(100, 100);
+scene.addWigglyThingy(200, 200, "#800000", 0.05, 100, 25);
+scene.addWigglyThingy(500, 200, "#000080", 0.005, 100, 90);
+export const screen: CScreen = new CScreen(canvas, 1080, 16/9, scene);

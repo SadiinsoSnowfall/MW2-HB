@@ -1,3 +1,4 @@
+import { GameObject } from '../gameObject';
 import { ObjectComponent } from "./";
 
 /**
@@ -5,8 +6,14 @@ import { ObjectComponent } from "./";
  */
 export class Display extends ObjectComponent {
 
-    public update(): void {
-
+    constructor(object: GameObject) {
+        super(object);
     }
+
+    public update(): void {}
+
+    public draw(ctx: CanvasRenderingContext2D): void {}
+
+
 
 }

@@ -108,6 +108,20 @@ export class Vec2 {
     */
 
     /**
+     * Returns the magnitude of the vector (x, y).
+     */
+    public static magnitude(x: number, y: number) {
+        return Math.sqrt(x * x + y * y);
+    }
+
+    /**
+     * Returns the squared magnitude of the vector (x, y).
+     */
+    public static sqrMagnitude(x: number, y: number) {
+        return x * x + y * y;
+    }
+
+    /**
      * Returns a vector that is made from the smallest components of two vectors.
      */
     public static min(a: Vec2, b: Vec2): Vec2 {

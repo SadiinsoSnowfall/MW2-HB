@@ -1,3 +1,4 @@
+import { GameObject } from '../gameObject';
 import { ObjectComponent } from "./";
 
 /**
@@ -5,6 +6,10 @@ import { ObjectComponent } from "./";
  */
 export class Behaviour extends ObjectComponent {
     
+    constructor(object: GameObject) {
+        super(object);
+    }
+
     public update(): void {
 
     }
