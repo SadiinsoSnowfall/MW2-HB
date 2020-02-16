@@ -103,6 +103,10 @@ export class Vec2 {
         return (this.x == v.x) && (this.y == v.y);
     }
 
+    public toString(): string {
+        return "(" + this.x + ", " + this.y + ")";
+    }
+
     /*
         STATIC FUNCTIONS
     */

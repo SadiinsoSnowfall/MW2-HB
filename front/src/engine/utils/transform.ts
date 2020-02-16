@@ -10,7 +10,7 @@ export * from "./vec2";
  * (see https://developer.mozilla.org/en-US/docs/Web/API/DOMMatrix/DOMMatrix).
  */
 export class Transform {
-    public static readonly Identity = Object.freeze(new Transform());
+    public static readonly Identity = Object.freeze(new Transform(1, 0, 0, 1, 0, 0));
 
     private readonly m11: number;
     private readonly m12: number;
@@ -21,23 +21,18 @@ export class Transform {
 
     /**
      * @brief Constructor.
-     * If init is not given, the constructor will build an identity matrix.
-     * Otherwise, init must be an array of six numbers a, b, c, ..., f and the
-     * resulting matrix will have the following values :
+     * The resulting matrix will have the following values :
      * a c e
      * b d f
      * 0 0 1
      */
-    constructor(init?: number[]) {
-        if (init == undefined) {
-            this.m11 = this.m22 = 1;
-            this.m12 = this.m21 = this.m31 = this.m32 = 0;
-        } else {
-            if (init.length != 6) {
-                throw new Error("Transform.constructor: invalid length for init: expected 6, got " + init.length);
-            }
-            [this.m11, this.m12, this.m21, this.m22, this.m31, this.m32] = init;
-        }
+    constructor(a: number, b : number, c: number, d: number, e: number, f: number) {
+        this.m11 = a;
+        this.m12 = b;
+        this.m21 = c;
+        this.m22 = d;
+        this.m31 = e;
+        this.m32 = f;
     }
 
     /**********************************************************************************************
@@ -94,11 +89,16 @@ export class Transform {
     public getRotation(): number {
         let scaleX = Vec2.magnitude(this.m11, this.m12);
         let angle = Math.acos(this.m11 / scaleX); // acos(cos(angle))
-        if (Math.sign(this.m12 / scaleX) >= 0) {  // sign(sin(angle)) >= 0
+        if (Math.sign(this.m12 / scaleX) < 0) {   // sign(sin(angle)) < 0
             return angle;
         } else {
             return -angle;
         }
+    }
+
+    public toString(): string {
+        return this.m11 + " " + this.m21 + " " + this.m31 + "\n"
+            + this.m12 + " " + this.m22 + " " + this.m32 + "\n0 0 1";
     }
 
     /**********************************************************************************************
@@ -112,14 +112,14 @@ export class Transform {
      * @param m The other matrix.
      */
     public multiplyMatrix(m: Transform): Transform {
-        return new Transform([
+        return new Transform(
             this.m11 * m.m11 + this.m21 * m.m12,
             this.m12 * m.m11 + this.m22 * m.m12,
             this.m11 * m.m21 + this.m21 * m.m22,
             this.m12 * m.m21 + this.m22 * m.m22,
             this.m11 * m.m31 + this.m21 * m.m32 + this.m31,
             this.m12 * m.m31 + this.m22 * m.m32 + this.m32
-        ]);
+        );
     }
 
     /**
@@ -142,14 +142,14 @@ export class Transform {
      * @brief Moves the matrix alongside the vector (x, y). 
      */
     public translate(x: number, y: number): Transform {
-        return new Transform([
+        return new Transform(
             this.m11,
             this.m12,
             this.m21,
             this.m22,
             this.m11 * x + this.m21 * y + this.m31,
             this.m12 * x + this.m22 * y + this.m32
-        ]);
+        );
     }
 
     /**
@@ -165,14 +165,14 @@ export class Transform {
      * @param y Factor alongside the y axis
      */
     public scale(x: number, y: number): Transform {
-        return new Transform([
+        return new Transform(
             this.m11 * x,
             this.m12 * x, 
             this.m21 * y,
             this.m22 * y,
             this.m31,
             this.m32
-        ]);
+        );
     }
 
     /**
@@ -183,14 +183,14 @@ export class Transform {
     public rotateRadians(angle: number): Transform {
         let cosa = Math.cos(angle);
         let sina = Math.sin(angle);
-        return new Transform([
+        return new Transform(
             this.m11 * cosa - this.m21 * sina,
             this.m12 * cosa - this.m22 * sina,
             this.m11 * sina + this.m21 * cosa,
             this.m12 * sina + this.m22 * cosa,
             this.m31,
             this.m32
-        ]);
+        );
     }
 
     /** 

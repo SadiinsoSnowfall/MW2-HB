@@ -68,5 +68,6 @@ let canvas = document.getElementsByTagName('canvas')[0];
 let scene = new DullScene();
 scene.addWigglyThingy(100, 100);
 scene.addWigglyThingy(200, 200, "#800000", 0.05, 100, 25);
-scene.addWigglyThingy(500, 200, "#000080", 0.005, 100, 90);
+scene.addWigglyThingy(500, 200, "#000080", 0.005, 100, 75);
+scene.addSpinnyThingy(300, 350, "#008080", 0.01, 75);
 export const screen: CScreen = new CScreen(canvas, 1080, 16/9, scene);
