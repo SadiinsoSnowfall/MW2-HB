@@ -11,6 +11,8 @@ export class CScreen {
     public readonly AR: number;
     
     private _frame: number;
+    private _frameTime: number;
+    private _lastrefresh: number;
 
     constructor(canvas: HTMLCanvasElement, height: number, AR: number) {
         this.canvas = canvas;
@@ -25,11 +27,16 @@ export class CScreen {
         this.height = this.canvas.height = height;
 
         // Starts game loop
-        this._frame = 0;
+        this._frame = this._frameTime = this._lastrefresh = 0;
         let _this = this;
         let updater = function() {
             _this.scene = _this.scene?.update();
             _this.draw();
+            
+            if (_this._frame % 15 == 0) {
+                _this._frameTime = (Date.now() - _this._lastrefresh);
+            }
+            _this._lastrefresh = Date.now();
             requestAnimationFrame(updater);
         };
         requestAnimationFrame(updater);
@@ -63,9 +70,17 @@ export class CScreen {
         return this._frame;
     }
 
+    /**
+     * The current time it take for the scene to be rendered
+     * (updated every 15 frames)
+     */
+    public framerate(): number {
+        return this._frameTime;
+    }
+
     public draw(): void {
         if (this.scene) {
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
             this.context.save();
             this.scene?.draw(this.context);
             this.context.restore();

@@ -32,6 +32,14 @@ export abstract class Scene {
     }
 
     /**
+     * @brief Shortcut for screen().framerate()
+     * @returns The current framerate or -1 if the scene is not rendered
+     */
+    public framerate(): number {
+        return this._screen?.framerate() || -1;
+    }
+
+    /**
      * @brief Displays this Scene on a canvas.
      * @param ctx The context from the canvas the scene must be drawn on.
      */
@@ -185,8 +193,11 @@ class FPSMetterBehaviour extends Display {
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
-        let tick = this.object?.scene()?.tick();
+        let tick = this.object?.scene()?.tick() || -1;
+        let ftime = this.object?.scene()?.framerate() || -666;
         ctx.font = '48px sans';
-        ctx.fillText("Current frame: " + tick, 0, 0);
+        ctx.fillStyle = 'black';
+        ctx.fillText(`Current frame: ${tick}`, 0, 0)
+        ctx.fillText(`Frame time: ${ftime}ms (${(1000 / ftime).toFixed(1)} fps)`, 0, 50);
     }
 }
