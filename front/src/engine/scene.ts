@@ -96,14 +96,14 @@ export class DullScene extends Scene {
 
     public addFPSMetter(x: number, y: number): void {
         let o = new GameObject(x, y);
-        o.setDisplayComponent(new FPSMetterDisplay(o, Alignment.Left));
+        o.setDisplayComponent(new FPSMetterDisplay(o, Alignment.Left, Style.Fill));
         o.setScene(this);
         this.objects.push(o);
     }
 
     public addFunnyFPSMetter(x: number, y: number): void {
         let o = new GameObject(x, y);
-        o.setDisplayComponent(new FPSMetterDisplay(o, Alignment.Centered));
+        o.setDisplayComponent(new FPSMetterDisplay(o, Alignment.Centered, Style.Fill));
         o.setBehaviourComponent(new WigglyBehaviour(o, 0.01));
         o.setScene(this);
         this.objects.push(o);
@@ -111,7 +111,7 @@ export class DullScene extends Scene {
 
     public addHilariousFPSMetter(x: number, y: number): void {
         let o = new GameObject(x, y);
-        o.setDisplayComponent(new FPSMetterDisplay(o, Alignment.Right));
+        o.setDisplayComponent(new FPSMetterDisplay(o, Alignment.Right, Style.Stroke));
         o.setBehaviourComponent(new SpinnyBehaviour(o, 0.01));
         o.setScene(this);
         this.objects.push(o);
@@ -208,10 +208,11 @@ class SpinnyDisplay extends Display {
 class FPSMetterDisplay extends Display {
     private format: TextFormat;
 
-    constructor(o: GameObject, a: Alignment) {
+    constructor(o: GameObject, a: Alignment, s: Style) {
         super(o);
         this.format = TextFormat.Standard.copy();
         this.format.setAlignment(a);
+        this.format.setStyle(s);
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
