@@ -1,4 +1,4 @@
-import { Scene, DullScene } from "./engine/scene";
+import { Scene } from "./engine/scene";
 
 
 export class CScreen {

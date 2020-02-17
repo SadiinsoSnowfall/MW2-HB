@@ -1,0 +1,109 @@
+import { Display, Behaviour } from "../../engine/components";
+import { GameObject } from "../../engine/gameObject";
+import { TextFormat, Alignment, Style } from "../../engine/utils/textFormat";
+
+export class WigglyBehaviour extends Behaviour {
+    public rotation: number;
+    public updates: number;
+    public last: number;
+
+    private static smooth: number = 8;
+    private static variance: number = 5; // Opposite of (variance / 2) actually
+
+    constructor(o: GameObject, rotation: number) {
+        super(o);
+        this.rotation = rotation;
+        this.updates = Math.floor(Math.random() * WigglyBehaviour.smooth);
+        this.last = 1;
+    }
+
+    public update(): void {
+        this.object.rotateRadians(this.rotation);
+        let factor = (Math.cos(this.updates / WigglyBehaviour.smooth)) / WigglyBehaviour.variance + 1;
+        this.object.scale(1 / this.last, 1/* / this.last*/);
+        this.object.scale(factor, /*factor*/1);
+        this.last = factor;
+        this.updates++;
+    }
+}
+
+export class WigglyDisplay extends Display {
+    public color: string;
+    public width: number;
+    public height: number;
+
+    constructor(o: GameObject, c: string, w: number, h: number) {
+        super(o);
+        this.color = c;
+        this.width = w;
+        this.height = h;
+    }
+
+    public update(): void {}
+
+    public draw(ctx: CanvasRenderingContext2D) {
+        ctx.beginPath();
+        // x and y must be 0!
+        // The position is implicitly set through the Transform of the object
+        // Thus, here x and y don't set the actual offset but rather the offset relative to the center of the object
+        // Here we want our object to be the ellipse, so it doesn't make sense to put any value other than 0
+        ctx.ellipse(0, 0, this.width, this.height, 0, 0, 2 * Math.PI);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+    }
+}
+
+export class SpinnyBehaviour extends Behaviour {
+    public rotation: number;
+
+    constructor(o: GameObject, rotation: number) {
+        super(o);
+        this.rotation = rotation;
+        o.scale(2, 0.5);
+    }
+
+    public update(): void {
+        this.object.rotateRadians(this.rotation);
+    }
+}
+
+export class SpinnyDisplay extends Display {
+    public color: string;
+    public radius: number;
+
+    constructor(o: GameObject, c: string, r: number) {
+        super(o);
+        this.color = c;
+        this.radius = r;
+    }
+
+    public update(): void {}
+
+    public draw(ctx: CanvasRenderingContext2D) {
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        //ctx.ellipse(0, 0, this.radius, this.radius, 0, 0, 2 * Math.PI);
+        ctx.fillRect(-this.radius / 2, -this.radius / 2, this.radius, this.radius);
+        ctx.closePath();
+    }
+}
+
+export class FPSMetterDisplay extends Display {
+    private format: TextFormat;
+
+    constructor(o: GameObject, a: Alignment, s: Style) {
+        super(o);
+        this.format = TextFormat.Standard.copy();
+        this.format.setAlignment(a);
+        this.format.setStyle(s);
+    }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        let tick = this.object?.scene()?.tick() || -1;
+        let ftime = this.object?.scene()?.framerate() || -666;
+        let frameTxt = `Current frame: ${tick}`;
+        let timeTxt = `Frame time: ${ftime}ms (${(1000 / ftime).toFixed(1)} fps)`;
+        this.format.drawText(ctx, [frameTxt, timeTxt]);
+    }
+}
