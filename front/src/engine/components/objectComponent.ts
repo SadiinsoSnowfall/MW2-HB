@@ -1,14 +1,12 @@
 import { GameObject } from "../gameObject";
 
-export class ObjectComponent {
+export abstract class ObjectComponent {
     readonly object: GameObject;
 
     constructor(object: GameObject) {
         this.object = object;
     }
 
-    public update(): void {
-        
-    }
-
+    public abstract update(): void;
+    
 }

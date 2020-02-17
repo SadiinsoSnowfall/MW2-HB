@@ -1,13 +1,16 @@
 import { Transform, Vec2 } from './utils';
 import { RigidBody, Display, Collider, Behaviour } from './components';
+import { Scene } from './scene';
 
 export class GameObject {
     transform: Transform;
 
-    display: Display | null;
-    rigidBody: RigidBody | null;
-    collider: Collider | null;
-    behaviour: Behaviour | null;
+    private display?: Display;
+    private rigidBody?: RigidBody;
+    private collider?: Collider;
+    private behaviour?: Behaviour;
+
+    private _scene?: Scene;
 
     /**
      * @brief Creates a new GameObject.
@@ -16,7 +19,6 @@ export class GameObject {
      */
     constructor(x: number, y: number) {
         this.transform = Transform.Identity.center(x, y);
-        this.display = this.rigidBody = this.collider = this.behaviour = null;
     }
 
     /**********************************************************************************************
@@ -25,35 +27,43 @@ export class GameObject {
      * 
      *********************************************************************************************/
 
-    public displayComponent(): Display | null {
+    public scene(): Scene | undefined {
+        return this._scene;
+    }
+
+    public setScene(scene?: Scene): void {
+        this._scene = scene;
+    }
+
+    public displayComponent(): Display | undefined {
         return this.display;
     }
 
-    public setDisplayComponent(display: Display | null): void {
+    public setDisplayComponent(display?: Display): void {
         this.display = display;
     }
 
-    public rigidBodyComponent(): RigidBody | null {
+    public rigidBodyComponent(): RigidBody | undefined {
         return this.rigidBody;
     }
     
-    public setRigidBodyComponent(body: RigidBody | null): void {
+    public setRigidBodyComponent(body?: RigidBody): void {
         this.rigidBody = body;
     }
 
-    public colliderComponent(): Collider | null {
+    public colliderComponent(): Collider | undefined {
         return this.collider;
     }
 
-    public setColliderComponent(collider: Collider | null): void {
+    public setColliderComponent(collider?: Collider): void {
         this.collider = collider;
     }
 
-    public behaviourComponent(): Behaviour | null {
+    public behaviourComponent(): Behaviour | undefined {
         return this.behaviour;
     }
 
-    public setBehaviourComponent(behaviour: Behaviour | null): void {
+    public setBehaviourComponent(behaviour?: Behaviour): void {
         this.behaviour = behaviour;
     }
 

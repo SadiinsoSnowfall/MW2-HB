@@ -1,30 +1,57 @@
 import { GameObject } from "./gameObject";
 import { RigidBody, Display, Collider, Behaviour } from './components';
+import { CScreen } from "../screen";
 
 /**
  * @brief Defines any object that can interact with the game loop.
  */
-export interface Scene {
+export abstract class Scene {
+    private _screen?: CScreen;
+
+    /**
+     * @brief Retrieve the CScreen the scene is displayed on
+     * @returns The CScreen the scene is displayed on
+     */
+    public screen(): CScreen | undefined {
+        return this._screen;
+    }
+
+    /**
+     * @brief Set the CScreen of the scene
+     */
+    public setScreen(screen: CScreen): void {
+        this._screen = screen;
+    }
+
+    /**
+     * @brief Shortcut for screen().currentFrame()
+     * @returns The current frame being displayed or -1 if the scene is not rendered
+     */
+    public tick(): number {
+        return this._screen?.currentFrame() || -1;
+    }
+
     /**
      * @brief Displays this Scene on a canvas.
      * @param ctx The context from the canvas the scene must be drawn on.
      */
-    draw(ctx: CanvasRenderingContext2D): void;
+    abstract draw(ctx: CanvasRenderingContext2D): void;
 
     /**
      * @brief Updates the game without displaying it.
      * @returns The next scene to update and display (usually, itself)
      */
-    update(): Scene;
+    abstract update(): Scene;
 }
 
 /**
  * @brief A dull implementation of Scene for the sole purpose of testing.
  */
-export class DullScene implements Scene {
+export class DullScene extends Scene {
     private objects: GameObject[];
 
     constructor() {
+        super();
         this.objects = [];
     }
 
@@ -45,6 +72,7 @@ export class DullScene implements Scene {
         let o = new GameObject(x, y);
         o.setDisplayComponent(new WigglyDisplay(o, c, w, h));
         o.setBehaviourComponent(new WigglyBehaviour(o, a));
+        o.setScene(this);
         this.objects.push(o);
     }
 
@@ -52,12 +80,19 @@ export class DullScene implements Scene {
         let o = new GameObject(x, y);
         o.setDisplayComponent(new SpinnyDisplay(o, c, r));
         o.setBehaviourComponent(new SpinnyBehaviour(o, a));
+        o.setScene(this);
+        this.objects.push(o);
+    }
+
+    public addFPSMetter(x: number, y: number): void {
+        let o = new GameObject(x, y);
+        o.setDisplayComponent(new FPSMetterBehaviour(o));
+        o.setScene(this);
         this.objects.push(o);
     }
 }
 
 class WigglyBehaviour extends Behaviour {
-
     private rotation: number;
     private updates: number;
     private last: number;
@@ -141,5 +176,17 @@ class SpinnyDisplay extends Display {
         //ctx.ellipse(0, 0, this.radius, this.radius, 0, 0, 2 * Math.PI);
         ctx.fillRect(-this.radius / 2, -this.radius / 2, this.radius, this.radius);
         ctx.closePath();
+    }
+}
+
+class FPSMetterBehaviour extends Display {
+    constructor(o: GameObject) {
+        super(o);
+    }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        let tick = this.object?.scene()?.tick();
+        ctx.font = '48px sans';
+        ctx.fillText("Current frame: " + tick, 0, 0);
     }
 }

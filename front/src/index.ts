@@ -2,6 +2,7 @@ import './assets/stylesheets/styles.scss';
 
 import { screen } from './screen';
 import { Transform, Vec2 } from './engine/utils/transform';
+import { DullScene } from './engine/scene';
 
 console.log(screen.width + " " + screen.height);
 
@@ -19,9 +20,13 @@ gradient.addColorStop(1, 'red');
 ctx.fillStyle = gradient;
 ctx.fillRect(0, 0, screen.width, screen.height);
 
-let v = new Vec2(5, 5);
-v.mul(2);
-console.log(v);
+let scene = new DullScene();
+scene.addWigglyThingy(100, 100);
+scene.addWigglyThingy(200, 200, "#800000", 0.05, 100, 25);
+scene.addWigglyThingy(500, 200, "#000080", 0.005, 100, 75);
+scene.addSpinnyThingy(300, 350, "#008080", 0.01, 75);
+scene.addFPSMetter(600, 50);
+screen.setScene(scene);
 
 let m = Transform.Identity;
 let angle = Math.PI / 2;
