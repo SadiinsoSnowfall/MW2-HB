@@ -1,8 +1,9 @@
 import './assets/stylesheets/styles.scss';
 
 import { screen } from './screen';
-import { Transform, Vec2 } from './engine/utils/transform';
+import { Transform } from './engine/utils/transform';
 import { DullScene } from './engine/scene';
+import { Assets } from './utils';
 
 console.log(screen.width + " " + screen.height);
 
@@ -45,3 +46,10 @@ m = m.translate(100, Math.PI);
 console.log(m.toString());
 console.log("angle: " + m.getRotation());
 console.log("scale: " + m.getScale());
+
+test();
+async function test() {
+    await Assets.load();
+    await Assets.load();
+    ctx.drawImage(Assets.get(Assets.LEVELS_ICON), 0, 0);
+}

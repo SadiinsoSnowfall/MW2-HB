@@ -58,6 +58,9 @@ module.exports = {
         ],
     },
     resolve: {
+        alias: {
+            'assets': path.resolve(__dirname, 'src', 'assets')
+        },
         extensions: ['.ts', '.js', '.json']
     },
     devtool: false,

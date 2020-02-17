@@ -39,3 +39,14 @@ export function* range3(from: number, to: number, step: number) {
 export function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+/**
+ * Throw an error if $value is not true
+ * @param value The value to assert
+ * @param msg The error message to display
+ */
+export function assert(value: unknown, msg: string = "[no_err_msg]"): void {
+    if (!value) {
+        throw new Error('Assertion failed: ' + msg);
+    }
+}
