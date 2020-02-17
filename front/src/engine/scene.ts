@@ -1,6 +1,8 @@
 import { GameObject } from "./gameObject";
 import { RigidBody, Display, Collider, Behaviour } from './components';
 import { CScreen } from "../screen";
+import { Vec2 } from "./utils";
+import { TextFormat, Alignment, Style } from "./utils/textFormat";
 
 /**
  * @brief Defines any object that can interact with the game loop.
@@ -94,7 +96,23 @@ export class DullScene extends Scene {
 
     public addFPSMetter(x: number, y: number): void {
         let o = new GameObject(x, y);
-        o.setDisplayComponent(new FPSMetterBehaviour(o));
+        o.setDisplayComponent(new FPSMetterDisplay(o, Alignment.Left));
+        o.setScene(this);
+        this.objects.push(o);
+    }
+
+    public addFunnyFPSMetter(x: number, y: number): void {
+        let o = new GameObject(x, y);
+        o.setDisplayComponent(new FPSMetterDisplay(o, Alignment.Centered));
+        o.setBehaviourComponent(new WigglyBehaviour(o, 0.01));
+        o.setScene(this);
+        this.objects.push(o);
+    }
+
+    public addHilariousFPSMetter(x: number, y: number): void {
+        let o = new GameObject(x, y);
+        o.setDisplayComponent(new FPSMetterDisplay(o, Alignment.Right));
+        o.setBehaviourComponent(new SpinnyBehaviour(o, 0.01));
         o.setScene(this);
         this.objects.push(o);
     }
@@ -187,17 +205,27 @@ class SpinnyDisplay extends Display {
     }
 }
 
-class FPSMetterBehaviour extends Display {
-    constructor(o: GameObject) {
+class FPSMetterDisplay extends Display {
+    private format: TextFormat;
+
+    constructor(o: GameObject, a: Alignment) {
         super(o);
+        this.format = TextFormat.Standard.copy();
+        this.format.setAlignment(a);
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
         let tick = this.object?.scene()?.tick() || -1;
         let ftime = this.object?.scene()?.framerate() || -666;
-        ctx.font = '48px sans';
-        ctx.fillStyle = 'black';
-        ctx.fillText(`Current frame: ${tick}`, 0, 0)
-        ctx.fillText(`Frame time: ${ftime}ms (${(1000 / ftime).toFixed(1)} fps)`, 0, 50);
+        let frameTxt = `Current frame: ${tick}`;
+        let timeTxt = `Frame time: ${ftime}ms (${(1000 / ftime).toFixed(1)} fps)`;
+        this.format.drawText(ctx, [frameTxt, timeTxt]);
+
+        /*let frameDim = Display.measureText(ctx, frameTxt);
+        let timeDim = Display.measureText(ctx, timeTxt);
+        let dim = new Vec2(Math.max(frameDim.x, timeDim.x), frameDim.y + timeDim.y + 10);
+        dim.x = -dim.x / 2;
+        ctx.fillText(frameTxt, dim.x, -(frameDim.y + timeDim.y) / 2);
+        ctx.fillText(timeTxt, dim.x, 5);*/
     }
 }

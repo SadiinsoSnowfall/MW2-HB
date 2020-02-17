@@ -25,7 +25,9 @@ scene.addWigglyThingy(100, 100);
 scene.addWigglyThingy(200, 200, "#800000", 0.05, 100, 25);
 scene.addWigglyThingy(500, 200, "#000080", 0.005, 100, 75);
 scene.addSpinnyThingy(300, 350, "#008080", 0.01, 75);
-scene.addFPSMetter(600, 50);
+scene.addFPSMetter(800, 100);
+scene.addFunnyFPSMetter(800, 400);
+scene.addHilariousFPSMetter(300, 500);
 screen.setScene(scene);
 
 let m = Transform.Identity;

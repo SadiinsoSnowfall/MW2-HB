@@ -10,7 +10,7 @@ export * from "./vec2";
  * (see https://developer.mozilla.org/en-US/docs/Web/API/DOMMatrix/DOMMatrix).
  */
 export class Transform {
-    public static readonly Identity = Object.freeze(new Transform(1, 0, 0, 1, 0, 0));
+    public static readonly Identity = new Transform(1, 0, 0, 1, 0, 0);
 
     private readonly m11: number;
     private readonly m12: number;
