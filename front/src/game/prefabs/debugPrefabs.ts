@@ -1,10 +1,10 @@
 import { Prefab } from "../../engine/prefab";
-import { SpinnyDisplay, SpinnyBehaviour, WigglyDisplay, WigglyBehaviour, FPSMetterDisplay, ImageDisplay, SpriteDisplay } from "../components/debugComponents";
+import { SpinnyDisplay, SpinnyBehaviour, WigglyDisplay, WigglyBehaviour, FPSMetterDisplay, ImageDisplay, SpriteDisplay, YoloSpritesheetDisplay } from "../components/debugComponents";
 import { Alignment, Style } from "../../engine/utils/textFormat";
 import { Scene } from "../../engine/scene";
 import { Assets } from "../../utils";
 
-export { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, sprite };
+export { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, sprite, yoloSprite };
 
 const wigglyThingy = new Prefab(obj => {
     obj.setDisplayComponent(new WigglyDisplay(obj, "#008000", 100, 55));
@@ -38,6 +38,11 @@ const image = new Prefab(obj => {
 const sprite = new Prefab(obj => {
     obj.setDisplayComponent(new SpriteDisplay(obj, 0, 0));
     obj.setBehaviourComponent(new WigglyBehaviour(obj, 0.01));
+});
+
+const yoloSprite = new Prefab(obj => {
+    obj.setDisplayComponent(new YoloSpritesheetDisplay(obj));
+    obj.setBehaviourComponent(new WigglyBehaviour(obj, -0.01));
 });
 
 /*
