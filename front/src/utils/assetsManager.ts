@@ -22,7 +22,6 @@ export class Assets {
     }
 
     static loadImage(url: string): Promise<void> {
-        console.log("loading" + url);
         return new Promise(resolve => {
             let img = new Image();
             img.onload = () => { 
