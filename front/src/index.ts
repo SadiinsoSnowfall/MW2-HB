@@ -3,7 +3,7 @@ import './assets/stylesheets/styles.scss';
 import { screen } from './screen';
 import { Transform } from './engine/utils/transform';
 import { Scene } from './engine/scene';
-import { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, createWiggly } from './game/prefabs/debugPrefabs';
+import { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, sprite, createWiggly } from './game/prefabs/debugPrefabs';
 import { Assets } from './utils';
 
 async function game() {
@@ -51,5 +51,6 @@ async function game() {
 
     await Assets.load();
     scene.instantiate(image, 250, 800);
+    scene.instantiate(sprite, 600, 800);
 }
 game();
