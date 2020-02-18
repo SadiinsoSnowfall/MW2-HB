@@ -1,7 +1,7 @@
 import './assets/stylesheets/styles.scss';
 
 import { screen } from './screen';
-import { Transform } from './engine/utils/transform';
+import { Transform, Vec2 } from './engine/utils/transform';
 import { Scene } from './engine/scene';
 import { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, sprite, createWiggly } from './game/prefabs/debugPrefabs';
 import { Assets } from './utils';
@@ -30,7 +30,7 @@ async function game() {
     scene.instantiate(spinnyThingy, 300, 350);
     scene.instantiate(FPSMetter, 800, 100);
     scene.instantiate(funnyFPSMetter, 800, 400);
-    scene.instantiate(hilariousFPSMetter, 300, 500);
+    //scene.instantiate(hilariousFPSMetter, 300, 500);
     screen.setScene(scene);
 
     let m = Transform.Identity;
@@ -48,6 +48,14 @@ async function game() {
     console.log(m.toString());
     console.log("angle: " + m.getRotation());
     console.log("scale: " + m.getScale());
+
+    m = Transform.Identity;
+    let scale = new Vec2(2, 0.5);
+    console.log(`expected scale: ${scale}`);
+    m = m.scale(scale.x, scale.y);
+    console.log(`scale: ${m.getScale()}`);
+    m = m.rotateRadians(Math.PI / 2);
+    console.log(`scale after pi/2 rotation: ${m.getScale()}`);
 
     await Assets.load();
     scene.instantiate(image, 250, 800);

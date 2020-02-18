@@ -86,13 +86,21 @@ export class GameObject {
 
     /**********************************************************************************************
      * 
-     * Methods related to the Transform
+     * Methods related to transform
      * 
      *********************************************************************************************/
 
-     public getPosition(): Vec2 {
-         return this.transform.getTranslation();
-     }
+    public getPosition(): Vec2 {
+        return this.transform.getTranslation();
+    }
+
+    public getScale(): Vec2 {
+        return this.transform.getScale();
+    }
+
+    public getRotation(): number {
+        return this.transform.getRotation();
+    }
 
     /** 
      * @brief Cancels all scales and rotations on the object, only preserving its position.
@@ -100,6 +108,10 @@ export class GameObject {
     public resetTransform(): void {
         let v = this.transform.getTranslation();
         this.transform = Transform.Identity.center(v.x, v.y);
+    }
+
+    public move(x: number, y: number): void {
+        this.transform = this.transform.translate(x, y);
     }
 
     /**
@@ -121,4 +133,7 @@ export class GameObject {
         this.transform = this.transform.rotateDegrees(angle);
     }
 
+    public shear(x: number, y: number): void {
+        this.transform = this.transform.shear(x, y);
+    }
 }

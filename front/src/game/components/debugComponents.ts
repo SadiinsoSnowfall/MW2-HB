@@ -20,9 +20,9 @@ export class WigglyBehaviour extends Behaviour {
     }
 
     public update(): void {
+        this.object.scale(1 / this.last, 1/* / this.last*/);
         this.object.rotateRadians(this.rotation);
         let factor = (Math.cos(this.updates / WigglyBehaviour.smooth)) / WigglyBehaviour.variance + 1;
-        this.object.scale(1 / this.last, 1/* / this.last*/);
         this.object.scale(factor, /*factor*/1);
         this.last = factor;
         this.updates++;
@@ -66,7 +66,10 @@ export class SpinnyBehaviour extends Behaviour {
     }
 
     public update(): void {
+        //this.object.scale(0.5, 2);
         this.object.rotateRadians(this.rotation);
+        //this.object.scale(2, 0.5);
+        //console.log(this.object.getScale());
     }
 }
 

@@ -201,4 +201,15 @@ export class Transform {
     public rotateDegrees(angle: number): Transform {
         return this.rotateRadians(Transform.degreesToRadians(angle));
     }
+
+    public shear(x: number, y: number) {
+        return new Transform(
+            this.m11 + this.m21 * y,
+            this.m12 + this.m22 * y,
+            this.m11 * x + this.m21,
+            this.m12 * x + this.m22,
+            this.m31,
+            this.m32
+        );
+    }
 }
