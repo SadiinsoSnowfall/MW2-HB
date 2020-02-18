@@ -57,7 +57,7 @@ def compute_bb(sprites):
     for p in sprites:
         mh = max(p[3][0], mh)
         mw = max(p[3][1], mw)
-    return (mh, mw)
+    return (mh + 1, mw + 1)
 
 def render_sprite(src, dst, h, w, sprite):
     (mask, (hmin, wmin), (hmax, wmax), (sh, sw)) = sprite
@@ -79,8 +79,8 @@ sprites = analyze(np.copy(im))
 
 count = len(sprites)
 (mh, mw) = compute_bb(sprites)
-fh = (mh + 1) * count
-fw = mw + 1
+fh = mh * count
+fw = mw 
 
 print(f"Found {count} {mh}x{mw}px sprites")
 print(f"Generating {fh}x{fw}px spritesheet...")
