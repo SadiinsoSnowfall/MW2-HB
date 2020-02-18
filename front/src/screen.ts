@@ -2,6 +2,8 @@ import { Scene } from "./engine/scene";
 
 
 export class CScreen {
+    private static readonly AVG_FRAMETIME_COUNT = 15;
+
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
     private scene?: Scene;
@@ -33,10 +35,10 @@ export class CScreen {
             _this.scene = _this.scene?.update();
             _this.draw();
             
-            if (_this._frame % 15 == 0) {
-                _this._frameTime = (Date.now() - _this._lastrefresh);
+            if (_this._frame % CScreen.AVG_FRAMETIME_COUNT == 0) {
+                _this._frameTime = (Date.now() - _this._lastrefresh) / CScreen.AVG_FRAMETIME_COUNT;
+                _this._lastrefresh = Date.now();
             }
-            _this._lastrefresh = Date.now();
             requestAnimationFrame(updater);
         };
         requestAnimationFrame(updater);

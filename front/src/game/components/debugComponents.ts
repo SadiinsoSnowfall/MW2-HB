@@ -105,7 +105,7 @@ export class FPSMetterDisplay extends Display {
         let tick = this.object?.scene()?.tick() || -1;
         let ftime = this.object?.scene()?.framerate() || -666;
         let frameTxt = `Current frame: ${tick}`;
-        let timeTxt = `Frame time: ${ftime}ms (${(1000 / ftime).toFixed(1)} fps)`;
+        let timeTxt = `Frame time: ${ftime.toFixed(2)}ms (${(1000 / ftime).toFixed(1)} fps)`;
         this.format.drawText(ctx, [frameTxt, timeTxt]);
     }
 }
