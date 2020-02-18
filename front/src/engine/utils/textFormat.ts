@@ -138,9 +138,8 @@ export class TextFormat {
         // Computing dimensions
         let globalDim = new Vec2(0, 0);
         let lineDim: Vec2[] = [];
-        for (let line of lines) {
+        for (const line of lines) {
             let dim = TextFormat._measureLine(ctx, line);
-            //console.log(dim.y);
             globalDim.x = Math.max(globalDim.x, dim.x);
             globalDim.y += dim.y;
             lineDim.push(dim);

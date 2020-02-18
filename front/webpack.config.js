@@ -97,11 +97,27 @@ module.exports = {
                 terserOptions: {
                     ecma: 2018,
                     mangle: {
-                        eval: !devmode,
+                        eval: true,
                         toplevel: true,
                         keep_fnames: false,
                         keep_classnames: false,
-                        properties: true, // /!\ MAY CAUSE INSTABILITY /!\
+                        properties: {
+                            builtins: false,
+                            reserved: [
+                                // TextMetrics API
+                                'actualBoundingBoxLeft',
+                                'actualBoundingBoxRight',
+                                'fontBoundingBoxAscent',
+                                'fontBoundingBoxDescent',
+                                'actualBoundingBoxAscent',
+                                'actualBoundingBoxDescent',
+                                'emHeightAscent',
+                                'emHeightDescent',
+                                'hangingBaseline',
+                                'alphabeticBaseline',
+                                'ideographicBaseline'
+                            ]
+                        }, // /!\ MAY CAUSE INSTABILITY /!\
                     },
                     compress: {
                         passes: 3,
