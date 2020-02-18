@@ -90,6 +90,10 @@ export class GameObject {
      * 
      *********************************************************************************************/
 
+    public getTransform(): Transform {
+        return this.transform;
+    }
+
     public getPosition(): Vec2 {
         return this.transform.getTranslation();
     }

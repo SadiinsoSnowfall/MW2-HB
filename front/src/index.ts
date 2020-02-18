@@ -5,6 +5,8 @@ import { Transform, Vec2 } from './engine/utils/transform';
 import { Scene } from './engine/scene';
 import { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, sprite, createWiggly, yoloSprite } from './game/prefabs/debugPrefabs';
 import { Assets } from './utils';
+import { GameObject } from './engine/gameObject';
+import { SpinnyDisplay } from './game/components/debugComponents';
 
 async function game() {
     await Assets.load();
@@ -38,6 +40,9 @@ async function game() {
     scene.instantiate(yoloSprite, 600, 600);
     scene.instantiate(yoloSprite, 650, 650);
 
+    scene.instantiate(image, 250, 800);
+    scene.instantiate(sprite, 600, 800);
+
     screen.setScene(scene);
 
     let m = Transform.Identity;
@@ -62,10 +67,24 @@ async function game() {
     m = m.scale(scale.x, scale.y);
     console.log(`scale: ${m.getScale()}`);
     m = m.rotateRadians(Math.PI / 2);
-    console.log(`scale after pi/2 rotation: ${m.getScale()}`);
+    console.log(`scale after pi/2 rotation: ${m.getScale()} (norm: ${m.getScale().magnitude()})`);
+    m = m.rotateRadians(0.05);
+    console.log(`scale after 0.05 rotation: ${m.getScale()} (norm: ${m.getScale().magnitude()})`);
 
-    await Assets.load();
-    scene.instantiate(image, 250, 800);
-    scene.instantiate(sprite, 600, 800);
+    let rect1 = new GameObject(1000, 250);
+    rect1.scale(2, 0.5);
+    rect1.setDisplayComponent(new SpinnyDisplay(rect1, "#000000", 50));
+    scene.addObject(rect1);
+
+    let rect2 = new GameObject(1000, 350);
+    rect2.rotateRadians(Math.PI / 2);
+    console.log(rect2.getTransform());
+    console.log(rect2.getScale());
+    rect2.scale(2, 0.5);
+    rect2.shear(0.25, 0);
+    console.log(rect2.getTransform());
+    console.log(rect2.getScale());
+    rect2.setDisplayComponent(new SpinnyDisplay(rect2, "#000000", 50));
+    scene.addObject(rect2);
 }
 game();

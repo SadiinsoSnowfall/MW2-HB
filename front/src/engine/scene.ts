@@ -10,7 +10,7 @@ export class Scene {
     protected objects: GameObject[] = [];
 
     /**
-     * @brief Retrieve the CScreen the scene is displayed on
+     * @brief Retrieves the CScreen the scene is displayed on
      * @returns The CScreen the scene is displayed on
      */
     public screen(): CScreen | undefined {
@@ -18,7 +18,7 @@ export class Scene {
     }
 
     /**
-     * @brief Set the CScreen of the scene
+     * @brief Sets the CScreen of the scene
      */
     public setScreen(screen: CScreen): void {
         this._screen = screen;
@@ -41,7 +41,7 @@ export class Scene {
     }
 
     /**
-     * Instantiate an Object using a Prefab
+     * @brief Instantiates an Object using a Prefab
      * @param prefab The model for the object to instantiate
      * @param x The x position of the object
      * @param y The y position of the object
@@ -52,6 +52,13 @@ export class Scene {
         obj.setScene(this);
         this.objects.push(obj);
         return obj;
+    }
+
+    /**
+     * @brief Adds an object to this scene
+     */
+    public addObject(object: GameObject) {
+        this.objects.push(object);
     }
 
     /**
