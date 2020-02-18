@@ -1,9 +1,10 @@
 import { Prefab } from "../../engine/prefab";
-import { SpinnyDisplay, SpinnyBehaviour, WigglyDisplay, WigglyBehaviour, FPSMetterDisplay } from "../components/debugComponents";
+import { SpinnyDisplay, SpinnyBehaviour, WigglyDisplay, WigglyBehaviour, FPSMetterDisplay, ImageDisplay } from "../components/debugComponents";
 import { Alignment, Style } from "../../engine/utils/textFormat";
 import { Scene } from "../../engine/scene";
+import { Assets } from "../../utils";
 
-export { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter };
+export { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image };
 
 const wigglyThingy = new Prefab(obj => {
     obj.setDisplayComponent(new WigglyDisplay(obj, "#008000", 100, 55));
@@ -27,6 +28,11 @@ const funnyFPSMetter = new Prefab(obj => {
 const hilariousFPSMetter = new Prefab(obj => {
     obj.setDisplayComponent(new FPSMetterDisplay(obj, Alignment.Right, Style.Stroke));
     obj.setBehaviourComponent(new SpinnyBehaviour(obj, 0.01));
+});
+
+const image = new Prefab(obj => {
+    obj.setDisplayComponent(new ImageDisplay(obj, Assets.get(Assets.LEVELS_ICON)));
+    obj.setBehaviourComponent(new WigglyBehaviour(obj, 0.01));
 });
 
 /*

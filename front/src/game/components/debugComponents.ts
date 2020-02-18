@@ -1,6 +1,7 @@
 import { Display, Behaviour } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { TextFormat, Alignment, Style } from "../../engine/utils/textFormat";
+import { Sprite } from "../../engine/utils/spritesheet";
 
 export class WigglyBehaviour extends Behaviour {
     public rotation: number;
@@ -105,5 +106,18 @@ export class FPSMetterDisplay extends Display {
         let frameTxt = `Current frame: ${tick}`;
         let timeTxt = `Frame time: ${ftime}ms (${(1000 / ftime).toFixed(1)} fps)`;
         this.format.drawText(ctx, [frameTxt, timeTxt]);
+    }
+}
+
+export class ImageDisplay extends Display {
+    private sprite: Sprite;
+
+    constructor(o: GameObject, image: HTMLImageElement) {
+        super(o);
+        this.sprite = Sprite.fromSource(image);
+    }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        this.sprite.draw(ctx);
     }
 }
