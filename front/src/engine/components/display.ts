@@ -14,5 +14,4 @@ export class Display extends ObjectComponent {
     public update(): void {}
 
     public draw(ctx: CanvasRenderingContext2D): void {}
-    
 }
