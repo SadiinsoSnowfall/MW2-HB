@@ -2,7 +2,7 @@ import { Display, Behaviour } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { TextFormat, Alignment, Style } from "../../engine/utils/textFormat";
 import { Spritesheet, Sprite } from "../../engine/utils/spritesheet";
-import { Assets } from "../../utils";
+import { Assets, randomIn } from "../../utils";
 
 export class WigglyBehaviour extends Behaviour {
     public rotation: number;
@@ -136,6 +136,29 @@ export class SpriteDisplay extends Display {
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
+        this.sprite.draw(ctx);
+    }
+}
+
+export class YoloSpritesheetDisplay extends Display {
+    private sheet: Spritesheet;
+    private index: number;
+    private sprite: Sprite;
+
+    constructor(o: GameObject) {
+        super(o);
+        this.sheet = new Spritesheet(Assets.get(Assets.PLANKS_LONG), 1, 12);
+        this.index = randomIn(0, this.sheet.spriteCount());
+        this.sprite = this.sheet.getSpriteAbsolute(this.index);
+    }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        let tick = this.object?.scene()?.tick() || -1;
+        if (tick % 20 == 0) {
+            this.index = (this.index + 1) % this.sheet.spriteCount();
+            this.sprite = this.sheet.getSpriteAbsolute(this.index);
+        }
+        ctx.scale(2, 2);
         this.sprite.draw(ctx);
     }
 }

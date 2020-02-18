@@ -3,10 +3,11 @@ import './assets/stylesheets/styles.scss';
 import { screen } from './screen';
 import { Transform, Vec2 } from './engine/utils/transform';
 import { Scene } from './engine/scene';
-import { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, sprite, createWiggly } from './game/prefabs/debugPrefabs';
+import { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, sprite, createWiggly, yoloSprite } from './game/prefabs/debugPrefabs';
 import { Assets } from './utils';
 
 async function game() {
+    await Assets.load();
     console.log(screen.width + " " + screen.height);
 
     const ctx = screen.getContext();
@@ -30,7 +31,13 @@ async function game() {
     scene.instantiate(spinnyThingy, 300, 350);
     scene.instantiate(FPSMetter, 800, 100);
     scene.instantiate(funnyFPSMetter, 800, 400);
-    //scene.instantiate(hilariousFPSMetter, 300, 500);
+    scene.instantiate(hilariousFPSMetter, 300, 500);
+
+    scene.instantiate(yoloSprite, 500, 500);
+    scene.instantiate(yoloSprite, 550, 550);
+    scene.instantiate(yoloSprite, 600, 600);
+    scene.instantiate(yoloSprite, 650, 650);
+
     screen.setScene(scene);
 
     let m = Transform.Identity;

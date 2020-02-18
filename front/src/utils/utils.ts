@@ -50,3 +50,10 @@ export function assert(value: unknown, msg: string = "[no_err_msg]"): void {
         throw new Error('Assertion failed: ' + msg);
     }
 }
+
+/**
+ * Return a random value between $min and $max
+ */
+export function randomIn(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}

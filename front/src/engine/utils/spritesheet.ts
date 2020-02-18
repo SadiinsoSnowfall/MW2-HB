@@ -7,6 +7,8 @@ export class Spritesheet {
     private readonly image: HTMLImageElement;
     private readonly divh: number;
     private readonly divv: number;
+    private readonly sH: number; // sprite height
+    private readonly sW: number; // sprite width
 
     /**
      * @brief Constructs a spritesheet.
@@ -21,6 +23,8 @@ export class Spritesheet {
         this.image = image;
         this.divh = horizontalDivisions;
         this.divv = verticalDivisions;
+        this.sH = this.image.height / this.divv;
+        this.sW = this.image.width / this.divh;
     }
 
     /**
@@ -30,13 +34,40 @@ export class Spritesheet {
         return this.image;
     }
 
+    /**
+     * @brif Returns the number of horizontal divisions
+     */
+    public hDiv(): number {
+        return this.divh;
+    }
+
+    /**
+     * @brif Returns the number of vertical divisions
+     */
+    public vDiv(): number {
+        return this.divv;
+    }
+
+    /**
+     * @brief Returns the number of sprites on this spritesheet
+     */
+    public spriteCount(): number {
+        return this.divh * this.divv;
+    }
+    
+    /**
+     * Return the sprite at the given index
+     * @param index The sprite index
+     */
+    public getSpriteAbsolute(index: number): Sprite {
+        return this.getSprite(index % this.divh, Math.floor(index / this.divh));
+    }
+
     /** 
      * @brief Returns the sprite at the given position.
      */
     public getSprite(x: number, y: number): Sprite {
-        let w = this.image.width / this.divh;
-        let h = this.image.height / this.divv;
-        return new Sprite(this.image, w * x, h * y, w, h);
+        return new Sprite(this.image, this.sW * x, this.sH * y, this.sW, this.sH);
     }
 }
 
