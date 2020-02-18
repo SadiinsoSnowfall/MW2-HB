@@ -40,7 +40,6 @@ def flood_query(im, h, w, y, x):
     return (mi, pmin, pmax, size) # return the part mask, size and bounding box
     
 def analyze(im):
-    global yolo
     h = im.shape[0]
     w = im.shape[1]
     parts = []
@@ -80,7 +79,7 @@ sprites = analyze(np.copy(im))
 
 count = len(sprites)
 (mh, mw) = compute_bb(sprites)
-fh = mh * count
+fh = (mh + 1) * count
 fw = mw + 1
 
 print(f"Found {count} {mh}x{mw}px sprites")
