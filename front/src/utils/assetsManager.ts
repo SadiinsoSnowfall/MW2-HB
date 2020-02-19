@@ -5,7 +5,11 @@ export class Assets {
     private static assets = new Map<string, HTMLImageElement>(); 
 
     static readonly LEVELS_ICON = require('assets/images/levels_icon.png').default as string
-    static readonly PLANKS_LONG = require('assets/images/planks_long.png').default as string
+    static readonly BALLS = require('assets/images/balls.png').default as string
+    static readonly CUBES = require('assets/images/cubes.png').default as string
+    static readonly TRIS = require('assets/images/tris.png').default as string
+    static readonly FAT_PLANKS = require('assets/images/large_planks.png').default as string
+    static readonly PLANKS_XL = require('assets/images/planks_xl.png').default as string
 
     public static get(url: string): HTMLImageElement {
         return Assets.assets.get(url) as HTMLImageElement;
@@ -17,7 +21,11 @@ export class Assets {
 
         return Promise.all([
             this.LEVELS_ICON,
-            this.PLANKS_LONG,
+            this.BALLS,
+            this.CUBES,
+            this.TRIS,
+            this.FAT_PLANKS,
+            this.PLANKS_XL,
         ].map(this.loadImage));
     }
 
