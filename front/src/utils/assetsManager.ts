@@ -10,6 +10,10 @@ export class Assets {
     static readonly TRIS = require('assets/images/tris.png').default as string
     static readonly FAT_PLANKS = require('assets/images/large_planks.png').default as string
     static readonly PLANKS_XL = require('assets/images/planks_xl.png').default as string
+    static readonly PLANKS_LG = require('assets/images/planks_lg.png').default as string
+    static readonly PLANKS_MD = require('assets/images/planks_md.png').default as string
+    static readonly PLANKS_SM = require('assets/images/planks_sm.png').default as string
+    static readonly PLANKS_XS = require('assets/images/planks_xs.png').default as string
 
     public static get(url: string): HTMLImageElement {
         return Assets.assets.get(url) as HTMLImageElement;
@@ -26,6 +30,10 @@ export class Assets {
             this.TRIS,
             this.FAT_PLANKS,
             this.PLANKS_XL,
+            this.PLANKS_LG,
+            this.PLANKS_MD,
+            this.PLANKS_SM,
+            this.PLANKS_XS,
         ].map(this.loadImage));
     }
 
