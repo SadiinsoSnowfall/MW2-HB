@@ -58,6 +58,7 @@ export class Scene {
      * @brief Adds an object to this scene
      */
     public addObject(object: GameObject) {
+        object.setScene(this);
         this.objects.push(object);
     }
 
@@ -66,7 +67,7 @@ export class Scene {
      * @param ctx The context from the canvas the scene must be drawn on.
      */
     public draw(ctx: CanvasRenderingContext2D): void {
-        for (let o of this.objects) {
+        for (const o of this.objects) {
             o.draw(ctx);
         }
     }
@@ -76,7 +77,7 @@ export class Scene {
      * @returns The next scene to update and display (usually, itself)
      */
     public update(): Scene {
-        for (let o of this.objects) {
+        for (const o of this.objects) {
             o.update();
         }
         return this;
