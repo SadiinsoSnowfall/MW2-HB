@@ -107,9 +107,12 @@ export class FPSMetterDisplay extends Display {
     public draw(ctx: CanvasRenderingContext2D): void {
         let tick = this.object?.scene()?.tick() || -1;
         let ftime = this.object?.scene()?.framerate() || -666;
+        let rtime = this.object?.scene()?.realFramerate() || -666;
+
         let frameTxt = `Current frame: ${tick}`;
         let timeTxt = `Frame time: ${ftime.toFixed(2)}ms (${(1000 / ftime).toFixed(1)} fps)`;
-        this.format.drawText(ctx, [frameTxt, timeTxt]);
+        let rtimeTxt = `Real: ${rtime.toFixed(2)}ms (${(1000 / rtime).toFixed(1)} fps)`;
+        this.format.drawText(ctx, [frameTxt, timeTxt, rtimeTxt]);
     }
 }
 

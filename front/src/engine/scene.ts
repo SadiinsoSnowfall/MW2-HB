@@ -41,6 +41,14 @@ export class Scene {
     }
 
     /**
+     * @brief Shortcut for screen().realFramerate()
+     * @returns The current framerate excluding vsync or -1 if the scene is not rendered
+     */
+    public realFramerate(): number {
+        return this._screen?.realFramerate() || -1;
+    }
+
+    /**
      * @brief Instantiates an Object using a Prefab
      * @param prefab The model for the object to instantiate
      * @param x The x position of the object

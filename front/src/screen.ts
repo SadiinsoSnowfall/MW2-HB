@@ -1,6 +1,5 @@
 import { Scene } from "./engine/scene";
 
-
 export class CScreen {
     private static readonly AVG_FRAMETIME_COUNT = 15;
 
@@ -15,6 +14,9 @@ export class CScreen {
     private _frame: number;
     private _frameTime: number;
     private _lastrefresh: number;
+    
+    private _rft: number; // real frame time
+    private _rft_accumulator: number;
 
     constructor(canvas: HTMLCanvasElement, height: number, AR: number) {
         this.canvas = canvas;
@@ -29,15 +31,22 @@ export class CScreen {
         this.height = this.canvas.height = height;
 
         // Starts game loop
-        this._frame = this._frameTime = this._lastrefresh = 0;
+        this._frame = this._frameTime = this._lastrefresh = this._rft = this._rft_accumulator = 0;
         let _this = this;
         let updater = function() {
+            let tmp = Date.now();
             _this.scene = _this.scene?.update();
             _this.draw();
+            _this._rft_accumulator += (Date.now() - tmp);
             
             if (_this._frame % CScreen.AVG_FRAMETIME_COUNT == 0) {
+                // update frametime
                 _this._frameTime = (Date.now() - _this._lastrefresh) / CScreen.AVG_FRAMETIME_COUNT;
                 _this._lastrefresh = Date.now();
+
+                // update real frametime
+                _this._rft = _this._rft_accumulator / CScreen.AVG_FRAMETIME_COUNT;
+                _this._rft_accumulator = 0;
             }
             requestAnimationFrame(updater);
         };
@@ -78,6 +87,14 @@ export class CScreen {
      */
     public framerate(): number {
         return this._frameTime;
+    }
+
+    /**
+     * The current time it take for the scene to be rendered excluding Vsync
+     * (updated every 15 frames)
+     */
+    public realFramerate(): number {
+        return this._rft;
     }
 
     public draw(): void {
