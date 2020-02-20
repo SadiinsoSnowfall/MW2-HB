@@ -97,7 +97,7 @@ export class Transform {
     }
 
     public toString(): string {
-        return `${this.m11} ${this.m21} ${this.m31}\n${this.m12} ${this.m22} ${this.m32}\n0 0 1`;
+        return `${this.m11}\t${this.m21}\t${this.m31}\n${this.m12}\t${this.m22}\${this.m32}\n0\t0\t1`;
     }
 
     /**********************************************************************************************
@@ -173,7 +173,7 @@ export class Transform {
     }
 
     /**
-     * Scales the matrix.
+     * @brief Scales the matrix.
      * @param x Factor alongside the x axis
      * @param y Factor alongside the y axis
      */

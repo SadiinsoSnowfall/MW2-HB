@@ -134,20 +134,33 @@ export class GameObject {
     /**
      * @brief Scales the object.
      * 1. is the neutral value for both parameters.
-     * @todo Determine if putting negative values flips the object
+     * Negative values will flip the object in the corresponding axis.
      */
     public scale(x: number, y: number): void {
         this.transform = this.transform.scale(x, y);
     }
 
+    /**
+     * @brief Rotates the object.
+     * @param angle The angle, in radians.
+     * @see rotateDegrees
+     */
     public rotateRadians(angle: number): void {
         this.transform = this.transform.rotateRadians(angle);
     }
 
+    /**
+     * @brief Rotates the object.
+     * @param angle The angle, in degrees.
+     * @see rotateRadians, 
+     */
     public rotateDegrees(angle: number): void {
         this.transform = this.transform.rotateDegrees(angle);
     }
 
+    /**
+     * @brief Slants the object.
+     */
     public shear(x: number, y: number): void {
         this.transform = this.transform.shear(x, y);
     }

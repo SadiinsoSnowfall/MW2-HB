@@ -86,7 +86,7 @@ async function game() {
     console.log(rect2.getTransform());
     console.log(rect2.getScale());
     rect2.scale(2, 0.5);
-    rect2.shear(0.25, 0);
+    //rect2.shear(0.25, 0);
     console.log(rect2.getTransform());
     console.log(rect2.getScale());
     rect2.setDisplayComponent(new SpinnyDisplay(rect2, "#000000", 50));
