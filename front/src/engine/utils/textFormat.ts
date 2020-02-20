@@ -12,25 +12,56 @@ export enum Style {
     //FillAndStroke // requires two distinct attributes fill and stroke instead of just color
 }
 
+/**
+ * @brief A class for formatting and displaying text.
+ */
 export class TextFormat {
     private font: string;
+    private size: number;
+    private fontStr: string;
     private color: string;
     private interline: number;
     private alignment: Alignment;
     private style: Style;
 
-    public static readonly Standard = Object.freeze(new TextFormat("48px sans", 10, Alignment.Centered));
+    public static readonly Standard = Object.freeze(new TextFormat("sans", 48, 1, Alignment.Left));
 
-    constructor(font: string, interline: number, alignment: Alignment, color: string = "#000000", style: Style = Style.Fill) {
+    /**
+     * @brief Constructs a new TextFormat.
+     * @param font Font name.
+     * @param size Size, in pixels.
+     * @param interline Number of pixels between each line
+     * @param alignment Either Left, Right or Centered.
+     * @param color Either the fill or stroke color, depending on style.
+     * @param style Either Fill or Stroke.
+     * Note: size and interline actually translate to pixels in 1:1 when the Transform used when drawing
+     * has no scale or rotation.
+     */
+    constructor(font: string, size: number, interline: number, alignment: Alignment, color: string = "#000000", style: Style = Style.Fill) {
         this.font = font;
+        this.size = size;
+        this.fontStr = "";
+        this.refreshFontStr();
         this.interline = interline;
         this.color = color
         this.alignment = alignment;
         this.style = style;
     }
 
+    /**
+     * @brief Returns a copy of this format.
+     */
     public copy(): TextFormat {
-        return new TextFormat(this.font, this.interline, this.alignment, this.color, this.style);
+        return new TextFormat(this.font, this.size, this.interline, this.alignment, this.color, this.style);
+    }
+
+    public getSize(): number {
+        return this.size;
+    }
+
+    public setSize(size: number): void {
+        this.size = size;
+        this.refreshFontStr();
     }
 
     public getFont(): string {
@@ -39,6 +70,7 @@ export class TextFormat {
 
     public setFont(font: string): void {
         this.font = font;
+        this.refreshFontStr();
     }
 
     public getColor(): string {
@@ -73,8 +105,12 @@ export class TextFormat {
         this.style = style;
     }
 
+    private refreshFontStr(): void {
+        this.fontStr = `${this.size}px ${this.font}`;
+    }
+
     private applyTo(ctx: CanvasRenderingContext2D): void {
-        ctx.font = this.font;
+        ctx.font = this.fontStr;
         switch (this.style) {
             case Style.Fill:
                 ctx.fillStyle = this.color;
@@ -114,14 +150,19 @@ export class TextFormat {
      * @param lines Lines to be drawn
      */
     public measureLines(ctx: CanvasRenderingContext2D, lines: string[]): Vec2 {
+        // Commented: old version (lines with different height)
+        // New version: lines with same height
         this.applyTo(ctx);
         let r = new Vec2(0, 0);
         for (let line of lines) {
-            let dim = TextFormat._measureLine(ctx, line);
+            /*let dim = TextFormat._measureLine(ctx, line);
             r.x = Math.max(r.x, dim.x);
-            r.y += dim.y;
+            r.y += dim.y;*/
+            let w = ctx.measureText(line).width;
+            r.x = Math.max(r.x, w);
         }
-        r.y += (lines.length - 1) * this.interline;
+        //r.y += (lines.length - 1) * this.interline;
+        r.y = lines.length * this.size + (lines.length - 1) * this.interline;
         return r;
     }
 
@@ -133,10 +174,13 @@ export class TextFormat {
      * (0, 0) is relative to the current transform. Call ctx.translate() if you want to alter the position.
      */
     public drawText(ctx: CanvasRenderingContext2D, lines: string[], maxLength: number = Infinity): void {
+        // Commented: old version with lines of different height
+        // New version: lines with same height
+        // The following line is shared
         this.applyTo(ctx);
 
         // Computing dimensions
-        let globalDim = new Vec2(0, 0);
+        /*let globalDim = new Vec2(0, 0);
         let lineDim: Vec2[] = [];
         for (const line of lines) {
             let dim = TextFormat._measureLine(ctx, line);
@@ -192,7 +236,64 @@ export class TextFormat {
             }
 
             y += dim.y + this.interline;
+        }*/
+
+        // New version
+        let globalDim = new Vec2(0, 0);
+        let lineWidth: number[] = [];
+        for (const line of lines) {
+            let w = ctx.measureText(line).width;
+            globalDim.x = Math.max(globalDim.x, w);
+            lineWidth.push(w);
+        }
+        globalDim.x = Math.min(globalDim.x, maxLength);
+        globalDim.y = lines.length * this.size + (lines.length - 1) * this.interline;
+
+        // Drawing
+        let y = -globalDim.y / 2;
+        for (let i: number = 0; i < lines.length; i++) {
+            let line = lines[i];
+            let w = lineWidth[i];
+            let x = 0;
+            switch (this.alignment) {
+                case Alignment.Left:
+                    x = -globalDim.x / 2;
+                    break;
+
+                case Alignment.Right:
+                    x = globalDim.x / 2 - w;
+                    break;
+
+                case Alignment.Centered:
+                    x = -Math.min(w, maxLength) / 2;
+                    break;
+
+                default:
+                    throw new Error("TextFormat#drawText: unknown alignment");
+            }
+
+            switch (this.style) {
+                case Style.Fill:
+                    if (maxLength == Infinity) {
+                        ctx.fillText(line, x, y);
+                    } else {
+                        ctx.fillText(line, x, y, maxLength);
+                    }
+                    break;
+                
+                case Style.Stroke:
+                    if (maxLength == Infinity) {
+                        ctx.strokeText(line, x, y);
+                    } else {
+                        ctx.strokeText(line, x, y, maxLength);
+                    }
+                    break;
+
+                default:
+                    throw new Error("TextFormat#drawText: unknown style");
+            }
+
+            y += this.size + this.interline;
         }
     }
-
 }
