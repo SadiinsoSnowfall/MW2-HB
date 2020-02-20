@@ -105,7 +105,7 @@ export class FPSMetterDisplay extends Display {
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
-        let tick = this.object?.scene()?.tick() || -1;
+        let tick = this.tick() || -1;
         let ftime = this.object?.scene()?.framerate() || -666;
         let rtime = this.object?.scene()?.realFramerate() || -666;
 
@@ -147,21 +147,49 @@ export class YoloSpritesheetDisplay extends Display {
     private sheet: Spritesheet;
     private index: number;
     private sprite: Sprite;
+    private from: number;
+    private to: number;
 
-    constructor(o: GameObject) {
+    constructor(o: GameObject, sheet: Spritesheet, from: number, to: number) {
         super(o);
-        this.sheet = new Spritesheet(Assets.get(Assets.PLANKS_LONG), 1, 12);
-        this.index = randomIn(0, this.sheet.spriteCount());
+        this.sheet = sheet;
+        this.from = from;
+        this.to = to;
+        this.index = randomIn(from, to);
         this.sprite = this.sheet.getSpriteAbsolute(this.index);
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
-        let tick = this.object?.scene()?.tick() || -1;
-        if (tick % 20 == 0) {
-            this.index = (this.index + 1) % this.sheet.spriteCount();
+        if (this.tick() % 20 == 0) {
+            this.index = ((this.index + 1) % (this.to - this.from + 1)) + this.from;
             this.sprite = this.sheet.getSpriteAbsolute(this.index);
         }
         ctx.scale(2, 2);
         this.sprite.draw(ctx);
+    }
+}
+
+export class CircleBehaviour extends Display {
+    private radius: number;
+    private shearFactor: number;
+
+    constructor(o: GameObject, radius: number) {
+        super(o);
+        this.radius = radius;
+        this.shearFactor = 0.01;
+    }
+
+    public update(): void {
+        let tick = this.tick();
+        if (tick % 15 == 0) {
+            this.shearFactor *= -1;
+        }
+
+        let angle = (2 * Math.PI) / 5;
+        this.object.move(Math.tan(angle) * this.radius, Math.tan(angle) * this.radius);
+        
+        this.object.rotateDegrees(1);
+        this.object.scale(1 + this.shearFactor, 1 - this.shearFactor);
+        this.object.shear(this.shearFactor, this.shearFactor);
     }
 }
