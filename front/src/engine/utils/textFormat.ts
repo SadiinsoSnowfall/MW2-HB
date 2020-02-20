@@ -34,7 +34,7 @@ export class TextFormat {
      * @param alignment Either Left, Right or Centered.
      * @param color Either the fill or stroke color, depending on style.
      * @param style Either Fill or Stroke.
-     * Note: size and interline actually translate to pixels in 1:1 when the Transform used when drawing
+     * Note: size and interline actually translate to pixels in 1:1 only when the Transform used when drawing
      * has no scale or rotation.
      */
     constructor(font: string, size: number, interline: number, alignment: Alignment, color: string = "#000000", style: Style = Style.Fill) {
@@ -109,7 +109,12 @@ export class TextFormat {
         this.fontStr = `${this.size}px ${this.font}`;
     }
 
-    private applyTo(ctx: CanvasRenderingContext2D): void {
+    /**
+     * @brief Applies the format to ctx.
+     * You should not have to call this method yourself:
+     * it is automatically performed whenever text is drawn
+     */
+    public applyTo(ctx: CanvasRenderingContext2D): void {
         ctx.font = this.fontStr;
         switch (this.style) {
             case Style.Fill:
@@ -121,27 +126,8 @@ export class TextFormat {
                 break;
 
             default:
-                throw new Error("TextFormat#apply: unknown style");
+                throw new Error("TextFormat#applyTo: unknown style");
         }
-    }
-
-    private static _measureLine(ctx: CanvasRenderingContext2D, line: string): Vec2 {
-        // https://stackoverflow.com/questions/1134586/how-can-you-find-the-height-of-text-on-an-html-canvas
-        let metrics = ctx.measureText(line);
-        let actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
-        return new Vec2(metrics.width, actualHeight);
-    }
-
-    /**
-     * @brief Returns the width and height of the given line if it were drawn on ctx with this format.
-     * @param ctx The context to draw on
-     * @param line The text to be drawn
-     * This function makes use of advanced support of TextMetrics, and is as of now (17/02/2020)
-     * the sole reason why Firefox isn't supported.
-     */
-    public measureLine(ctx: CanvasRenderingContext2D, line: string): Vec2 {
-        this.applyTo(ctx);
-        return TextFormat._measureLine(ctx, line);
     }
 
     /**
@@ -150,18 +136,12 @@ export class TextFormat {
      * @param lines Lines to be drawn
      */
     public measureLines(ctx: CanvasRenderingContext2D, lines: string[]): Vec2 {
-        // Commented: old version (lines with different height)
-        // New version: lines with same height
         this.applyTo(ctx);
         let r = new Vec2(0, 0);
         for (let line of lines) {
-            /*let dim = TextFormat._measureLine(ctx, line);
-            r.x = Math.max(r.x, dim.x);
-            r.y += dim.y;*/
             let w = ctx.measureText(line).width;
             r.x = Math.max(r.x, w);
         }
-        //r.y += (lines.length - 1) * this.interline;
         r.y = lines.length * this.size + (lines.length - 1) * this.interline;
         return r;
     }
@@ -174,126 +154,189 @@ export class TextFormat {
      * (0, 0) is relative to the current transform. Call ctx.translate() if you want to alter the position.
      */
     public drawText(ctx: CanvasRenderingContext2D, lines: string[], maxLength: number = Infinity): void {
-        // Commented: old version with lines of different height
-        // New version: lines with same height
-        // The following line is shared
         this.applyTo(ctx);
 
         // Computing dimensions
-        /*let globalDim = new Vec2(0, 0);
-        let lineDim: Vec2[] = [];
-        for (const line of lines) {
-            let dim = TextFormat._measureLine(ctx, line);
-            globalDim.x = Math.max(globalDim.x, dim.x);
-            globalDim.y += dim.y;
-            lineDim.push(dim);
-        }
-        globalDim.x = Math.min(globalDim.x, maxLength);
-        globalDim.y += (lines.length - 1) * this.interline;
-
-        // Drawing
-        let y = -globalDim.y / 2;
-        for (let i: number = 0; i < lines.length; i++) {
-            let line = lines[i];
-            let dim = lineDim[i];
-            let x = 0;
-            switch (this.alignment) {
-                case Alignment.Left:
-                    x = -globalDim.x / 2;
-                    break;
-
-                case Alignment.Right:
-                    x = globalDim.x / 2 - dim.x;
-                    break;
-
-                case Alignment.Centered:
-                    x = -Math.min(dim.x, maxLength) / 2;
-                    break;
-
-                default:
-                    throw new Error("TextFormat#drawText: unknown alignment");
-            }
-
-            switch (this.style) {
-                case Style.Fill:
-                    if (maxLength == Infinity) {
-                        ctx.fillText(line, x, y);
-                    } else {
-                        ctx.fillText(line, x, y, maxLength);
-                    }
-                    break;
-                
-                case Style.Stroke:
-                    if (maxLength == Infinity) {
-                        ctx.strokeText(line, x, y);
-                    } else {
-                        ctx.strokeText(line, x, y, maxLength);
-                    }
-                    break;
-
-                default:
-                     throw new Error("TextFormat#drawText: unknown style");
-            }
-
-            y += dim.y + this.interline;
-        }*/
-
-        // New version
-        let globalDim = new Vec2(0, 0);
-        let lineWidth: number[] = [];
+        let width = 0;
+        let lines2: any[] = [];
         for (const line of lines) {
             let w = ctx.measureText(line).width;
-            globalDim.x = Math.max(globalDim.x, w);
-            lineWidth.push(w);
+            width = Math.max(width, w);
+            lines2.push({
+                current: line,
+                width: w
+            });
         }
-        globalDim.x = Math.min(globalDim.x, maxLength);
-        globalDim.y = lines.length * this.size + (lines.length - 1) * this.interline;
+        width = Math.min(width, maxLength);
+        let height = lines.length * this.size + (lines.length - 1) * this.interline;
 
         // Drawing
-        let y = -globalDim.y / 2;
-        for (let i: number = 0; i < lines.length; i++) {
-            let line = lines[i];
-            let w = lineWidth[i];
-            let x = 0;
-            switch (this.alignment) {
-                case Alignment.Left:
-                    x = -globalDim.x / 2;
-                    break;
+        drawText(ctx, this, lines2, width, height, maxLength);
+    }
+}
 
-                case Alignment.Right:
-                    x = globalDim.x / 2 - w;
-                    break;
+// Unexposed function
+// lines: array of objects with at least two properties, current (text to display) and width (width of said text)
+function drawText(ctx: CanvasRenderingContext2D, format: TextFormat, lines: any[], 
+        width: number, height: number, maxLength: number) {
 
-                case Alignment.Centered:
-                    x = -Math.min(w, maxLength) / 2;
-                    break;
+    let y = -height / 2;
+    for (const line of lines) {
+        let x = 0;
+        switch (format.getAlignment()) {
+            case Alignment.Left:
+                x = -width / 2;
+                break;
 
-                default:
-                    throw new Error("TextFormat#drawText: unknown alignment");
-            }
+            case Alignment.Right:
+                x = width / 2 - line.width;
+                break;
 
-            switch (this.style) {
-                case Style.Fill:
-                    if (maxLength == Infinity) {
-                        ctx.fillText(line, x, y);
-                    } else {
-                        ctx.fillText(line, x, y, maxLength);
-                    }
-                    break;
-                
-                case Style.Stroke:
-                    if (maxLength == Infinity) {
-                        ctx.strokeText(line, x, y);
-                    } else {
-                        ctx.strokeText(line, x, y, maxLength);
-                    }
-                    break;
+            case Alignment.Centered:
+                x = -Math.min(line.width, maxLength) / 2;
+                break;
 
-                default:
-                    throw new Error("TextFormat#drawText: unknown style");
-            }
-
-            y += this.size + this.interline;
+            default:
+                throw new Error("TextFormat#drawText: unknown alignment");
         }
+
+        switch (format.getStyle()) {
+            case Style.Fill:
+                if (maxLength == Infinity) {
+                    ctx.fillText(line.current, x, y);
+                } else {
+                    ctx.fillText(line.current, x, y, maxLength);
+                }
+                break;
+            
+            case Style.Stroke:
+                if (maxLength == Infinity) {
+                    ctx.strokeText(line.current, x, y);
+                } else {
+                    ctx.strokeText(line.current, x, y, maxLength);
+                }
+                break;
+
+            default:
+                throw new Error("TextFormat#drawText: unknown style");
+        }
+
+        y += format.getSize() + format.getInterline();
+    }
+}
+
+// Unexposed class
+class Line {
+    private text: string[];
+    private variables: number[];
+    // since the class is not exposed, it is safe to have public attributes
+    public current: string; 
+    public width: number;
+
+    constructor(text: string) {
+        this.variables = [];
+        this.text = [];
+
+        // Looking for variable slots
+        let results: RegExpExecArray | null;
+        let last = 0;
+        while ((results = Text.varRegExp.exec(text)) != null) {
+            this.variables.push(parseInt(results[1]));
+            this.text.push(text.slice(last, Text.varRegExp.lastIndex - results[0].length));
+            last = Text.varRegExp.lastIndex;
+        }
+        this.text.push(text.slice(last));
+
+        // Dummy values
+        this.current = "";
+        this.width = -1;
+    }
+
+    public refresh(ctx: CanvasRenderingContext2D, variables: any[]): void {
+        let current = this.text[0];
+        for (let i = 0; i < this.variables.length; i++) {
+            current += variables[this.variables[i]].toString() + this.text[i + 1]; 
+        }
+        if (current != this.current) {
+            this.current = current;
+            this.width = ctx.measureText(this.current).width;
+        }
+    }
+}
+
+/**
+ * @brief A class for text that do not change each frame, vastly more efficient than calling TextFormat#drawText each time.
+ * This class defines a concept of variable for parts of the text that can change.
+ * The syntax is ${n} where n is an integer. The variable is reset by calling refresh with an array 
+ * whose nth element is its new value.
+ */
+export class Text {
+    /**
+     * @brief The RegExp used for variables
+     */
+    public static readonly varRegExp: RegExp = /\$\{([0-9]+)\}/g;
+
+    private format: TextFormat;
+    private lines: Line[];
+    private maxLength: number;
+    private width: number;
+    private height: number;
+    
+    constructor(format: TextFormat, text: string[], maxLength: number = Infinity) {
+        // We have to copy since format could change otherwise,
+        // and we would need to refresh
+        this.format = format.copy();
+        this.maxLength = maxLength;
+
+        this.lines = [];
+        for (const t of text) {
+            // \n are also considered to be separators between lines
+            for (const line of t.split(/\n/)) {
+                this.lines.push(new Line(line));
+            }
+        }
+
+        this.width = -1; // Dummy value
+        this.height = this.lines.length * format.getSize() + (this.lines.length - 1) * format.getInterline();
+    }
+
+    /**
+     * @brief Returns whether or not the text has been initialized.
+     * If it is not, call refresh.
+     * @see refresh
+     */
+    public isInitialized(): boolean {
+        return this.width != -1;
+    }
+
+    /**
+     * @brief Returns the text that is currently displayed.
+     */
+    public toString(): string {
+        return this.lines.join("\n");
+    }
+
+    /**
+     * @brief Updates (or initializes) the variables.
+     * @param ctx Used for computing text width.
+     * @param variables The new values
+     */
+    public refresh(ctx: CanvasRenderingContext2D, variables: any[]): void {
+        this.format.applyTo(ctx);
+        this.width = 0;
+        for (let line of this.lines) {
+            line.refresh(ctx, variables);
+            this.width = Math.max(this.width, line.width);
+        }
+        this.width = Math.min(this.width, this.maxLength);
+    }
+
+    /**
+     * Draws the text centered on (x, y) (relative to the current transform).
+     * @param ctx Used for drawing
+     */
+    public draw(ctx: CanvasRenderingContext2D): void {
+        this.format.applyTo(ctx);
+        drawText(ctx, this.format, this.lines, this.width, this.height, this.maxLength);
     }
 }

@@ -50,7 +50,7 @@ async function game() {
 
     screen.setScene(scene);
 
-    let m = Transform.Identity;
+    /*let m = Transform.Identity;
     let angle = Math.PI / 2;
     console.log("expected rotation: " + angle);
     m = m.rotateRadians(angle);
@@ -90,7 +90,7 @@ async function game() {
     console.log(rect2.getTransform());
     console.log(rect2.getScale());
     rect2.setDisplayComponent(new SpinnyDisplay(rect2, "#000000", 50));
-    scene.addObject(rect2);
+    scene.addObject(rect2);*/
 
     // decomment this line
     //const music = AudioManager.loop(Sound.MAIN_REMIX, 0.1, 50, 70);

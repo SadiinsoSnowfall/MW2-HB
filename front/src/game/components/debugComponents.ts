@@ -1,6 +1,6 @@
 import { Display, Behaviour } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
-import { TextFormat, Alignment, Style } from "../../engine/utils/textFormat";
+import { TextFormat, Alignment, Style, Text } from "../../engine/utils/textFormat";
 import { Spritesheet, Sprite } from "../../engine/utils/spritesheet";
 import { Assets, randomIn, Img } from "../../utils";
 
@@ -91,7 +91,7 @@ export class SpinnyDisplay extends Display {
     }
 }
 
-export class FPSMetterDisplay extends Display {
+/*export class FPSMetterDisplay extends Display {
     private format: TextFormat;
 
     constructor(o: GameObject, a: Alignment, s: Style) {
@@ -105,11 +105,42 @@ export class FPSMetterDisplay extends Display {
         let tick = this.tick() || -1;
         let ftime = this.object?.scene()?.framerate() || -666;
         let rtime = this.object?.scene()?.realFramerate() || -666;
-
         let frameTxt = `Current frame: ${tick}`;
         let timeTxt = `Frame time: ${ftime.toFixed(2)}ms (${(1000 / ftime).toFixed(1)} fps)`;
         let rtimeTxt = `Real: ${rtime.toFixed(2)}ms (${(1000 / rtime).toFixed(1)} fps)`;
         this.format.drawText(ctx, [frameTxt, timeTxt, rtimeTxt]);
+    }
+}*/
+
+export class FPSMetterDisplay extends Display {
+    private text: Text;
+
+    constructor(o: GameObject, a: Alignment, s: Style) {
+        super(o);
+        let format = TextFormat.Standard.copy();
+        format.setAlignment(a);
+        format.setStyle(s);
+        this.text = new Text(format, [
+            "Current frame: ${0}",
+            "Frame time: ${1}ms (${2} fps)\nReal: ${3}ms (${4} fps)"
+        ]);
+    }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        let tick = this.tick() || -1;
+        if (!this.text.isInitialized() || tick % 15 == 0) {
+            let ftime = this.object?.scene()?.framerate() || -666;
+            let rtime = this.object?.scene()?.realFramerate() || -666;
+
+            this.text.refresh(ctx, [
+                tick,
+                ftime.toFixed(2),
+                (1000 / ftime).toFixed(1),
+                rtime.toFixed(2),
+                (1000 / rtime).toFixed(1)
+            ]);
+        }
+        this.text.draw(ctx);
     }
 }
 

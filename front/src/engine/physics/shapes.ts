@@ -104,12 +104,16 @@ export class Rectangle {
  * @brief Class specialized in convex polygons.
  */
 export class ConvexPolygon {
+    //private center: Vec2;
     private vertices: Vec2[];
 
     /**
-     * @brief Given a list of vertices given counterclockwise, constructs a polygon.
-     * No error is thrown if the vertices are not given in the right order,
-     * however the behavior of this class' methods are unspecified.
+     * @brief Given a center and a list of vertices given counterclockwise, constructs a polygon.
+     * @param center Center of the polygon
+     * @param vertices Vertices of the polygon, given 
+     * This constructor assumes that center is indeed the center of the polygon and that the points
+     * are given in the right order. If these conditions are not respected, no error will be thrown
+     * but the behaviour of this class' methods are unspecified.
      */
     constructor(vertices: Vec2[]) {
         assert(vertices.length >= 3, "ConvexPolygon#constructor: cannot make a polygone out of less than 3 vertices");
@@ -158,6 +162,13 @@ export class ConvexPolygon {
         return new Rectangle(new Vec2(xmin, ymin), xmax - xmin, ymax - ymin);
     }
 
+    public transform(t: Transform): ConvexPolygon {
+        let r: Vec2[] = [];
+        for (const p of this.vertices) {
+            r.push(t.multiplyVector(p));
+        }
+        return new ConvexPolygon(r);
+    }
 
     /**
      * @brief Returns null if this and other are not colliding.
