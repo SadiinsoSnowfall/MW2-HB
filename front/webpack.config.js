@@ -56,8 +56,12 @@ module.exports = {
                 loader: 'html-loader'
             },
             {
-                test: /\.(ogg)$/i,
+                test: /\.(ogg|mp3)$/i,
                 loader: 'file-loader',
+                options: {
+                    name: 'assets/[md5:hash:base64]',
+                    esModule: false,
+                },
             },
         ],
     },

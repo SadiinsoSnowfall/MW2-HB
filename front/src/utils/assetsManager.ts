@@ -2,11 +2,11 @@ import { assert } from "./";
 
 export class Assets {
     private static assetsLoaded: boolean = false;
-    private static assets = new Map<string, HTMLImageElement>(); 
+    private static imgs = new Map<string, HTMLImageElement>();
 
-    public static get(img: string): HTMLImageElement {
-        const res = Assets.assets.get(img);
-        assert(res !== undefined, 'Assets#get undefined ressource ');
+    public static img(img: string): HTMLImageElement {
+        const res = Assets.imgs.get(img);
+        assert(res !== undefined, 'Assets#img undefined ressource');
         return res as HTMLImageElement;
     }
 
@@ -18,9 +18,9 @@ export class Assets {
 
     private static loadImage(url: string): Promise<void> {
         return new Promise(resolve => {
-            let img = new Image();
+            const img = new Image();
             img.onload = () => {
-                Assets.assets.set(url, img);
+                Assets.imgs.set(url, img);
                 resolve();
             };
             img.src = url;
@@ -28,6 +28,10 @@ export class Assets {
     }
 
 }
+
+export const Sound = Object.freeze({
+    MAIN_REMIX: require('assets/music/SSvsAB_remix.ogg'),
+});
 
 export const Img = Object.freeze({
     LEVELS_ICON:  require('assets/images/levels_icon.png'),

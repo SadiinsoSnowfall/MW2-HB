@@ -134,7 +134,7 @@ export class SpriteDisplay extends Display {
 
     constructor(o: GameObject, x: number, y: number) {
         super(o);
-        let sheet = new Spritesheet(Assets.get(Img.LEVELS_ICON), 4, 3);
+        let sheet = new Spritesheet(Assets.img(Img.LEVELS_ICON), 4, 3);
         this.sprite = sheet.getSprite(x, y);
     }
 

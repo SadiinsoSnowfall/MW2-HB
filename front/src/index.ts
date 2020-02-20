@@ -4,9 +4,10 @@ import { screen } from './screen';
 import { Transform, Vec2 } from './engine/utils/transform';
 import { Scene } from './engine/scene';
 import { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, sprite, createWiggly, yoloSprite, dicedice } from './game/prefabs/debugPrefabs';
-import { Assets, sleep } from './utils';
+import { Assets, sleep, Sound } from './utils';
 import { GameObject } from './engine/gameObject';
 import { SpinnyDisplay } from './game/components/debugComponents';
+import { AudioManager } from './engine/AudioManager';
 
 async function game() {
     await Assets.load();
@@ -90,5 +91,8 @@ async function game() {
     console.log(rect2.getScale());
     rect2.setDisplayComponent(new SpinnyDisplay(rect2, "#000000", 50));
     scene.addObject(rect2);
+
+    // decomment this line
+    //const music = AudioManager.loop(Sound.MAIN_REMIX, 0.1, 50, 70);
 }
 game();
