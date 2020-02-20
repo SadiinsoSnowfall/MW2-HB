@@ -2,7 +2,8 @@ const webpack = require('webpack');
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const JavaScriptObfuscator = require('webpack-obfuscator');
+const JSObfuscator = require('webpack-obfuscator');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 const {
     NODE_ENV = 'production',
@@ -11,6 +12,7 @@ const {
 const devmode = NODE_ENV !== 'production';
 const mangle = process.env.MANGLE !== 'false';
 const obfuscate = false;
+const compress = false;
 
 module.exports = {
     entry: "./src/index.ts",
@@ -78,8 +80,8 @@ module.exports = {
         path: path.resolve(__dirname, './public'),
         filename: 'bundle.js',
     },
-    plugins: devmode || !obfuscate ? [] : [
-        new JavaScriptObfuscator ({
+    plugins: [
+        devmode || !obfuscate ? false : new JSObfuscator ({
             debugProtection: false,
             debugProtectionInterval: false,
             selfDefending: false,
@@ -87,8 +89,18 @@ module.exports = {
             stringArray: true,
             shuffleStringArray: true,
             stringArrayThreshold: 1.0,
+        }),
+        devmode || !compress ? false : new CompressionPlugin({
+            filename: '[path].br[query]',
+            algorithm: 'brotliCompress',
+            compressionOptions: { 
+                level: 11 
+            },
+            threshold: 10240, // only compress assets were size > 10KB
+            minRatio: 0.8, // only compress assets were compression_ratio > 0.8
+            deleteOriginalAssets: false,
         })
-    ],
+    ].filter(Boolean),
     optimization: {
         minimize: !devmode,
         minimizer: devmode ? [] : [
