@@ -2,7 +2,7 @@ import { Display, Behaviour } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { TextFormat, Alignment, Style } from "../../engine/utils/textFormat";
 import { Spritesheet, Sprite } from "../../engine/utils/spritesheet";
-import { Assets, randomIn } from "../../utils";
+import { Assets, randomIn, Img } from "../../utils";
 
 export class WigglyBehaviour extends Behaviour {
     public rotation: number;
@@ -134,7 +134,7 @@ export class SpriteDisplay extends Display {
 
     constructor(o: GameObject, x: number, y: number) {
         super(o);
-        let sheet = new Spritesheet(Assets.get(Assets.LEVELS_ICON), 4, 3);
+        let sheet = new Spritesheet(Assets.get(Img.LEVELS_ICON), 4, 3);
         this.sprite = sheet.getSprite(x, y);
     }
 

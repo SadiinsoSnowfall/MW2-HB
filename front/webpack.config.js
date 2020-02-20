@@ -9,6 +9,7 @@ const {
 } = process.env;
 
 const devmode = NODE_ENV !== 'production';
+const mangle = process.env.MANGLE !== 'false';
 const obfuscate = false;
 
 module.exports = {
@@ -44,7 +45,8 @@ module.exports = {
                 test: /\.(png|svg|jpe?g|gif)$/,
                 loader: 'file-loader',
                 options: {
-                    name: 'assets/[hash].[ext]',
+                    name: 'assets/[md5:hash:base64]',
+                    esModule: false,
                 },
             },
             {
@@ -96,7 +98,7 @@ module.exports = {
                 sourceMap: false,
                 terserOptions: {
                     ecma: 2018,
-                    mangle: {
+                    mangle: mangle ? {
                         eval: true,
                         toplevel: true,
                         keep_fnames: false,
@@ -118,7 +120,7 @@ module.exports = {
                                 'ideographicBaseline'
                             ]
                         }, // /!\ MAY CAUSE INSTABILITY /!\
-                    },
+                    } : false,
                     compress: {
                         passes: 3,
                         toplevel: true,
@@ -141,6 +143,9 @@ module.exports = {
                         unsafe_proto: true,
                         unsafe_regexp: true,
                         unsafe_undefined: true,
+                    },
+                    output: {
+                        beautify: !mangle
                     }
                 }
             }),

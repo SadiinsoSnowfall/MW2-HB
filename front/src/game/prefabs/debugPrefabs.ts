@@ -2,7 +2,7 @@ import { Prefab } from "../../engine/prefab";
 import { SpinnyDisplay, SpinnyBehaviour, WigglyDisplay, WigglyBehaviour, FPSMetterDisplay, ImageDisplay, SpriteDisplay, YoloSpritesheetDisplay, CircleBehaviour } from "../components/debugComponents";
 import { Alignment, Style } from "../../engine/utils/textFormat";
 import { Scene } from "../../engine/scene";
-import { Assets } from "../../utils";
+import { Assets, Img } from "../../utils";
 import { Spritesheet } from "../../engine/utils/spritesheet";
 
 export { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, sprite, yoloSprite, dicedice };
@@ -32,7 +32,7 @@ const hilariousFPSMetter = new Prefab(obj => {
 });
 
 const image = new Prefab(obj => {
-    obj.setDisplayComponent(new ImageDisplay(obj, Assets.get(Assets.LEVELS_ICON)));
+    obj.setDisplayComponent(new ImageDisplay(obj, Assets.get(Img.LEVELS_ICON)));
     obj.setBehaviourComponent(new WigglyBehaviour(obj, 0.01));
 });
 
@@ -42,12 +42,12 @@ const sprite = new Prefab(obj => {
 });
 
 const yoloSprite = new Prefab(obj => {
-    obj.setDisplayComponent(new YoloSpritesheetDisplay(obj, new Spritesheet(Assets.get(Assets.PLANKS_LG), 1, 24), 0, 23));
+    obj.setDisplayComponent(new YoloSpritesheetDisplay(obj, new Spritesheet(Assets.get(Img.PLANKS_LG), 1, 24), 0, 23));
     obj.setBehaviourComponent(new WigglyBehaviour(obj, -0.01));
 });
 
 const dicedice = new Prefab(obj => {
-    obj.setDisplayComponent(new YoloSpritesheetDisplay(obj, new Spritesheet(Assets.get(Assets.MISC_MD), 7, 3), 0, 5));
+    obj.setDisplayComponent(new YoloSpritesheetDisplay(obj, new Spritesheet(Assets.get(Img.MISC_MD), 7, 3), 0, 5));
     obj.setBehaviourComponent(new CircleBehaviour(obj, 1));
 });
 
