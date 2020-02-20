@@ -66,10 +66,7 @@ export class SpinnyBehaviour extends Behaviour {
     }
 
     public update(): void {
-        //this.object.scale(0.5, 2);
         this.object.rotateRadians(this.rotation);
-        //this.object.scale(2, 0.5);
-        //console.log(this.object.getScale());
     }
 }
 
@@ -175,7 +172,7 @@ export class CircleBehaviour extends Display {
 
     constructor(o: GameObject, radius: number) {
         super(o);
-        this.radius = radius;
+        this.radius = radius * 2;
         this.shearFactor = 0.01;
     }
 
@@ -186,7 +183,9 @@ export class CircleBehaviour extends Display {
         }
 
         let angle = (2 * Math.PI) / 5;
-        this.object.move(Math.tan(angle) * this.radius, Math.tan(angle) * this.radius);
+        //this.object.move(Math.tan(angle) * this.radius, Math.tan(angle) * this.radius);
+        //this.object.move(1, 1);
+        this.object.translate(this.radius, this.radius);
         
         this.object.rotateDegrees(1);
         this.object.scale(1 + this.shearFactor, 1 - this.shearFactor);

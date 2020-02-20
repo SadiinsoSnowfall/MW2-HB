@@ -32,6 +32,7 @@ const hilariousFPSMetter = new Prefab(obj => {
 });
 
 const image = new Prefab(obj => {
+    obj.scale(-1, 1);
     obj.setDisplayComponent(new ImageDisplay(obj, Assets.img(Img.LEVELS_ICON)));
     obj.setBehaviourComponent(new WigglyBehaviour(obj, 0.01));
 });

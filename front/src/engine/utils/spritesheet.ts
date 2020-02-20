@@ -18,7 +18,7 @@ export class Spritesheet {
      */
     constructor(image: HTMLImageElement, horizontalDivisions: number, verticalDivisions: number) {
         if (horizontalDivisions <= 0 || verticalDivisions <= 0) {
-            throw new Error("Spritesheet.constructor: invalid divisions (" + horizontalDivisions + ", " + verticalDivisions + ")");
+            throw new Error(`Spritesheet#constructor: invalid divisions (${horizontalDivisions}, ${verticalDivisions})`);
         }
         this.image = image;
         this.divh = horizontalDivisions;

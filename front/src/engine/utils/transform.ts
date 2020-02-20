@@ -97,8 +97,7 @@ export class Transform {
     }
 
     public toString(): string {
-        return this.m11 + " " + this.m21 + " " + this.m31 + "\n"
-            + this.m12 + " " + this.m22 + " " + this.m32 + "\n0 0 1";
+        return `${this.m11} ${this.m21} ${this.m31}\n${this.m12} ${this.m22} ${this.m32}\n0 0 1`;
     }
 
     /**********************************************************************************************
@@ -139,7 +138,21 @@ export class Transform {
      *********************************************************************************************/
 
     /**
-     * @brief Moves the matrix alongside the vector (x, y). 
+     * @brief Moves the matrix alongside the vector (x, y), without regards for the current rotation and scale.
+     * @see translate
+     */
+    public move(x: number, y: number): Transform {
+        return new Transform(
+            this.m11, this.m12,
+            this.m21, this.m22,
+            this.m31 + x, this.m32 + y
+        );
+    }
+
+    /**
+     * @brief Moves the matrix alongside the vector (x, y).
+     * Unlike move(), this method takes into consideration the current rotation.
+     * @see move
      */
     public translate(x: number, y: number): Transform {
         return new Transform(
@@ -202,6 +215,9 @@ export class Transform {
         return this.rotateRadians(Transform.degreesToRadians(angle));
     }
 
+    /**
+     * Slants the matrix alongside the x or y axis.
+     */
     public shear(x: number, y: number) {
         return new Transform(
             this.m11 + this.m21 * y,

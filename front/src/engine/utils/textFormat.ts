@@ -85,7 +85,7 @@ export class TextFormat {
                 break;
 
             default:
-                throw new Error("TextFormat.apply: unknown style");
+                throw new Error("TextFormat#apply: unknown style");
         }
     }
 
@@ -167,7 +167,7 @@ export class TextFormat {
                     break;
 
                 default:
-                    throw new Error("TextFormat.drawText: unknown alignment");
+                    throw new Error("TextFormat#drawText: unknown alignment");
             }
 
             switch (this.style) {
@@ -188,7 +188,7 @@ export class TextFormat {
                     break;
 
                 default:
-                     throw new Error("TextFormat.drawText: unknown style");
+                     throw new Error("TextFormat#drawText: unknown style");
             }
 
             y += dim.y + this.interline;

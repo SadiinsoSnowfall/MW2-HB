@@ -49,7 +49,7 @@ export class Vec2 {
     }
 
     /**
-     * Multiplies this vector components by thoses of another vector
+     * Multiplies this vector components by those of another vector
      */
     public scale(v: Vec2): void {
         this.x *= v.x;
@@ -57,7 +57,7 @@ export class Vec2 {
     }
 
     /**
-     * Divides this vector components by thoses of another vector
+     * Divides this vector components by those of another vector
      */
     public invScale(v: Vec2): void {
         this.x /= v.x;

@@ -114,15 +114,26 @@ export class GameObject {
         this.transform = Transform.Identity.center(v.x, v.y);
     }
 
+    /**
+     * @brief Moves the object without regards for its current rotation and scale.
+     * @see translate
+     */
     public move(x: number, y: number): void {
+        this.transform = this.transform.move(x, y);
+    }
+
+    /**
+     * @brief Moves the object relative to its current transform.
+     * If an object is perpetually rotating on itself, translating it with a vector of (1, 1)
+     * will make it run in circle, while with move, it would move straight.
+     */
+    public translate(x: number, y: number): void {
         this.transform = this.transform.translate(x, y);
     }
 
     /**
      * @brief Scales the object.
-     * @param x Horizontal scale 
-     * @param y Vertical scale
-     * 1. is the neutral value.
+     * 1. is the neutral value for both parameters.
      * @todo Determine if putting negative values flips the object
      */
     public scale(x: number, y: number): void {
