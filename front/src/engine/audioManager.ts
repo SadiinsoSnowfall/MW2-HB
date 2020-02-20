@@ -7,10 +7,11 @@ export class AudioManager {
      */
     private static readonly alwaysWatchTimeUpdate: boolean = false;
 
-    public static play(sound: string, volume: number = 1.0, from: number = 0, to?: number) {
+    public static play(sound: string, volume: number = 1.0, from: number = 0, to?: number): HTMLAudioElement {
         const audio = new Audio(AudioManager.buildURI(sound, from, to));
         audio.volume = volume;
         audio.play();
+        return audio;
     }
 
     public static loop(sound: string, volume: number = 1.0, from: number = 0, to?: number): HTMLAudioElement {
