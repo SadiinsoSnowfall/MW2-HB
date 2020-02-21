@@ -30,23 +30,28 @@ export class Assets {
 }
 
 export const Sound = Object.freeze({
+    MAIN: require('assets/music/title_theme.ogg'),
     MAIN_REMIX: require('assets/music/SSvsAB_remix.ogg'),
 });
 
 export const Img = Object.freeze({
-    LEVELS_ICON:  require('assets/images/levels_icon.png'),
-    MISC_MD:  require('assets/images/misc_md.png'),
-    MISC_LG:  require('assets/images/misc_lg.png'),
-    MISC_XL:  require('assets/images/misc_xl.png'),
-    MISC_XLV:  require('assets/images/misc_xlv.png'),
-    BALLS:  require('assets/images/balls.png'),
-    BALLS_SM:  require('assets/images/balls_sm.png'),
-    CUBES:  require('assets/images/cubes.png'),
-    TRIS:  require('assets/images/tris.png'),
-    FAT_PLANKS:  require('assets/images/large_planks.png'),
-    PLANKS_XL:  require('assets/images/planks_xl.png'),
-    PLANKS_LG:  require('assets/images/planks_lg.png'),
-    PLANKS_MD:  require('assets/images/planks_md.png'),
-    PLANKS_SM:  require('assets/images/planks_sm.png'),
-    PLANKS_XS:  require('assets/images/planks_xs.png'),
+    LEVELS_ICON: require('assets/images/levels_icon.png'),
+    MISC_MD: require('assets/images/misc_md.png'),
+    MISC_LG: require('assets/images/misc_lg.png'),
+    MISC_XL: require('assets/images/misc_xl.png'),
+    MISC_XLV: require('assets/images/misc_xlv.png'),
+    BALLS: require('assets/images/balls.png'),
+    BALLS_SM: require('assets/images/balls_sm.png'),
+    CUBES_MD: require('assets/images/cubes_md.png'),
+    CUBES_SM: require('assets/images/cubes_sm.png'),
+    CUBES_XS: require('assets/images/cubes_xs.png'),
+    CUBES_HOLLOW: require('assets/images/cubes_hollow.png'),
+    TRIS: require('assets/images/tris.png'),
+    TRIS_HOLLOW: require('assets/images/tris_hollow.png'),
+    FAT_PLANKS: require('assets/images/large_planks.png'),
+    PLANKS_XL: require('assets/images/planks_xl.png'),
+    PLANKS_LG: require('assets/images/planks_lg.png'),
+    PLANKS_MD: require('assets/images/planks_md.png'),
+    PLANKS_SM: require('assets/images/planks_sm.png'),
+    PLANKS_XS: require('assets/images/planks_xs.png'),
 });
