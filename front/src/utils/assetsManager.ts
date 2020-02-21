@@ -11,9 +11,9 @@ export class Assets {
     }
 
     public static load(): Promise<unknown> {
-        assert(this.assetsLoaded == false, "More than one call to Assets#load");
-        this.assetsLoaded = true;
-        return Promise.all(Object.values(Img).map(this.loadImage));
+        assert(Assets.assetsLoaded == false, "More than one call to Assets#load");
+        Assets.assetsLoaded = true;
+        return Promise.all(Object.values(Img).map(Assets.loadImage));
     }
 
     private static loadImage(url: string): Promise<void> {

@@ -8,8 +8,10 @@ import { Assets, sleep, Sound } from './utils';
 import { GameObject } from './engine/gameObject';
 import { SpinnyDisplay } from './game/components/debugComponents';
 import { AudioManager } from './engine/AudioManager';
+import { InputManager } from './utils/inputManager';
 
 async function game() {
+    InputManager.init();
     await Assets.load();
     console.log(screen.width + " " + screen.height);
 
@@ -32,7 +34,7 @@ async function game() {
     createWiggly(scene, 200, 200, "#800000", 0.05, 100, 25);
     createWiggly(scene, 500, 200, "#000080", 0.005, 100, 75);
     scene.instantiate(spinnyThingy, 300, 350);
-    scene.instantiate(FPSMetter, 800, 100);
+    scene.instantiate(FPSMetter, 800, 120);
     scene.instantiate(funnyFPSMetter, 800, 400);
     scene.instantiate(hilariousFPSMetter, 300, 500);
 

@@ -1,4 +1,5 @@
 import { Scene } from "./engine/scene";
+import { InputManager } from "./utils/inputManager";
 
 export class CScreen {
     private static readonly AVG_FRAMETIME_COUNT = 15;
@@ -6,17 +7,19 @@ export class CScreen {
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
     private scene?: Scene;
-    
+
     public readonly width: number;
     public readonly height: number;
     public readonly AR: number;
-    
-    private _frame: number;
-    private _frameTime: number;
-    private _lastrefresh: number;
-    
-    private _rft: number; // real frame time
-    private _rft_accumulator: number;
+
+    private frame: number;
+    private frameTime: number;
+    private lastrefresh: number;
+
+    private rft: number; // real frame time
+    private rft_accumulator: number;
+
+    private doUpdate: boolean = true;
 
     constructor(canvas: HTMLCanvasElement, height: number, AR: number) {
         this.canvas = canvas;
@@ -31,33 +34,50 @@ export class CScreen {
         this.height = this.canvas.height = height;
 
         // Starts game loop
-        this._frame = this._frameTime = this._lastrefresh = this._rft = this._rft_accumulator = 0;
-        let _this = this;
-        let updater = function() {
-            let tmp = Date.now();
-            _this.scene = _this.scene?.update();
-            _this.draw();
-            _this._rft_accumulator += (Date.now() - tmp);
-            
-            if (_this._frame % CScreen.AVG_FRAMETIME_COUNT == 0) {
-                // update frametime
-                _this._frameTime = (Date.now() - _this._lastrefresh) / CScreen.AVG_FRAMETIME_COUNT;
-                _this._lastrefresh = Date.now();
-
-                // update real frametime
-                _this._rft = _this._rft_accumulator / CScreen.AVG_FRAMETIME_COUNT;
-                _this._rft_accumulator = 0;
-            }
-            requestAnimationFrame(updater);
-        };
-        requestAnimationFrame(updater);
+        this.frame = this.frameTime = this.lastrefresh = this.rft = this.rft_accumulator = 0;
+        requestAnimationFrame(() => this.update());
 
         // add listener to switch the game in fullscreen mode
-        addEventListener("keydown", (e: KeyboardEvent) => {
-            if (e.key === 'Enter') {
-                this.canvas.requestFullscreen();
+        InputManager.subscribe('Enter', () => this.canvas.requestFullscreen());
+
+        // add listener to freeze / unfreeze the scene rendering
+        InputManager.subscribe(['Shift', 'Enter'], () => {
+            if(this.doUpdate = !this.doUpdate) {
+                requestAnimationFrame(() => this.update());
             }
         });
+    }
+
+    private update(): void {
+        if (this.doUpdate) {
+            requestAnimationFrame(() => this.update());
+        }
+
+        let updateBegin = performance.now();
+        this.scene = this.scene?.update();
+        this.draw();
+        let updateEnd = performance.now();
+        this.rft_accumulator += (updateEnd - updateBegin);
+
+        if (this.frame % CScreen.AVG_FRAMETIME_COUNT == 0) {
+            // update frametime
+            this.frameTime = (updateEnd - this.lastrefresh) / CScreen.AVG_FRAMETIME_COUNT;
+            this.lastrefresh = updateEnd;
+
+            // update real frametime
+            this.rft = this.rft_accumulator / CScreen.AVG_FRAMETIME_COUNT;
+            this.rft_accumulator = 0;
+        }
+    }
+
+    private draw(): void {
+        if (this.scene) {
+            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.context.save();
+            this.scene?.draw(this.context);
+            this.context.restore();
+            ++this.frame;
+        }
     }
 
     public getContext(): CanvasRenderingContext2D {
@@ -78,7 +98,7 @@ export class CScreen {
     }
 
     public currentFrame(): number {
-        return this._frame;
+        return this.frame;
     }
 
     /**
@@ -86,7 +106,7 @@ export class CScreen {
      * (updated every 15 frames)
      */
     public framerate(): number {
-        return this._frameTime;
+        return this.frameTime;
     }
 
     /**
@@ -94,19 +114,10 @@ export class CScreen {
      * (updated every 15 frames)
      */
     public realFramerate(): number {
-        return this._rft;
+        return this.rft;
     }
 
-    public draw(): void {
-        if (this.scene) {
-            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            this.context.save();
-            this.scene?.draw(this.context);
-            this.context.restore();
-            ++this._frame;
-        }
-    }
 }
 
 let canvas = document.getElementsByTagName('canvas')[0];
-export const screen: CScreen = new CScreen(canvas, 1080, 16/9);
+export const screen: CScreen = new CScreen(canvas, 1080, 16 / 9);
