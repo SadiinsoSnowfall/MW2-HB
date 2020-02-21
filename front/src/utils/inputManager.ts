@@ -25,6 +25,7 @@ export class InputManager {
 
     public static init(): void {
         assert(!InputManager.initialized, "InputManager#init called twice");
+        InputManager.initialized = true;
         addEventListener('keydown', InputManager.onKeyDown);
         addEventListener('keyup', InputManager.onKeyUp);
     }
