@@ -32,7 +32,7 @@ async function game() {
     createWiggly(scene, 200, 200, "#800000", 0.05, 100, 25);
     createWiggly(scene, 500, 200, "#000080", 0.005, 100, 75);
     scene.instantiate(spinnyThingy, 300, 350);
-    scene.instantiate(FPSMetter, 800, 100);
+    scene.instantiate(FPSMetter, 800, 120);
     scene.instantiate(funnyFPSMetter, 800, 400);
     scene.instantiate(hilariousFPSMetter, 300, 500);
 
@@ -50,7 +50,7 @@ async function game() {
 
     screen.setScene(scene);
 
-    /*let m = Transform.Identity;
+    let m = Transform.Identity;
     let angle = Math.PI / 2;
     console.log("expected rotation: " + angle);
     m = m.rotateRadians(angle);
@@ -90,7 +90,7 @@ async function game() {
     console.log(rect2.getTransform());
     console.log(rect2.getScale());
     rect2.setDisplayComponent(new SpinnyDisplay(rect2, "#000000", 50));
-    scene.addObject(rect2);*/
+    scene.addObject(rect2);
 
     // decomment this line
     //const music = AudioManager.loop(Sound.MAIN_REMIX, 0.1, 50, 70);

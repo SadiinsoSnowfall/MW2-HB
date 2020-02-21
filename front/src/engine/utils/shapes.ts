@@ -2,17 +2,29 @@ import { Vec2, Transform } from "../utils";
 import { assert } from "../../utils";
 
 /**
- * Unused (as long there is only one shape class)
+ * @brief Interface for all classes that can be used as shapes.
  */
-/*export interface Shape {
+export interface Shape {
+    /**
+     * @brief Returns whether or not point belongs in the shape.
+     */
     pointIn(point: Vec2): boolean;
+
+    /**
+     * @brief Returns the smallest AABB that contains the entire shape.
+     */
     boundingBox(): Rectangle;
+
+    /**
+     * @brief Performs the transformation of a shape.
+     */
     transform(t: Transform): Shape;
-}*/
+}
 
 /**
  * @brief Class for axis-aligned bounding boxes.
- * Though Rectangle is conceptually a Shape, it should not be used by GameObjects directly,
+ * Though Rectangle is conceptually a Shape, 
+ * it should not be used by GameObjects directly since it does not support rotation,
  * so it does not implement the interface.
  */
 export class Rectangle {
@@ -64,7 +76,46 @@ export class Rectangle {
 		let t = Math.min(rect.position.y, this.position.y);
 		let b = Math.max(rb, tb);
 		return new Rectangle(new Vec2(l, t), r - l, b - t);
-	}
+    }
+    
+    /**
+     * @brief Returns an AABB that is slightly larger than this one.
+     * The result will have the same center.
+     */
+    public fatten(factor: number): Rectangle {
+        let w = this.width * factor;
+        let h = this.height * factor;
+        return new Rectangle(
+            new Vec2(
+                this.position.x + this.width  / 2 - w / 2,
+                this.position.y + this.height / 2 - h / 2
+            ),
+            w, h
+        );
+    }
+
+    /**
+     * @brief Returns the area of this rectangle.
+     */
+    public area(): number {
+        return this.width * this.height;
+    }
+
+    /**
+     * @brief Computes the area of the minimal AABB enclosing this and rect.
+     * The minimal AABB is actually not computed.
+     */
+    public mergedArea(rect: Rectangle): number {
+        let tr = this.position.x + this.width;
+		let tb = this.position.y + this.height;
+		let rr = rect.position.x + rect.width;
+		let rb = rect.position.y + rect.height;
+		let l = Math.min(rect.position.x, this.position.x);
+		let r = Math.max(rr, tr);
+		let t = Math.min(rect.position.y, this.position.y);
+		let b = Math.max(rb, tb);
+        return (r - l) * (b - t); 
+    }
 }
 
 /**
@@ -73,7 +124,7 @@ export class Rectangle {
  * So we just decided that circles would be approximated by (convex) polygons,
  * which are scalable without issue.
  */
-/*export class Circle implements Shape {
+export class Circle implements Shape {
     private center: Vec2;
     private radius: number;
 
@@ -98,25 +149,33 @@ export class Rectangle {
             doubleRadius
         );
     }
-}*/
+
+    public transform(t: Transform): Circle {
+        // Wrong, of course: this.radius should be affected by the scale
+        // (and because the scale might affect differently the radius depending on the direction,
+        // it should return an ellipse rather than a circle)
+        return new Circle(t.multiplyVector(this.center), this.radius);
+    }
+}
 
 /**
  * @brief Class specialized in convex polygons.
  */
-export class ConvexPolygon {
-    //private center: Vec2;
+export class ConvexPolygon implements Shape {
+    private center: Vec2;
     private vertices: Vec2[];
 
     /**
      * @brief Given a center and a list of vertices given counterclockwise, constructs a polygon.
      * @param center Center of the polygon
-     * @param vertices Vertices of the polygon, given 
+     * @param vertices Vertices of the polygon, given relative to center 
      * This constructor assumes that center is indeed the center of the polygon and that the points
      * are given in the right order. If these conditions are not respected, no error will be thrown
      * but the behaviour of this class' methods are unspecified.
      */
-    constructor(vertices: Vec2[]) {
+    constructor(center: Vec2, vertices: Vec2[]) {
         assert(vertices.length >= 3, "ConvexPolygon#constructor: cannot make a polygone out of less than 3 vertices");
+        this.center = center;
         this.vertices = vertices;
     }
 
@@ -124,11 +183,14 @@ export class ConvexPolygon {
      * @brief Returns whether or not point belongs in this shape.
      */
     public pointIn(point: Vec2): boolean {
-        let a = this.vertices[0];
+        let ax = this.vertices[0].x + this.center.x;
+        let ay = this.vertices[0].y + this.center.y;
         for (let i = 1; i < this.vertices.length; i++) {
-            let b = this.vertices[i];
-            let det = (b.x - a.x) * (point.x - a.x) - (b.y - a.y) * (point.y - a.y);
-            a = b;
+            let bx = this.vertices[i].x + this.center.x;
+            let by = this.vertices[i].y + this.center.y;
+            let det = (bx - ax) * (point.x - ax) - (by - ay) * (point.y - ay);
+            ax = bx;
+            ay = by;
             if (det < 0) {
                 return false;
             }
@@ -159,15 +221,15 @@ export class ConvexPolygon {
             }
         }
 
-        return new Rectangle(new Vec2(xmin, ymin), xmax - xmin, ymax - ymin);
+        return new Rectangle(new Vec2(this.center.x + xmin, this.center.y + ymin), xmax - xmin, ymax - ymin);
     }
 
     public transform(t: Transform): ConvexPolygon {
         let r: Vec2[] = [];
         for (const p of this.vertices) {
-            r.push(t.multiplyVector(p));
+            r.push(t.multiplyVector(new Vec2(p.x + this.center.x, p.y + this.center.y)));
         }
-        return new ConvexPolygon(r);
+        return new ConvexPolygon(t.multiplyVector(this.center), r);
     }
 
     /**

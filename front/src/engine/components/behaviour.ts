@@ -10,8 +10,8 @@ export class Behaviour extends ObjectComponent {
         super(object);
     }
 
-    public update(): void {
-
+    public update(): boolean {
+        return false;
     }
 
 }

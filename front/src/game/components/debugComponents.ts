@@ -19,13 +19,14 @@ export class WigglyBehaviour extends Behaviour {
         this.last = 1;
     }
 
-    public update(): void {
+    public update(): boolean {
         this.object.scale(1 / this.last, 1/* / this.last*/);
         this.object.rotateRadians(this.rotation);
         let factor = (Math.cos(this.updates / WigglyBehaviour.smooth)) / WigglyBehaviour.variance + 1;
         this.object.scale(factor, /*factor*/1);
         this.last = factor;
         this.updates++;
+        return true;
     }
 }
 
@@ -40,8 +41,6 @@ export class WigglyDisplay extends Display {
         this.width = w;
         this.height = h;
     }
-
-    public update(): void {}
 
     public draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
@@ -65,8 +64,9 @@ export class SpinnyBehaviour extends Behaviour {
         o.scale(2, 0.5);
     }
 
-    public update(): void {
+    public update(): boolean {
         this.object.rotateRadians(this.rotation);
+        return true;
     }
 }
 
@@ -79,8 +79,6 @@ export class SpinnyDisplay extends Display {
         this.color = c;
         this.radius = r;
     }
-
-    public update(): void {}
 
     public draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
@@ -207,7 +205,7 @@ export class CircleBehaviour extends Display {
         this.shearFactor = 0.01;
     }
 
-    public update(): void {
+    public update(): boolean {
         let tick = this.tick();
         if (tick % 15 == 0) {
             this.shearFactor *= -1;
@@ -221,5 +219,6 @@ export class CircleBehaviour extends Display {
         this.object.rotateDegrees(1);
         this.object.scale(1 + this.shearFactor, 1 - this.shearFactor);
         this.object.shear(this.shearFactor, this.shearFactor);
+        return true;
     }
 }
