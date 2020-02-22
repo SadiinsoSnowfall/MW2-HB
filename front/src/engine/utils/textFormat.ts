@@ -49,6 +49,16 @@ export class TextFormat {
     }
 
     /**
+     * Shortcut to reduce the boilerplate needed code to create a TextFormat
+     */
+    public static using(a: Alignment, s: Style) {
+        const format = TextFormat.Standard.copy();
+        format.setAlignment(a);
+        format.setStyle(s);
+        return format;
+    }
+
+    /**
      * @brief Returns a copy of this format.
      */
     public copy(): TextFormat {

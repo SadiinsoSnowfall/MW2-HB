@@ -117,9 +117,7 @@ export class FPSMetterDisplay extends Display {
 
     constructor(o: GameObject, a: Alignment, s: Style) {
         super(o);
-        let format = TextFormat.Standard.copy();
-        format.setAlignment(a);
-        format.setStyle(s);
+        let format = TextFormat.using(a, s);
         this.text = new Text(format, [
             "Current frame: ${0}",
             "Frame time: ${1}ms (${2} fps)\nReal: ${3}ms (${4} fps)"

@@ -1,3 +1,4 @@
+import { Assets } from "../../utils";
 
 /**
  * @brief Represents a spritesheet.
@@ -104,5 +105,28 @@ export class Sprite {
      */
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.drawImage(this.image, this.x, this.y, this.w, this.h, -this.w/2, -this.h/2, this.w, this.h);
+    }
+}
+
+/**
+ * Spritesheet Map wrapper to manage lazy loading of spritesheets
+ */
+export class SSManager {
+    private static sheets: Map<[string, number, number], Spritesheet> = new Map();
+
+    public static get(img: string, hdiv: number, vdiv: number): Spritesheet {
+        const query: [string, number, number] = [img, hdiv, vdiv];
+
+        /*
+            As the map will not contains any undefined|null-mapped keys, it is
+            safe to use the get-then-check pattern instead of has-then-get
+        */
+        let sheet = SSManager.sheets.get(query);
+        if (sheet === undefined) {
+            sheet = new Spritesheet(Assets.img(img), hdiv, vdiv);
+            SSManager.sheets.set(query, sheet);
+        }
+
+        return sheet;
     }
 }
