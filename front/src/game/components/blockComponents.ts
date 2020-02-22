@@ -51,6 +51,7 @@ export class BlockBehaviour extends Behaviour {
 
     public setHealth(health: number) {
         this.health = Math.min(this.maxHealth, health);
+        this.display.useSprite(4 - Math.ceil((this.health / (this.maxHealth / 4))))
     }
 
     public applyDamage(damage: number): void {
