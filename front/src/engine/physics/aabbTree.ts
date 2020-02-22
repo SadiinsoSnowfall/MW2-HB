@@ -46,6 +46,35 @@ class NodeData {
             this.right.broadSearch(rect, r);
         }
     }
+
+    // Returns the node's sibling (assuming node is a child)
+    public getSibling(node: Node): Node {
+        if (node == this.left) {
+            return this.right;
+        } else {
+            return this.right;
+        }
+    }
+
+    // Replaces node's sibling (assuming node is a child)
+    public setSibling(node: Node, sibling: Node): void {
+        if (node == this.left) {
+            this.right = sibling;
+        } else {
+            this.left = sibling;
+        }
+        sibling.parent = this;
+    }
+
+    // Replaces node with newNode (assuming node is a child)
+    public setNode(node: Node, newNode: Node): void {
+        if (node == this.left) {
+            this.left = newNode;
+        } else {
+            this.right = newNode;
+        }
+        newNode.parent = this;
+    }
 }
 
 class LeafData {
@@ -118,16 +147,8 @@ export class AABBTree {
     private swapLoss(parent: NodeData, child: Node, grandchild: Node): number {
         // Will never be null since it has two grandchildren
         let otherChild = (grandchild.parent as NodeData);
-
-        // Computing cost of swap
         let currentCost = otherChild.bbox.area();
-        let swapCost: number; 
-        if (otherChild.left == grandchild) {
-            swapCost = child.bbox.mergedArea(otherChild.right.bbox);
-        } else {
-            swapCost = child.bbox.mergedArea(otherChild.left.bbox);
-        }
-
+        let swapCost = child.bbox.mergedArea(otherChild.getSibling(grandchild).bbox);
         return swapCost - currentCost;
     }
 
@@ -136,12 +157,7 @@ export class AABBTree {
         let otherChild = (grandchild.parent as NodeData);
 
         // Swapping child and grandchild
-        child.parent = otherChild;
-        if (otherChild.left == grandchild) {
-            otherChild.left = child;
-        } else {
-            otherChild.right = child;
-        }
+        otherChild.setNode(grandchild, child);
         grandchild.parent = parent;
 
         // Refitting otherChild
@@ -183,6 +199,14 @@ export class AABBTree {
         }
     }
 
+    private refit(node: NodeData | null): void {
+        while (node != null) {
+            node.bbox = node.right.bbox.merge(node.left.bbox);
+            this.rotate(node);
+            node = node.parent;
+        }
+    }
+
     /**
      * @brief Inserts a new collider into the tree.
      */
@@ -205,12 +229,24 @@ export class AABBTree {
             leaf.parent = node;
             r.bestSibling.parent = node;
 
-            // Refitting the tree
-            while (parent != null) {
-                parent.bbox = parent.right.bbox.merge(parent.left.bbox);
-                this.rotate(parent);
-                parent = parent.parent;
+            this.refit(parent);
+        }
+    }
+
+    private removeLeaf(leaf: LeafData): void {
+        let parent = leaf.parent;
+        if (parent == null) {
+            this.root = null;
+        } else {
+            let sibling = parent.getSibling(leaf);
+            if (parent.parent == null) {
+                this.root = sibling;
+                sibling.parent = null;
+            } else {
+                sibling.parent = parent.parent;
+                parent.parent.setNode(parent, sibling);
             }
+            this.refit(parent.parent);
         }
     }
 
@@ -222,7 +258,7 @@ export class AABBTree {
         let suspects = this.broadSearch(bboxFromCollider(collider));
         for (let leaf of suspects) {
             if (leaf.collider == collider) {
-                //this.removeLeaf(leaf);
+                this.removeLeaf(leaf);
                 return;
             }
         }
