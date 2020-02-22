@@ -3,13 +3,17 @@ import { RigidBody, Display, Collider, Behaviour } from './components';
 import { Scene } from './scene';
 
 export class GameObject {
-    transform: Transform;
+    private static currentId: number = 0;
+
+    public readonly id: number;
+    private enabled: boolean;
+
+    private transform: Transform;
 
     private display?: Display;
     private rigidBody?: RigidBody;
     private collider?: Collider;
     private behaviour?: Behaviour;
-    private enabled: boolean;
 
     private _scene?: Scene;
 
@@ -22,6 +26,7 @@ export class GameObject {
     constructor(x: number, y: number) {
         this.transform = Transform.Identity.center(x, y);
         this.enabled = true;
+        this.id = GameObject.currentId++;
     }
 
     /**********************************************************************************************
