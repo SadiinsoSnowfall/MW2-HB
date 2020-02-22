@@ -42,7 +42,7 @@ export const Img = Object.freeze({
     MISC_XL: require('assets/images/misc_xl.png'),
     MISC_XLV: require('assets/images/misc_xlv.png'),
 
-    BALLS: require('assets/images/balls.png'),
+    BALLS_MD: require('assets/images/balls_md.png'),
     BALLS_SM: require('assets/images/balls_sm.png'),
 
     CUBES_MD: require('assets/images/cubes_md.png'),

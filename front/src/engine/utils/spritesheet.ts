@@ -24,8 +24,8 @@ export class Spritesheet {
         this.image = image;
         this.divh = horizontalDivisions;
         this.divv = verticalDivisions;
-        this.sH = this.image.height / this.divv;
-        this.sW = this.image.width / this.divh;
+        this.sH = this.image.height / this.divh;
+        this.sW = this.image.width / this.divv;
     }
 
     /**

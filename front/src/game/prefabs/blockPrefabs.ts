@@ -26,38 +26,38 @@ export enum Blocks {
  * 
  */
 
-export const wooden_ball = PrefabsManager.register(new Prefab(obj => {
-    obj.setDisplayComponent(new VSBlockDisplay(obj, SSManager.get(Img.BALLS, 4, 7), 0));
+export const wooden_ball_md = PrefabsManager.register(new Prefab(obj => {
+    obj.setDisplayComponent(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_MD, 4, 7), 0));
     obj.setBehaviourComponent(new BlockBehaviour(obj, Materials.WOOD * Blocks.BALL_MD));
 }), 100);
 
-export const stone_ball = PrefabsManager.register(new Prefab(obj => {
-    obj.setDisplayComponent(new VSBlockDisplay(obj, SSManager.get(Img.BALLS, 4, 7), 1));
+export const stone_ball_md = PrefabsManager.register(new Prefab(obj => {
+    obj.setDisplayComponent(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_MD, 4, 7), 1));
     obj.setBehaviourComponent(new BlockBehaviour(obj, Materials.STONE * Blocks.BALL_MD));
 }), 101);
 
-export const ice_ball = PrefabsManager.register(new Prefab(obj => {
-    obj.setDisplayComponent(new VSBlockDisplay(obj, SSManager.get(Img.BALLS, 4, 7), 2));
+export const ice_ball_md = PrefabsManager.register(new Prefab(obj => {
+    obj.setDisplayComponent(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_MD, 4, 7), 2));
     obj.setBehaviourComponent(new BlockBehaviour(obj, Materials.ICE * Blocks.BALL_MD));
 }), 102);
 
-export const sand_ball = PrefabsManager.register(new Prefab(obj => {
-    obj.setDisplayComponent(new VSBlockDisplay(obj, SSManager.get(Img.BALLS, 4, 7), 3));
+export const sand_ball_md = PrefabsManager.register(new Prefab(obj => {
+    obj.setDisplayComponent(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_MD, 4, 7), 3));
     obj.setBehaviourComponent(new BlockBehaviour(obj, Materials.SAND * Blocks.BALL_MD));
 }), 103);
 
-export const wooden_ball_2 = PrefabsManager.register(new Prefab(obj => {
-    obj.setDisplayComponent(new VSBlockDisplay(obj, SSManager.get(Img.BALLS, 4, 7), 4));
+export const wooden_ball_md_2 = PrefabsManager.register(new Prefab(obj => {
+    obj.setDisplayComponent(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_MD, 4, 7), 4));
     obj.setBehaviourComponent(new BlockBehaviour(obj, Materials.WOOD * Blocks.BALL_MD));
 }), 104);
 
-export const stone_ball_2 = PrefabsManager.register(new Prefab(obj => {
-    obj.setDisplayComponent(new VSBlockDisplay(obj, SSManager.get(Img.BALLS, 4, 7), 5));
+export const stone_ball_md_2 = PrefabsManager.register(new Prefab(obj => {
+    obj.setDisplayComponent(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_MD, 4, 7), 5));
     obj.setBehaviourComponent(new BlockBehaviour(obj, Materials.STONE * Blocks.BALL_MD));
 }), 105);
 
-export const ice_ball_2 = PrefabsManager.register(new Prefab(obj => {
-    obj.setDisplayComponent(new VSBlockDisplay(obj, SSManager.get(Img.BALLS, 4, 7), 6));
+export const ice_ball_md_2 = PrefabsManager.register(new Prefab(obj => {
+    obj.setDisplayComponent(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_MD, 4, 7), 6));
     obj.setBehaviourComponent(new BlockBehaviour(obj, Materials.ICE * Blocks.BALL_MD));
 }), 106);
 

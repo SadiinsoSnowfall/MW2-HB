@@ -31,7 +31,7 @@ export class VSBlockDisplay extends Display {
 }
 
 export class BlockBehaviour extends Behaviour {
-    private readonly maxHealth: number;
+    public readonly maxHealth: number;
     private health: number;
     private display: VSBlockDisplay;
 
@@ -45,6 +45,14 @@ export class BlockBehaviour extends Behaviour {
         this.display = display as VSBlockDisplay;
     }
 
+    public getHealth() {
+        return this.health;
+    }
+
+    public setHealth(health: number) {
+        this.health = Math.min(this.maxHealth, health);
+    }
+
     public applyDamage(damage: number): void {
         this.health -= damage;
 
@@ -52,7 +60,7 @@ export class BlockBehaviour extends Behaviour {
             this.object.setEnabled(false); // destroy the object
         } else {
             // find the quarter to use and update the sprite accordingly 
-            const quarter = Math.ceil((this.health / (this.maxHealth / 4))) - 1;
+            const quarter = 4 - Math.ceil((this.health / (this.maxHealth / 4)));
             this.display.useSprite(quarter);
         }
     }
