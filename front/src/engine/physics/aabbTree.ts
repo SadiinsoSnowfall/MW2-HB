@@ -81,11 +81,17 @@ class LeafData {
     public parent: NodeData | null;
     public collider: Collider;
     public bbox: Rectangle;
+    public fatFactor: number;
 
-    constructor(parent: NodeData | null, collider: Collider, fatFactor: number) {
-        this.parent = parent;
+    constructor(collider: Collider, fatFactor: number, parent?: NodeData) {
+        if (parent == undefined) {
+            this.parent = null;
+        } else {
+            this.parent = parent;
+        }
         this.collider = collider;
         this.bbox = bboxFromCollider(collider).fatten(fatFactor);
+        this.fatFactor = fatFactor;
     }
 
     public isLeaf(): boolean {
@@ -104,6 +110,11 @@ class LeafData {
         if (this.bbox.intersects(rect)) {
             r.push(this);
         }
+    }
+
+    // Recomputes the bounding box
+    public update(): void {
+        this.bbox = bboxFromCollider(this.collider).fatten(this.fatFactor);
     }
 }
 
@@ -126,6 +137,7 @@ type Node = LeafData | NodeData;
 export class AABBTree {
     private fatFactor: number;
     private root: Node | null;
+    private colliders: Map<Collider, LeafData>;
 
     /**
      * @brief Constructs a new, empty AABB tree.
@@ -134,15 +146,14 @@ export class AABBTree {
     constructor(fatFactor: number = 1.1) {
         this.fatFactor = fatFactor;
         this.root = null;
+        this.colliders = new Map<Collider, LeafData>();
     }
 
-    private broadSearch(rect: Rectangle): LeafData[] {
-        let r: LeafData[] = [];
-        if (this.root != null) {
-            this.root.broadSearch(rect, r);
-        }
-        return r;
-    }
+    /**********************************************************************************************
+     * 
+     * Refitting methods (private)
+     * 
+     *********************************************************************************************/
 
     private swapLoss(parent: NodeData, child: Node, grandchild: Node): number {
         // Will never be null since it has two grandchildren
@@ -199,6 +210,7 @@ export class AABBTree {
         }
     }
 
+    // Goes up the tree from node, recomputing bounding boxes and performing rotations if advantageous
     private refit(node: NodeData | null): void {
         while (node != null) {
             node.bbox = node.right.bbox.merge(node.left.bbox);
@@ -207,12 +219,14 @@ export class AABBTree {
         }
     }
 
-    /**
-     * @brief Inserts a new collider into the tree.
-     */
-    public insert(collider: Collider) {
+    /**********************************************************************************************
+     * 
+     * Insertions and removals
+     * 
+     *********************************************************************************************/
+
+    private insertLeaf(leaf: LeafData) {
         // https://box2d.org/files/ErinCatto_DynamicBVH_GDC2019.pdf
-        let leaf = new LeafData(null, collider, this.fatFactor);
         if (this.root == null) {
             this.root = leaf;
         } else {
@@ -231,6 +245,18 @@ export class AABBTree {
 
             this.refit(parent);
         }
+    }
+
+    /**
+     * @brief Inserts a new collider into the tree.
+     */
+    public insert(collider: Collider) {
+        if (this.colliders.get(collider) != undefined) {
+            throw new Error("AABBTree#insert: can not insert a collider that is already contained");
+        }
+        let leaf = new LeafData(collider, this.fatFactor);
+        this.colliders.set(collider, leaf);
+        this.insertLeaf(leaf);
     }
 
     private removeLeaf(leaf: LeafData): void {
@@ -254,13 +280,33 @@ export class AABBTree {
      * @brief Removes a collider from the tree.
      */
     public remove(collider: Collider): void {
-        // The collider is in collision with himself
-        let suspects = this.broadSearch(bboxFromCollider(collider));
-        for (let leaf of suspects) {
-            if (leaf.collider == collider) {
-                this.removeLeaf(leaf);
-                return;
-            }
+        let leaf = this.colliders.get(collider);
+        if (leaf == undefined) {
+            throw new Error("AABBTree#remove: the tree does not contain the given collider");
+        } else {
+            this.removeLeaf(leaf);
+            this.colliders.delete(collider);
         }
+    }
+
+    // Removes and reinserts a leaf
+    private update(leaf: LeafData) {
+        this.removeLeaf(leaf);
+        leaf.update();
+        this.insertLeaf(leaf);
+    }
+
+    /**********************************************************************************************
+     * 
+     * Queries
+     * 
+     *********************************************************************************************/
+
+    private broadSearch(rect: Rectangle): LeafData[] {
+        let r: LeafData[] = [];
+        if (this.root != null) {
+            this.root.broadSearch(rect, r);
+        }
+        return r;
     }
 }
