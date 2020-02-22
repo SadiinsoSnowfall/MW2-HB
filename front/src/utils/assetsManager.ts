@@ -35,29 +35,37 @@ export const Sound = Object.freeze({
 });
 
 export const Img = Object.freeze({
-    LEVELS_ICON: require('assets/images/levels_icon.png'),
+    LEVELS_ICON: require('assets/images/blocks/levels_icon.png'),
 
-    MISC_MD: require('assets/images/misc_md.png'),
-    MISC_LG: require('assets/images/misc_lg.png'),
-    MISC_XL: require('assets/images/misc_xl.png'),
-    MISC_XLV: require('assets/images/misc_xlv.png'),
+    MISC_MD: require('assets/images/blocks/misc_md.png'),
+    MISC_LG: require('assets/images/blocks/misc_lg.png'),
+    MISC_XL: require('assets/images/blocks/misc_xl.png'),
+    MISC_XLV: require('assets/images/blocks/misc_xlv.png'),
 
-    BALLS_MD: require('assets/images/balls_md.png'),
-    BALLS_SM: require('assets/images/balls_sm.png'),
+    BALLS_MD: require('assets/images/blocks/balls_md.png'),
+    BALLS_SM: require('assets/images/blocks/balls_sm.png'),
 
-    CUBES_MD: require('assets/images/cubes_md.png'),
-    CUBES_SM: require('assets/images/cubes_sm.png'),
-    CUBES_XS: require('assets/images/cubes_xs.png'),
-    CUBES_HOLLOW: require('assets/images/cubes_hollow.png'),
+    CUBES_MD: require('assets/images/blocks/cubes_md.png'),
+    CUBES_SM: require('assets/images/blocks/cubes_sm.png'),
+    CUBES_XS: require('assets/images/blocks/cubes_xs.png'),
+    CUBES_HOLLOW: require('assets/images/blocks/cubes_hollow.png'),
 
-    TRIS_MD: require('assets/images/tris_md.png'),
-    TRIS_SM: require('assets/images/tris_sm.png'),
-    TRIS_HOLLOW: require('assets/images/tris_hollow.png'),
+    TRIS_MD: require('assets/images/blocks/tris_md.png'),
+    TRIS_SM: require('assets/images/blocks/tris_sm.png'),
+    TRIS_HOLLOW: require('assets/images/blocks/tris_hollow.png'),
     
-    FAT_PLANKS: require('assets/images/large_planks.png'),
-    PLANKS_XL: require('assets/images/planks_xl.png'),
-    PLANKS_LG: require('assets/images/planks_lg.png'),
-    PLANKS_MD: require('assets/images/planks_md.png'),
-    PLANKS_SM: require('assets/images/planks_sm.png'),
-    PLANKS_XS: require('assets/images/planks_xs.png'),
+    FAT_PLANKS: require('assets/images/blocks/large_planks.png'),
+    PLANKS_XL: require('assets/images/blocks/planks_xl.png'),
+    PLANKS_LG: require('assets/images/blocks/planks_lg.png'),
+    PLANKS_MD: require('assets/images/blocks/planks_md.png'),
+    PLANKS_SM: require('assets/images/blocks/planks_sm.png'),
+    PLANKS_XS: require('assets/images/blocks/planks_xs.png'),
+
+    BIRD_RED: require('assets/images/characters/red.png'),
+    BIRD_YELLOW: require('assets/images/characters/yellow.png'),
+    BIRD_BLUE: require('assets/images/characters/blue.png'),
+    BIRD_BLACK: require('assets/images/characters/black.png'),
+    BIRD_WHITE: require('assets/images/characters/white.png'),
+    BIRD_GREEN: require('assets/images/characters/green.png'),
+    BIRD_BIG: require('assets/images/characters/big.png'),
 });

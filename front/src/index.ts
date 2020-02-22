@@ -84,9 +84,9 @@ async function game() {
         scene.instantiate(BP.wooden_tris_hl, 800, 500),
         scene.instantiate(BP.stone_tris_hl, 900, 500),
         scene.instantiate(BP.ice_tris_hl, 1000, 500),
-        scene.instantiate(BP.wooden_tris_hl_2, 1100, 500),
-        scene.instantiate(BP.stone_tris_hl_2, 1200, 500),
-        scene.instantiate(BP.ice_tris_hl_2, 1300, 500),
+        scene.instantiate(BP.wooden_tris_hl_2, 1200, 500),
+        scene.instantiate(BP.stone_tris_hl_2, 1300, 500),
+        scene.instantiate(BP.ice_tris_hl_2, 1400, 500),
     ]);
 
     
