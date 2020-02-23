@@ -138,6 +138,17 @@ export class Transform {
      *********************************************************************************************/
 
     /**
+     * @brief Places the matrix at the given place.
+     */
+    public place(x: number, y: number): Transform {
+        return new Transform(
+            this.m11, this.m12,
+            this.m21, this.m22,
+            x, y
+        );
+    }
+
+    /**
      * @brief Moves the matrix alongside the vector (x, y), without regards for the current rotation and scale.
      * @see translate
      */

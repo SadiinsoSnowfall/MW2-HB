@@ -77,7 +77,7 @@ export class BlockBehaviour extends Behaviour {
         }
     }
 
-    public update(): void {
-        
+    public update(): boolean {
+        return false;
     }
 }

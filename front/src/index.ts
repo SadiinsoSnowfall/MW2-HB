@@ -8,6 +8,7 @@ import { InputManager } from './utils/inputManager';
 import * as BP from './game/prefabs/blockPrefabs';
 import { BlockBehaviour } from './game/components/blockComponents';
 import { GameObject } from './engine/gameObject';
+import { square } from './game/prefabs/debugPrefabs';
 
 async function game() {
     InputManager.init();
@@ -88,6 +89,12 @@ async function game() {
         scene.instantiate(BP.stone_tris_hl_2, 1300, 500),
         scene.instantiate(BP.ice_tris_hl_2, 1400, 500),
     ]);
+
+    scene.instantiate(square, 100, 200);
+    scene.instantiate(square, 200, 225);
+    scene.instantiate(square, 400, 400);
+    scene.instantiate(square, 500, 425);
+    scene.instantiate(square, 300, 312);
 
     
     async function breakAnimation(objs: GameObject[]) {

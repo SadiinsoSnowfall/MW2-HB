@@ -1,6 +1,7 @@
 import { GameObject } from "./gameObject";
 import { CScreen } from "../screen";
 import { Prefab } from "./prefab";
+import { AABBTree } from "./physics";
 
 /**
  * @brief Defines any object that can interact with the game loop.
@@ -8,6 +9,11 @@ import { Prefab } from "./prefab";
 export class Scene {
     protected _screen?: CScreen;
     protected objects: GameObject[] = [];
+    protected tree: AABBTree;
+
+    constructor() {
+        this.tree = new AABBTree();
+    }
 
     /**
      * @brief Retrieves the CScreen the scene is displayed on
@@ -57,17 +63,21 @@ export class Scene {
     public instantiate(prefab: Prefab, x: number, y: number): GameObject {
         let obj = new GameObject(x, y);
         prefab.applyTo(obj);
-        obj.setScene(this);
-        this.objects.push(obj);
+        this.addObject(obj);
         return obj;
     }
 
     /**
      * @brief Adds an object to this scene
      */
-    public addObject(object: GameObject) {
-        object.setScene(this);
-        this.objects.push(object);
+    public addObject(obj: GameObject) {
+        obj.setScene(this);
+        let collider = obj.colliderComponent();
+        if (collider == undefined) {
+            this.objects.push(obj);
+        } else {
+            this.tree.insert(collider);
+        }
     }
 
     /**
@@ -78,6 +88,10 @@ export class Scene {
         for (let i = 0; i < this.objects.length; ++i) {
             this.objects[i].draw(ctx);
         }
+        for (const c of this.tree) {
+            c.object.draw(ctx);
+        }
+        this.tree.draw(ctx); // debug only
     }
 
     /**
@@ -93,8 +107,8 @@ export class Scene {
                 enabled.push(obj);
             }
         }
-
         this.objects = enabled;
+        this.tree.update();
         return this;
     }
 }

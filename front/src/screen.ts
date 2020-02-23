@@ -110,7 +110,7 @@ export class CScreen {
     }
 
     /**
-     * The current time it take for the scene to be rendered excluding Vsync
+     * The current time it takes for the scene to be rendered excluding Vsync
      * (updated every 15 frames)
      */
     public realFramerate(): number {

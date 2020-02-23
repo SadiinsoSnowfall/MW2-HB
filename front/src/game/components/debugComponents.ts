@@ -1,8 +1,9 @@
-import { Display, Behaviour } from "../../engine/components";
+import { Display, Behaviour, Collider } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { TextFormat, Alignment, Style, Text } from "../../engine/utils/textFormat";
 import { Spritesheet, Sprite } from "../../engine/utils/spritesheet";
 import { Assets, randomIn, Img } from "../../utils";
+import { ConvexPolygon, Vec2, Circle } from "../../engine/utils";
 
 export class WigglyBehaviour extends Behaviour {
     public rotation: number;
@@ -19,13 +20,14 @@ export class WigglyBehaviour extends Behaviour {
         this.last = 1;
     }
 
-    public update(): void {
+    public update(): boolean {
         this.object.scale(1 / this.last, 1/* / this.last*/);
         this.object.rotateRadians(this.rotation);
         let factor = (Math.cos(this.updates / WigglyBehaviour.smooth)) / WigglyBehaviour.variance + 1;
         this.object.scale(factor, /*factor*/1);
         this.last = factor;
         this.updates++;
+        return true;
     }
 }
 
@@ -40,8 +42,6 @@ export class WigglyDisplay extends Display {
         this.width = w;
         this.height = h;
     }
-
-    public update(): void {}
 
     public draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
@@ -65,8 +65,9 @@ export class SpinnyBehaviour extends Behaviour {
         o.scale(2, 0.5);
     }
 
-    public update(): void {
+    public update(): boolean {
         this.object.rotateRadians(this.rotation);
+        return true;
     }
 }
 
@@ -80,37 +81,13 @@ export class SpinnyDisplay extends Display {
         this.radius = r;
     }
 
-    public update(): void {}
-
     public draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
         ctx.fillStyle = this.color;
-        //ctx.ellipse(0, 0, this.radius, this.radius, 0, 0, 2 * Math.PI);
-        ctx.fillRect(-this.radius / 2, -this.radius / 2, this.radius, this.radius);
+        ctx.fillRect(-this.radius, -this.radius, this.radius * 2, this.radius * 2);
         ctx.closePath();
     }
 }
-
-/*export class FPSMetterDisplay extends Display {
-    private format: TextFormat;
-
-    constructor(o: GameObject, a: Alignment, s: Style) {
-        super(o);
-        this.format = TextFormat.Standard.copy();
-        this.format.setAlignment(a);
-        this.format.setStyle(s);
-    }
-
-    public draw(ctx: CanvasRenderingContext2D): void {
-        let tick = this.tick() || -1;
-        let ftime = this.object.scene()?.framerate() || -666;
-        let rtime = this.object.scene()?.realFramerate() || -666;
-        let frameTxt = `Current frame: ${tick}`;
-        let timeTxt = `Frame time: ${ftime.toFixed(2)}ms (${(1000 / ftime).toFixed(1)} fps)`;
-        let rtimeTxt = `Real: ${rtime.toFixed(2)}ms (${(1000 / rtime).toFixed(1)} fps)`;
-        this.format.drawText(ctx, [frameTxt, timeTxt, rtimeTxt]);
-    }
-}*/
 
 export class FPSMetterDisplay extends Display {
     private text: Text;
@@ -205,7 +182,7 @@ export class CircleBehaviour extends Display {
         this.shearFactor = 0.01;
     }
 
-    public update(): void {
+    public update(): boolean {
         let tick = this.tick();
         if (tick % 15 == 0) {
             this.shearFactor *= -1;
@@ -219,5 +196,19 @@ export class CircleBehaviour extends Display {
         this.object.rotateDegrees(1);
         this.object.scale(1 + this.shearFactor, 1 - this.shearFactor);
         this.object.shear(this.shearFactor, this.shearFactor);
+        return true;
+    }
+}
+
+export class SquareCollider extends Collider {
+    constructor(o: GameObject) {
+        let square = new ConvexPolygon(
+            new Vec2(0, 0), [
+            new Vec2(-50, 50),
+            new Vec2(50, 50),
+            new Vec2(50, -50),
+            new Vec2(-50, -50)
+        ]);
+        super(o, square);
     }
 }
