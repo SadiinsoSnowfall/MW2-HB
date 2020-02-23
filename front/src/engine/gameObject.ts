@@ -172,7 +172,7 @@ export class GameObject {
     /**
      * @brief Rotates the object.
      * @param angle The angle, in degrees.
-     * @see rotateRadians, 
+     * @see rotateRadians
      */
     public rotateDegrees(angle: number): void {
         this.transform = this.transform.rotateDegrees(angle);
