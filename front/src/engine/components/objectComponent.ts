@@ -15,6 +15,12 @@ export abstract class ObjectComponent {
         return this.object?.scene()?.tick() || -1;
     }
 
-    public abstract update(): void;
+    /**
+     * Updates the component.
+     * Returns true if the object has physically moved
+     * (typically, Display components will always return false,
+     * whereas a Behaviour might return true if it made the object move).
+     */
+    public abstract update(): boolean;
     
 }

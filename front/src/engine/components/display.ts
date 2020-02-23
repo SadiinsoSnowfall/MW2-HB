@@ -1,6 +1,5 @@
 import { GameObject } from '../gameObject';
 import { ObjectComponent } from "./";
-import { Vec2 } from '../utils';
 
 /**
  * ObjectComponent for graphic display
@@ -11,7 +10,9 @@ export class Display extends ObjectComponent {
         super(object);
     }
 
-    public update(): void {}
+    public update(): boolean {
+        return false;
+    }
 
     public draw(ctx: CanvasRenderingContext2D): void {}
 }

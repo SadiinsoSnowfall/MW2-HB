@@ -67,11 +67,12 @@ export class GameObject {
         this.behaviour = behaviour;
     }
 
-    public update(): void {
-        this.behaviour?.update();
-        this.rigidBody?.update();
-        this.collider?.update();
-        this.display?.update();
+    public update(): boolean {
+        let r = this.behaviour?.update()
+            || this.rigidBody?.update()
+            || this.collider?.update()
+            || this.display?.update();
+        return (r == undefined)? false : r;
     }
 
     public draw(ctx: CanvasRenderingContext2D) {
@@ -81,6 +82,9 @@ export class GameObject {
         ctx.save();
         this.transform.applyToContext(ctx);
         this.display?.draw(ctx);
+        if (this.collider != undefined) {
+            this.collider.getShape().draw(ctx);
+        }
         ctx.restore();
     }
 
