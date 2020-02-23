@@ -32,6 +32,7 @@ export class VSBlockDisplay extends Display {
 
 export class BlockBehaviour extends Behaviour {
     public readonly maxHealth: number;
+    private spriteIndex: number;
     private health: number;
     private display: VSBlockDisplay;
 
@@ -39,6 +40,7 @@ export class BlockBehaviour extends Behaviour {
         super(o);
         this.maxHealth = health;
         this.health = health;
+        this.spriteIndex = 0;
 
         const display = o.displayComponent();
         assert(display instanceof VSBlockDisplay, 'BlockBehaviour#init: target object display is not a VSBlockDisplay');
@@ -58,11 +60,20 @@ export class BlockBehaviour extends Behaviour {
         this.health -= damage;
 
         if (this.health <= 0) {
+            //TODO emmit destroy particles & sound
             this.object.setEnabled(false); // destroy the object
         } else {
             // find the quarter to use and update the sprite accordingly 
             const quarter = 4 - Math.ceil((this.health / (this.maxHealth / 4)));
-            this.display.useSprite(quarter);
+            
+            if (this.spriteIndex != quarter) {
+                this.display.useSprite(quarter);
+                this.spriteIndex = quarter;
+
+                //TODO emmit damage particles & sound
+            } else {
+                //TODO emmit collision sound
+            }
         }
     }
 

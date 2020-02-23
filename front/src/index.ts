@@ -94,13 +94,14 @@ async function game() {
         let bhv: BlockBehaviour[] = objs.map(obj => obj.behaviourComponent() as BlockBehaviour);
 
         while (true) {
-            await sleep(400);
+            await sleep(500);
             for (let i = 0; i < bhv.length; i++) {
                 const cur = bhv[i];
                 if (cur.getHealth() <= 0) {
                     // ressurect
                     objs[i].setEnabled(true);
                     cur.setHealth(cur.maxHealth);
+                    scene.addObject(objs[i]);
                 } else {
                     cur.applyDamage(10);
                 }

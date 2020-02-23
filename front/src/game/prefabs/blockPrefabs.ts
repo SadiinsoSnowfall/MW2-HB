@@ -9,7 +9,7 @@ export enum Materials {
     WOOD = 100,
     STONE = 500,
     ICE = 50,
-    SAND = 75
+    SAND = 50
 }
 
 export enum Blocks {

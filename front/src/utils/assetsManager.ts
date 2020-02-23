@@ -32,6 +32,169 @@ export class Assets {
 export const Sound = Object.freeze({
     MAIN: require('assets/music/title_theme.ogg'),
     MAIN_REMIX: require('assets/music/SSvsAB_remix.ogg'),
+
+    SLINGSHOT: require('assets/music/misc/slingshot_streched.ogg'),
+
+    HIGHSCORE: require('assets/music/misc/highscore.ogg'),
+    LEVEL_START_1: require('assets/music/misc/level_start_1.ogg'),
+    LEVEL_START_2: require('assets/music/misc/level_start_2.ogg'),
+    LEVEL_CLEAR_1: require('assets/music/misc/level_clear_1.ogg'),
+    LEVEL_CLEAR_2: require('assets/music/misc/level_clear_2.ogg'),
+    LEVEL_FAILED_1: require('assets/music/misc/level_failed_1.ogg'),
+    LEVEL_FAILED_2: require('assets/music/misc/level_failed_2.ogg'),
+
+    /**
+     * BIRDS
+     */
+
+    BIRD_DESTROYED: require('assets/music/birds/bird_destroyed.ogg'),
+    BIRD_SHOT_1: require('assets/music/birds/bird_shot_1.ogg'),
+    BIRD_SHOT_2: require('assets/music/birds/bird_shot_2.ogg'),
+    BIRD_SHOT_3: require('assets/music/birds/bird_shot_3.ogg'),
+    BIRD_NEXT_1: require('assets/music/birds/bird_next_1.ogg'),
+    BIRD_NEXT_2: require('assets/music/birds/bird_next_2.ogg'),
+    BIRD_NEXT_3: require('assets/music/birds/bird_next_3.ogg'),
+    
+    BIRD_1: require('assets/music/birds/misc/bird_misc_1.ogg'),
+    BIRD_2: require('assets/music/birds/misc/bird_misc_2.ogg'),
+    BIRD_3: require('assets/music/birds/misc/bird_misc_3.ogg'),
+    BIRD_4: require('assets/music/birds/misc/bird_misc_4.ogg'),
+    BIRD_5: require('assets/music/birds/misc/bird_misc_5.ogg'),
+    BIRD_6: require('assets/music/birds/misc/bird_misc_6.ogg'),
+    BIRD_7: require('assets/music/birds/misc/bird_misc_7.ogg'),
+    BIRD_8: require('assets/music/birds/misc/bird_misc_8.ogg'),
+    BIRD_9: require('assets/music/birds/misc/bird_misc_9.ogg'),
+    BIRD_10: require('assets/music/birds/misc/bird_misc_10.ogg'),
+    BIRD_11: require('assets/music/birds/misc/bird_misc_11.ogg'),
+    BIRD_12: require('assets/music/birds/misc/bird_misc_12.ogg'),
+
+    BIRD_RED_SELECT: require('assets/music/birds/specific/red/bird_01_select.ogg'),
+    BIRD_RED_FLY: require('assets/music/birds/specific/red/bird_01_flying.ogg'),
+    BIRD_RED_HIT_1: require('assets/music/birds/specific/red/bird_01_collision_1.ogg'),
+    BIRD_RED_HIT_2: require('assets/music/birds/specific/red/bird_01_collision_2.ogg'),
+    BIRD_RED_HIT_3: require('assets/music/birds/specific/red/bird_01_collision_3.ogg'),
+    BIRD_RED_HIT_4: require('assets/music/birds/specific/red/bird_01_collision_4.ogg'),
+
+    BIRD_YELLOW_SELECT: require('assets/music/birds/specific/yellow/bird_03_select.ogg'),
+    BIRD_YELLOW_FLY: require('assets/music/birds/specific/yellow/bird_03_flying.ogg'),
+    BIRD_YELLOW_HIT_1: require('assets/music/birds/specific/yellow/bird_03_collision_1.ogg'),
+    BIRD_YELLOW_HIT_2: require('assets/music/birds/specific/yellow/bird_03_collision_2.ogg'),
+    BIRD_YELLOW_HIT_3: require('assets/music/birds/specific/yellow/bird_03_collision_3.ogg'),
+    BIRD_YELLOW_HIT_4: require('assets/music/birds/specific/yellow/bird_03_collision_4.ogg'),
+    BIRD_YELLOW_HIT_5: require('assets/music/birds/specific/yellow/bird_03_collision_5.ogg'),
+
+    BIRD_BLUE_SELECT: require('assets/music/birds/specific/blue/bird_02_select.ogg'),
+    BIRD_BLUE_FLY: require('assets/music/birds/specific/blue/bird_02_flying.ogg'),
+    BIRD_BLUE_HIT_1: require('assets/music/birds/specific/blue/bird_02_collision_1.ogg'),
+    BIRD_BLUE_HIT_2: require('assets/music/birds/specific/blue/bird_02_collision_2.ogg'),
+    BIRD_BLUE_HIT_3: require('assets/music/birds/specific/blue/bird_02_collision_3.ogg'),
+    BIRD_BLUE_HIT_4: require('assets/music/birds/specific/blue/bird_02_collision_4.ogg'),
+    BIRD_BLUE_HIT_5: require('assets/music/birds/specific/blue/bird_02_collision_5.ogg'),
+
+    BIRD_BLACK_SELECT: require('assets/music/birds/specific/black/bird_04_select.ogg'),
+    BIRD_BLACK_FLY: require('assets/music/birds/specific/black/bird_04_flying.ogg'),
+    BIRD_BLACK_HIT_1: require('assets/music/birds/specific/black/bird_04_collision_1.ogg'),
+    BIRD_BLACK_HIT_2: require('assets/music/birds/specific/black/bird_04_collision_2.ogg'),
+    BIRD_BLACK_HIT_3: require('assets/music/birds/specific/black/bird_04_collision_3.ogg'),
+    BIRD_BLACK_HIT_4: require('assets/music/birds/specific/black/bird_04_collision_4.ogg'),
+
+    BIRD_WHITE_SELECT: require('assets/music/birds/specific/white/bird_05_select.ogg'),
+    BIRD_WHITE_FLY: require('assets/music/birds/specific/white/bird_05_flying.ogg'),
+    BIRD_WHITE_HIT_1: require('assets/music/birds/specific/white/bird_05_collision_1.ogg'),
+    BIRD_WHITE_HIT_2: require('assets/music/birds/specific/white/bird_05_collision_2.ogg'),
+    BIRD_WHITE_HIT_3: require('assets/music/birds/specific/white/bird_05_collision_3.ogg'),
+    BIRD_WHITE_HIT_4: require('assets/music/birds/specific/white/bird_05_collision_4.ogg'),
+    BIRD_WHITE_HIT_5: require('assets/music/birds/specific/white/bird_05_collision_5.ogg'),
+    BIRD_WHITE_EGG: require('assets/music/birds/specific/white/bird_pushing_egg_out.ogg'),
+
+    BIRD_GREEN_SELECT: require('assets/music/birds/specific/green/boomerang_select.ogg'),
+    BIRD_GREEN_FLY: require('assets/music/birds/specific/green/bird_06_flying.ogg'),
+    BIRD_GREEN_ACTIVATE: require('assets/music/birds/specific/green/boomerang_activate.ogg'),
+    BIRD_GREEN_SWISH: require('assets/music/birds/specific/green/boomerang_swish.ogg'),
+
+    /**
+     * BLOCKS
+     */
+
+    TNT: require('assets/music/blocks/tnt_explodes.ogg'),
+
+    WOOD_HIT_1: require('assets/music/blocks/wood/wood_collision_1.ogg'),
+    WOOD_HIT_2: require('assets/music/blocks/wood/wood_collision_2.ogg'),
+    WOOD_HIT_3: require('assets/music/blocks/wood/wood_collision_3.ogg'),
+    WOOD_HIT_4: require('assets/music/blocks/wood/wood_collision_4.ogg'),
+    WOOD_HIT_5: require('assets/music/blocks/wood/wood_collision_5.ogg'),
+    WOOD_HIT_6: require('assets/music/blocks/wood/wood_collision_6.ogg'),
+    WOOD_BREAK_1: require('assets/music/blocks/wood/wood_damage_1.ogg'),
+    WOOD_BREAK_2: require('assets/music/blocks/wood/wood_damage_2.ogg'),
+    WOOD_BREAK_3: require('assets/music/blocks/wood/wood_damage_3.ogg'),
+    WOOD_DESTROYED_1: require('assets/music/blocks/wood/wood_destroyed_1.ogg'),
+    WOOD_DESTROYED_2: require('assets/music/blocks/wood/wood_destroyed_2.ogg'),
+    WOOD_DESTROYED_3: require('assets/music/blocks/wood/wood_destroyed_3.ogg'),
+    WOOD_ROLL: require('assets/music/blocks/wood/wood_rolling.ogg'),
+
+    STONE_HIT_1: require('assets/music/blocks/rock/rock_collision_1.ogg'),
+    STONE_HIT_2: require('assets/music/blocks/rock/rock_collision_2.ogg'),
+    STONE_HIT_3: require('assets/music/blocks/rock/rock_collision_3.ogg'),
+    STONE_HIT_4: require('assets/music/blocks/rock/rock_collision_4.ogg'),
+    STONE_HIT_5: require('assets/music/blocks/rock/rock_collision_5.ogg'),
+    STONE_BREAK_1: require('assets/music/blocks/rock/rock_damage_1.ogg'),
+    STONE_BREAK_2: require('assets/music/blocks/rock/rock_damage_2.ogg'),
+    STONE_BREAK_3: require('assets/music/blocks/rock/rock_damage_3.ogg'),
+    STONE_DESTROYED_1: require('assets/music/blocks/rock/rock_destroyed_1.ogg'),
+    STONE_DESTROYED_2: require('assets/music/blocks/rock/rock_destroyed_2.ogg'),
+    STONE_DESTROYED_3: require('assets/music/blocks/rock/rock_destroyed_3.ogg'),
+    STONE_ROLL: require('assets/music/blocks/rock/rock_rolling.ogg'),
+
+    ICE_HIT_1: require('assets/music/blocks/ice/ice_hit_1.ogg'),
+    ICE_HIT_2: require('assets/music/blocks/ice/ice_hit_2.ogg'),
+    ICE_HIT_3: require('assets/music/blocks/ice/ice_hit_3.ogg'),
+    ICE_BREAK_1: require('assets/music/blocks/ice/ice_break_1.ogg'),
+    ICE_BREAK_2: require('assets/music/blocks/ice/ice_break_2.ogg'),
+    ICE_BREAK_3: require('assets/music/blocks/ice/ice_break_2.ogg'),
+    ICE_DESTROYED_1: require('assets/music/blocks/ice/light_destroyed_1.ogg'),
+    ICE_DESTROYED_2: require('assets/music/blocks/ice/light_destroyed_2.ogg'),
+    ICE_DESTROYED_3: require('assets/music/blocks/ice/light_destroyed_3.ogg'),
+
+    SAND_BREAK: require('assets/music/blocks/sand/sand_break.ogg'),
+
+    /**
+     * PIGS
+     */
+
+    PIG_HI_1: require('assets/music/pigs/pig_hi_hat_1.ogg'),
+    PIG_HI_2: require('assets/music/pigs/pig_hi_hat_2.ogg'),
+
+    PIG_OINK_1: require('assets/music/pigs/pig_oink_1.ogg'),
+    PIG_OINK_2: require('assets/music/pigs/pig_oink_2.ogg'),
+    PIG_OINK_3: require('assets/music/pigs/pig_oink_3.ogg'),
+    PIG_OINK_4: require('assets/music/pigs/pig_oink_4.ogg'),
+    PIG_OINK_5: require('assets/music/pigs/pig_oink_5.ogg'),
+    PIG_OINK_6: require('assets/music/pigs/pig_oink_6.ogg'),
+    PIG_OINK_7: require('assets/music/pigs/pig_oink_7.ogg'),
+    PIG_OINK_8: require('assets/music/pigs/pig_oink_8.ogg'),
+    PIG_OINK_9: require('assets/music/pigs/pig_oink_9.ogg'),
+    PIG_OINK_10: require('assets/music/pigs/pig_oink_10.ogg'),
+
+    PIG_HIT_1: require('assets/music/pigs/pig_collision_1.ogg'),
+    PIG_HIT_2: require('assets/music/pigs/pig_collision_2.ogg'),
+    PIG_HIT_3: require('assets/music/pigs/pig_collision_3.ogg'),
+    PIG_HIT_4: require('assets/music/pigs/pig_collision_4.ogg'),
+    PIG_HIT_5: require('assets/music/pigs/pig_collision_5.ogg'),
+    PIG_HIT_6: require('assets/music/pigs/pig_collision_6.ogg'),
+    PIG_HIT_7: require('assets/music/pigs/pig_collision_7.ogg'),
+    PIG_HIT_8: require('assets/music/pigs/pig_collision_8.ogg'),
+
+    PIG_DAMAGE_1: require('assets/music/pigs/pig_damage_1.ogg'),
+    PIG_DAMAGE_2: require('assets/music/pigs/pig_damage_2.ogg'),
+    PIG_DAMAGE_3: require('assets/music/pigs/pig_damage_3.ogg'),
+    PIG_DAMAGE_4: require('assets/music/pigs/pig_damage_4.ogg'),
+    PIG_DAMAGE_5: require('assets/music/pigs/pig_damage_5.ogg'),
+    PIG_DAMAGE_6: require('assets/music/pigs/pig_damage_6.ogg'),
+    PIG_DAMAGE_7: require('assets/music/pigs/pig_damage_7.ogg'),
+    PIG_DAMAGE_8: require('assets/music/pigs/pig_damage_8.ogg'),
+
+    PIG_DESTROYED: require('assets/music/pigs/pig_destroyed.ogg'),
+    
 });
 
 export const Img = Object.freeze({

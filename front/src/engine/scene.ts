@@ -75,8 +75,8 @@ export class Scene {
      * @param ctx The context from the canvas the scene must be drawn on.
      */
     public draw(ctx: CanvasRenderingContext2D): void {
-        for (const o of this.objects) {
-            o.draw(ctx);
+        for (let i = 0; i < this.objects.length; ++i) {
+            this.objects[i].draw(ctx);
         }
     }
 
@@ -85,9 +85,16 @@ export class Scene {
      * @returns The next scene to update and display (usually, itself)
      */
     public update(): Scene {
-        for (const o of this.objects) {
-            o.update();
+        let enabled: GameObject[] = [];
+        for (let i = 0; i < this.objects.length; ++i) {
+            const obj = this.objects[i];
+            if (obj.isEnabled()) {
+                obj.update();
+                enabled.push(obj);
+            }
         }
+
+        this.objects = enabled;
         return this;
     }
 }
