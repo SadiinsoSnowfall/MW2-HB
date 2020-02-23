@@ -1,11 +1,11 @@
 import { Prefab } from "../../engine/prefab";
-import { SpinnyDisplay, SpinnyBehaviour, WigglyDisplay, WigglyBehaviour, FPSMetterDisplay, ImageDisplay, SpriteDisplay, YoloSpritesheetDisplay, CircleBehaviour } from "../components/debugComponents";
+import { SpinnyDisplay, SpinnyBehaviour, WigglyDisplay, WigglyBehaviour, FPSMetterDisplay, ImageDisplay, SpriteDisplay, YoloSpritesheetDisplay, CircleBehaviour, SquareCollider } from "../components/debugComponents";
 import { Alignment, Style } from "../../engine/utils/textFormat";
 import { Scene } from "../../engine/scene";
 import { Assets, Img } from "../../utils";
 import { Spritesheet } from "../../engine/utils/spritesheet";
 
-export { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, sprite, yoloSprite, dicedice };
+export { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, sprite, yoloSprite, dicedice, square };
 
 const wigglyThingy = new Prefab(obj => {
     obj.setDisplayComponent(new WigglyDisplay(obj, "#008000", 100, 55));
@@ -50,6 +50,12 @@ const yoloSprite = new Prefab(obj => {
 const dicedice = new Prefab(obj => {
     obj.setDisplayComponent(new YoloSpritesheetDisplay(obj, new Spritesheet(Assets.img(Img.MISC_MD), 7, 3), 0, 5));
     obj.setBehaviourComponent(new CircleBehaviour(obj, 1));
+});
+
+const square = new Prefab(obj => {
+    obj.setDisplayComponent(new SpinnyDisplay(obj, "#FFFFFF", 50));
+    obj.setColliderComponent(new SquareCollider(obj));
+    obj.setBehaviourComponent(new SpinnyBehaviour(obj, 0.01));
 });
 
 /*

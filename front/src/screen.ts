@@ -33,6 +33,7 @@ export class CScreen {
         // Starts game loop
         this._frame = this._frameTime = this._lastrefresh = this._rft = this._rft_accumulator = 0;
         let _this = this;
+
         let updater = function() {
             let tmp = Date.now();
             _this.scene = _this.scene?.update();
@@ -90,7 +91,7 @@ export class CScreen {
     }
 
     /**
-     * The current time it take for the scene to be rendered excluding Vsync
+     * The current time it takes for the scene to be rendered excluding Vsync
      * (updated every 15 frames)
      */
     public realFramerate(): number {

@@ -1,22 +1,31 @@
 import { Rectangle } from "../utils"
 import { Collider } from '../components';
+import { assert } from "../../utils";
 
 function bboxFromCollider(collider: Collider): Rectangle {
     // TODO Must apply the object's transformations!
-    return collider.getShape().boundingBox();
+    let transform = collider.object.getTransform();
+    return collider.getShape().transform(transform).boundingBox();
 }
 
+let lastId = 0;
+
 class NodeData {
+    public id: number;
     public parent: NodeData | null;
     public left: Node;
     public right: Node;
     public bbox: Rectangle;
 
+    // Child -> parent is done but not parent -> child !
     constructor(parent: NodeData | null, left: Node, right: Node) {
+        this.id = lastId++;
         this.parent = parent;
         this.left = left;
         this.right = right;
         this.bbox = left.bbox.merge(right.bbox);
+        left.parent = this;
+        right.parent = this;
     }
 
     public isLeaf(): boolean {
@@ -26,7 +35,7 @@ class NodeData {
     public pickBest(r: InsertInfo, inheritedCost: number): void {
         let mergedArea = this.bbox.mergedArea(r.newNode.bbox);
         let cost = mergedArea + inheritedCost;
-        if (cost < r.bestCost) {
+        if (cost <= r.bestCost) {
             r.bestCost = cost;
             r.bestSibling = this;
 
@@ -52,7 +61,7 @@ class NodeData {
         if (node == this.left) {
             return this.right;
         } else {
-            return this.right;
+            return this.left;
         }
     }
 
@@ -67,6 +76,8 @@ class NodeData {
     }
 
     // Replaces node with newNode (assuming node is a child)
+    // node is no longer valid after the call: its parent needs to be reset
+    // (unless it was set to the correct value prior to the call to setNode)
     public setNode(node: Node, newNode: Node): void {
         if (node == this.left) {
             this.left = newNode;
@@ -75,15 +86,30 @@ class NodeData {
         }
         newNode.parent = this;
     }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        this.left.draw(ctx);
+        this.right.draw(ctx);
+        this.bbox.draw(ctx);
+    }
+
+    public lol(): void {
+        console.log("node " + this.id);
+        assert(this.left.parent == this, "left is completely drunk man (node " + this.left.id + ")");
+        this.left.lol();
+        assert(this.right.parent == this, "wow actually right is even more so (node " + this.right.id + ")");
+        this.right.lol();
+    }
 }
 
 class LeafData {
+    public id: number;
     public parent: NodeData | null;
     public collider: Collider;
     public bbox: Rectangle;
-    public fatFactor: number;
 
     constructor(collider: Collider, fatFactor: number, parent?: NodeData) {
+        this.id = lastId++;
         if (parent == undefined) {
             this.parent = null;
         } else {
@@ -91,7 +117,6 @@ class LeafData {
         }
         this.collider = collider;
         this.bbox = bboxFromCollider(collider).fatten(fatFactor);
-        this.fatFactor = fatFactor;
     }
 
     public isLeaf(): boolean {
@@ -100,7 +125,7 @@ class LeafData {
 
     public pickBest(r: InsertInfo, inheritedCost: number): void {
         let cost = this.bbox.mergedArea(r.newNode.bbox) + inheritedCost;
-        if (cost < r.bestCost) {
+        if (cost <= r.bestCost) {
             r.bestCost = cost;
             r.bestSibling = this;
         }
@@ -112,9 +137,13 @@ class LeafData {
         }
     }
 
-    // Recomputes the bounding box
-    public update(): void {
-        this.bbox = bboxFromCollider(this.collider).fatten(this.fatFactor);
+    public draw(ctx: CanvasRenderingContext2D): void {
+        this.bbox.draw(ctx);
+    }
+
+    public lol(): void {
+        console.log("leaf " + this.id);
+        console.log(this.bbox);
     }
 }
 
@@ -134,7 +163,10 @@ class InsertInfo {
 
 type Node = LeafData | NodeData;
 
-export class AABBTree {
+/**
+ * @brief Performs both broad and narrow phase of collision detection between colliders.
+ */
+export class AABBTree implements Iterable<Collider> {
     private fatFactor: number;
     private root: Node | null;
     private colliders: Map<Collider, LeafData>;
@@ -147,6 +179,14 @@ export class AABBTree {
         this.fatFactor = fatFactor;
         this.root = null;
         this.colliders = new Map<Collider, LeafData>();
+    }
+
+    public lol(): void {
+        if (this.root == null) {
+            console.log("empty");
+        } else {
+            this.root.lol();
+        }
     }
 
     /**********************************************************************************************
@@ -169,7 +209,7 @@ export class AABBTree {
 
         // Swapping child and grandchild
         otherChild.setNode(grandchild, child);
-        grandchild.parent = parent;
+        parent.setNode(child, grandchild);
 
         // Refitting otherChild
         otherChild.bbox = otherChild.left.bbox.merge(otherChild.right.bbox);
@@ -186,7 +226,7 @@ export class AABBTree {
             let loss = _this.swapLoss(node, _child, _grandchild);
             if (loss < min) {
                 min = loss;
-                child = node.right;
+                child = _child;
                 grandchild = _grandchild;
             }
         }
@@ -204,7 +244,7 @@ export class AABBTree {
         }
 
         // The second condition is actually useless (since grandchild is set with child),
-        // but the compiler won't let this slip away :(
+        // but the compiler won't let this compile :(
         if (child != null && grandchild != null) {
             this.swap(node, child, grandchild);
         }
@@ -218,6 +258,7 @@ export class AABBTree {
             node = node.parent;
         }
     }
+
 
     /**********************************************************************************************
      * 
@@ -240,10 +281,13 @@ export class AABBTree {
             // Adding the leaf
             let parent = r.bestSibling.parent;
             let node = new NodeData(parent, leaf, r.bestSibling);
-            leaf.parent = node;
-            r.bestSibling.parent = node;
 
-            this.refit(parent);
+            if (parent == null) {
+                this.root = node;
+            } else {
+                parent.setNode(r.bestSibling, node);
+                this.refit(parent);
+            }
         }
     }
 
@@ -269,8 +313,8 @@ export class AABBTree {
                 this.root = sibling;
                 sibling.parent = null;
             } else {
-                sibling.parent = parent.parent;
                 parent.parent.setNode(parent, sibling);
+                parent.parent = null;
             }
             this.refit(parent.parent);
         }
@@ -289,13 +333,6 @@ export class AABBTree {
         }
     }
 
-    // Removes and reinserts a leaf
-    private update(leaf: LeafData) {
-        this.removeLeaf(leaf);
-        leaf.update();
-        this.insertLeaf(leaf);
-    }
-
     /**********************************************************************************************
      * 
      * Queries
@@ -308,5 +345,50 @@ export class AABBTree {
             this.root.broadSearch(rect, r);
         }
         return r;
+    }
+
+    /**********************************************************************************************
+     * 
+     * Miscellaneous
+     * 
+     *********************************************************************************************/
+
+    /**
+     * @brief Iterates over the contained colliders.
+     */
+    public [Symbol.iterator](): Iterator<Collider> {
+        return this.colliders.keys();
+    }
+
+    /**
+     * @brief Updates all contained objects and adapts the tree.
+     */
+    public update(): void {
+        for (let o of this.colliders) {
+            let collider: Collider = o[0];
+            let leaf: LeafData = o[1];
+            if (collider.object.update()) {
+                // The object has moved
+                let bbox = bboxFromCollider(collider);
+                if (!leaf.bbox.encloses(bbox)) {
+                    // The leaf's bbox no longer encloses the object's
+                    this.removeLeaf(leaf);
+                    leaf.bbox = bbox.fatten(this.fatFactor);
+                    this.insertLeaf(leaf);
+                    // We could also test if the leaf's bbox is too large
+                    // (leading to poor performance)
+                }
+            }
+        }
+    }
+
+    /**
+     * @brief Draws all bounding boxes used by the tree.
+     * Objects themselves are not drawn (though their bounding box are).
+     */
+    public draw(ctx: CanvasRenderingContext2D) {
+        if (this.root != null) {
+            this.root.draw(ctx);
+        }
     }
 }

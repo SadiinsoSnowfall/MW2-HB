@@ -19,6 +19,25 @@ export interface Shape {
      * @brief Performs the transformation of a shape.
      */
     transform(t: Transform): Shape;
+
+    /**
+     * @brief Draws the shape.
+     * This method should only be called by objects which have already set the right Transform.
+     */
+    draw(ctx: CanvasRenderingContext2D): void;
+}
+
+function drawCross(ctx: CanvasRenderingContext2D, dot: Vec2): void {
+    ctx.setLineDash([]);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(dot.x, dot.y - 5);
+    ctx.lineTo(dot.x, dot.y + 5);
+    ctx.moveTo(dot.x - 5, dot.y);
+    ctx.lineTo(dot.x + 5, dot.y);
+    ctx.strokeStyle = "#000000";
+    ctx.stroke();
+    ctx.closePath();
 }
 
 /**
@@ -50,8 +69,8 @@ export class Rectangle {
      * @brief Returns whether or not point is in the AABB.
      */
     public pointIn(point: Vec2): boolean {
-        return (point.x >= this.position.x && point.x < this.position.x + this.width)
-            && (point.y >= this.position.y && point.y < this.position.y + this.height);
+        return (point.x >= this.position.x && point.x <= this.position.x + this.width)
+            && (point.y >= this.position.y && point.y <= this.position.y + this.height);
     }
 
     /**
@@ -60,6 +79,14 @@ export class Rectangle {
     public intersects(rect: Rectangle): boolean {
         return (this.position.x <= rect.position.x + rect.width  && this.position.x + this.width  >= rect.position.x)
             && (this.position.y <= rect.position.y + rect.height && this.position.y + this.height >= rect.position.y);
+    }
+
+    /**
+     * @brief Returns true if rect is completely enclosed inside this.
+     */
+    public encloses(rect: Rectangle): boolean {
+        return (this.position.x <= rect.position.x && this.position.x + this.width  >= rect.position.x + rect.width)
+            && (this.position.y <= rect.position.y && this.position.y + this.height >= rect.position.y + rect.height);
     }
 
     /**
@@ -114,7 +141,23 @@ export class Rectangle {
 		let r = Math.max(rr, tr);
 		let t = Math.min(rect.position.y, this.position.y);
 		let b = Math.max(rb, tb);
-        return (r - l) * (b - t); 
+        return (r - l) * (b - t);
+    }
+
+    /**
+     * @brief Draws the bounding box (for debug purpose).
+     * Unlike regular shapes, ctx's transform will be reset:
+     * the coordinates are absolute.
+     */
+    public draw(ctx: CanvasRenderingContext2D) {
+        ctx.resetTransform();
+        ctx.setLineDash([5, 5]);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "#000000";
+        ctx.beginPath();
+        ctx.rect(this.position.x, this.position.y, this.width, this.height);
+        ctx.stroke();
+        ctx.closePath();
     }
 }
 
@@ -141,10 +184,9 @@ export class Circle implements Shape {
     }
 
     public boundingBox(): Rectangle {
-        let halfRadius = this.radius / 2;
         let doubleRadius = this.radius * 2;
         return new Rectangle(
-            new Vec2(this.center.x - halfRadius, this.center.y - halfRadius),
+            new Vec2(this.center.x - this.radius, this.center.y - this.radius),
             doubleRadius,
             doubleRadius
         );
@@ -155,6 +197,17 @@ export class Circle implements Shape {
         // (and because the scale might affect differently the radius depending on the direction,
         // it should return an ellipse rather than a circle)
         return new Circle(t.multiplyVector(this.center), this.radius);
+    }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        ctx.strokeStyle = "#000000";
+        ctx.lineWidth = 1;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.ellipse(this.center.x, this.center.y, this.radius, this.radius, 0, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.closePath();
+        drawCross(ctx, this.center);
     }
 }
 
@@ -225,9 +278,10 @@ export class ConvexPolygon implements Shape {
     }
 
     public transform(t: Transform): ConvexPolygon {
+        let t2 = t.place(0, 0);
         let r: Vec2[] = [];
         for (const p of this.vertices) {
-            r.push(t.multiplyVector(new Vec2(p.x + this.center.x, p.y + this.center.y)));
+            r.push(t2.multiplyVector(p));
         }
         return new ConvexPolygon(t.multiplyVector(this.center), r);
     }
@@ -238,5 +292,20 @@ export class ConvexPolygon implements Shape {
      */
     public collides(other: ConvexPolygon): Vec2 | null {
         return null;
+    }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        ctx.strokeStyle = "#000000";
+        ctx.lineWidth = 1;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        let last = this.vertices[this.vertices.length - 1];
+        ctx.moveTo(last.x + this.center.x, last.y + this.center.y);
+        for (const p of this.vertices) {
+            ctx.lineTo(p.x + this.center.x, p.y + this.center.y);
+        }
+        ctx.stroke();
+        ctx.closePath();
+        drawCross(ctx, this.center);
     }
 }

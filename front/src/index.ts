@@ -3,7 +3,7 @@ import './assets/stylesheets/styles.scss';
 import { screen } from './screen';
 import { Transform, Vec2 } from './engine/utils/transform';
 import { Scene } from './engine/scene';
-import { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, sprite, createWiggly, yoloSprite, dicedice } from './game/prefabs/debugPrefabs';
+import { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, sprite, createWiggly, yoloSprite, dicedice, square } from './game/prefabs/debugPrefabs';
 import { Assets, sleep, Sound } from './utils';
 import { GameObject } from './engine/gameObject';
 import { SpinnyDisplay } from './game/components/debugComponents';
@@ -47,6 +47,12 @@ async function game() {
 
     scene.instantiate(image, 250, 800);
     scene.instantiate(sprite, 600, 800);
+
+    scene.instantiate(square, 100, 200);
+    scene.instantiate(square, 200, 225);
+    scene.instantiate(square, 400, 400);
+    scene.instantiate(square, 500, 425);
+    scene.instantiate(square, 300, 312);
 
     screen.setScene(scene);
 
