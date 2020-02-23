@@ -68,4 +68,10 @@ export const Img = Object.freeze({
     BIRD_WHITE: require('assets/images/characters/white.png'),
     BIRD_GREEN: require('assets/images/characters/green.png'),
     BIRD_BIG: require('assets/images/characters/big.png'),
+
+    SCORES: require('assets/images/particles/scores.png'),
+    SMOKE: require('assets/images/particles/smoke.png'),
+    DEBRIS: require('assets/images/particles/debris.png'),
+    FEATHERS: require('assets/images/particles/feathers.png'),
+    EXPLOSION: require('assets/images/particles/explosion.png'),
 });
