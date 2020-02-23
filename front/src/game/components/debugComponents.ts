@@ -103,8 +103,8 @@ export class SpinnyDisplay extends Display {
 
     public draw(ctx: CanvasRenderingContext2D): void {
         let tick = this.tick() || -1;
-        let ftime = this.object?.scene()?.framerate() || -666;
-        let rtime = this.object?.scene()?.realFramerate() || -666;
+        let ftime = this.object.scene()?.framerate() || -666;
+        let rtime = this.object.scene()?.realFramerate() || -666;
         let frameTxt = `Current frame: ${tick}`;
         let timeTxt = `Frame time: ${ftime.toFixed(2)}ms (${(1000 / ftime).toFixed(1)} fps)`;
         let rtimeTxt = `Real: ${rtime.toFixed(2)}ms (${(1000 / rtime).toFixed(1)} fps)`;
@@ -117,9 +117,7 @@ export class FPSMetterDisplay extends Display {
 
     constructor(o: GameObject, a: Alignment, s: Style) {
         super(o);
-        let format = TextFormat.Standard.copy();
-        format.setAlignment(a);
-        format.setStyle(s);
+        let format = TextFormat.using(a, s);
         this.text = new Text(format, [
             "Current frame: ${0}",
             "Frame time: ${1}ms (${2} fps)\nReal: ${3}ms (${4} fps)"
@@ -129,8 +127,8 @@ export class FPSMetterDisplay extends Display {
     public draw(ctx: CanvasRenderingContext2D): void {
         let tick = this.tick() || -1;
         if (!this.text.isInitialized() || tick % 15 == 0) {
-            let ftime = this.object?.scene()?.framerate() || -666;
-            let rtime = this.object?.scene()?.realFramerate() || -666;
+            let ftime = this.object.scene()?.framerate() || -666;
+            let rtime = this.object.scene()?.realFramerate() || -666;
 
             this.text.refresh(ctx, [
                 tick,

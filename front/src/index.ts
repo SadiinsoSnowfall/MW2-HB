@@ -1,98 +1,112 @@
 import './assets/stylesheets/styles.scss';
 
 import { screen } from './screen';
-import { Transform, Vec2 } from './engine/utils/transform';
 import { Scene } from './engine/scene';
-import { wigglyThingy, spinnyThingy, FPSMetter, funnyFPSMetter, hilariousFPSMetter, image, sprite, createWiggly, yoloSprite, dicedice } from './game/prefabs/debugPrefabs';
-import { Assets, sleep, Sound } from './utils';
+import { FPSMetter} from './game/prefabs/debugPrefabs';
+import { Assets, sleep } from './utils';
+import { InputManager } from './utils/inputManager';
+import * as BP from './game/prefabs/blockPrefabs';
+import { BlockBehaviour } from './game/components/blockComponents';
 import { GameObject } from './engine/gameObject';
-import { SpinnyDisplay } from './game/components/debugComponents';
-import { AudioManager } from './engine/AudioManager';
 
 async function game() {
+    InputManager.init();
     await Assets.load();
-    console.log(screen.width + " " + screen.height);
 
     const ctx = screen.getContext();
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, screen.width, screen.height);
 
-    let gradient = ctx.createLinearGradient(0, 0, screen.width, screen.height);
-    gradient.addColorStop(0, 'purple');
-    gradient.addColorStop(0.10, 'blue');
-    gradient.addColorStop(0.25, 'cyan');
-    gradient.addColorStop(0.5, 'green');
-    gradient.addColorStop(0.75, 'orange');
-    gradient.addColorStop(1, 'red');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, screen.width, screen.height);
+    const scene = new Scene();
 
-    let scene = new Scene();
-    scene.instantiate(wigglyThingy, 100, 100);
-    createWiggly(scene, 200, 200, "#800000", 0.05, 100, 25);
-    createWiggly(scene, 500, 200, "#000080", 0.005, 100, 75);
-    scene.instantiate(spinnyThingy, 300, 350);
-    scene.instantiate(FPSMetter, 800, 100);
-    scene.instantiate(funnyFPSMetter, 800, 400);
-    scene.instantiate(hilariousFPSMetter, 300, 500);
-
-    scene.instantiate(yoloSprite, 500, 500);
-    scene.instantiate(yoloSprite, 550, 550);
-    scene.instantiate(yoloSprite, 600, 600);
-    scene.instantiate(yoloSprite, 650, 650);
-
-    for (let i = 0; i < 6; i++) {
-        scene.instantiate(dicedice, 600 + i * 50, 600 + i * 50);
-    }
-
-    scene.instantiate(image, 250, 800);
-    scene.instantiate(sprite, 600, 800);
-
+    scene.instantiate(FPSMetter, 600, 120);
     screen.setScene(scene);
 
-    /*let m = Transform.Identity;
-    let angle = Math.PI / 2;
-    console.log("expected rotation: " + angle);
-    m = m.rotateRadians(angle);
-    console.log(m.toString());
-    console.log("angle: " + m.getRotation());
-    console.log("scale: " + m.getScale());
-    m = m.scale(2, 0.5);
-    console.log(m.toString());
-    console.log("angle: " + m.getRotation());
-    console.log("scale: " + m.getScale());
-    m = m.translate(100, Math.PI);
-    console.log(m.toString());
-    console.log("angle: " + m.getRotation());
-    console.log("scale: " + m.getScale());
+    breakAnimation([
+        scene.instantiate(BP.wooden_ball_md, 100, 300),
+        scene.instantiate(BP.stone_ball_md, 200, 300),
+        scene.instantiate(BP.ice_ball_md, 300, 300),
+        scene.instantiate(BP.sand_ball_md, 400, 300),
+        scene.instantiate(BP.wooden_ball_md_2, 500, 300),
+        scene.instantiate(BP.stone_ball_md_2, 600, 300),
+        scene.instantiate(BP.ice_ball_md_2, 700, 300),
 
-    m = Transform.Identity;
-    let scale = new Vec2(2, 0.5);
-    console.log(`expected scale: ${scale}`);
-    m = m.scale(scale.x, scale.y);
-    console.log(`scale: ${m.getScale()}`);
-    m = m.rotateRadians(Math.PI / 2);
-    console.log(`scale after pi/2 rotation: ${m.getScale()} (norm: ${m.getScale().magnitude()})`);
-    m = m.rotateRadians(0.05);
-    console.log(`scale after 0.05 rotation: ${m.getScale()} (norm: ${m.getScale().magnitude()})`);
+        scene.instantiate(BP.wooden_ball_sm, 100, 400),
+        scene.instantiate(BP.stone_ball_sm, 200, 400),
+        scene.instantiate(BP.ice_ball_sm, 300, 400),
+        scene.instantiate(BP.wooden_ball_sm_2, 500, 400),
+        scene.instantiate(BP.stone_ball_sm_2, 600, 400),
+        scene.instantiate(BP.ice_ball_sm_2, 700, 400),
 
-    let rect1 = new GameObject(1000, 250);
-    rect1.scale(2, 0.5);
-    rect1.setDisplayComponent(new SpinnyDisplay(rect1, "#000000", 50));
-    scene.addObject(rect1);
 
-    let rect2 = new GameObject(1000, 350);
-    rect2.rotateRadians(Math.PI / 2);
-    console.log(rect2.getTransform());
-    console.log(rect2.getScale());
-    rect2.scale(2, 0.5);
-    //rect2.shear(0.25, 0);
-    console.log(rect2.getTransform());
-    console.log(rect2.getScale());
-    rect2.setDisplayComponent(new SpinnyDisplay(rect2, "#000000", 50));
-    scene.addObject(rect2);*/
 
-    // decomment this line
-    //const music = AudioManager.loop(Sound.MAIN_REMIX, 0.1, 50, 70);
+        scene.instantiate(BP.wooden_cube_md, 100, 500),
+        scene.instantiate(BP.stone_cube_md, 200, 500),
+        scene.instantiate(BP.ice_cube_md, 300, 500),
+        scene.instantiate(BP.sand_cube_md, 400, 500),
+
+        scene.instantiate(BP.wooden_cube_sm, 100, 600),
+        scene.instantiate(BP.stone_cube_sm, 200, 600),
+        scene.instantiate(BP.ice_cube_sm, 300, 600),
+        scene.instantiate(BP.wooden_cube_sm_2, 500, 600),
+        scene.instantiate(BP.stone_cube_sm_2, 600, 600),
+        scene.instantiate(BP.ice_cube_sm_2, 700, 600),
+
+        scene.instantiate(BP.wooden_cube_xs, 100, 700),
+        scene.instantiate(BP.stone_cube_xs, 200, 700),
+        scene.instantiate(BP.ice_cube_xs, 300, 700),
+        scene.instantiate(BP.wooden_cube_xs_2, 500, 700),
+        scene.instantiate(BP.stone_cube_xs_2, 600, 700),
+        scene.instantiate(BP.ice_cube_xs_2, 700, 700),
+
+        scene.instantiate(BP.wooden_cube_hl, 100, 800),
+        scene.instantiate(BP.stone_cube_hl, 200, 800),
+        scene.instantiate(BP.ice_cube_hl, 300, 800),
+        scene.instantiate(BP.wooden_cube_hl_2, 500, 800),
+        scene.instantiate(BP.stone_cube_hl_2, 600, 800),
+        scene.instantiate(BP.ice_cube_hl_2, 700, 800),
+
+
+
+        scene.instantiate(BP.wooden_tris_md, 800, 300),
+        scene.instantiate(BP.stone_tris_md, 900, 300),
+        scene.instantiate(BP.ice_tris_md, 1000, 300),
+        scene.instantiate(BP.sand_tris_md, 1100, 300),
+        scene.instantiate(BP.wooden_tris_md_2, 1200, 300),
+        scene.instantiate(BP.stone_tris_md_2, 1300, 300),
+        scene.instantiate(BP.ice_tris_md_2, 1400, 300),
+
+        scene.instantiate(BP.wooden_tris_sm, 800, 400),
+        scene.instantiate(BP.stone_tris_sm, 900, 400),
+        scene.instantiate(BP.ice_tris_sm, 1000, 400),
+        scene.instantiate(BP.sand_tris_sm, 1100, 400),
+
+        scene.instantiate(BP.wooden_tris_hl, 800, 500),
+        scene.instantiate(BP.stone_tris_hl, 900, 500),
+        scene.instantiate(BP.ice_tris_hl, 1000, 500),
+        scene.instantiate(BP.wooden_tris_hl_2, 1200, 500),
+        scene.instantiate(BP.stone_tris_hl_2, 1300, 500),
+        scene.instantiate(BP.ice_tris_hl_2, 1400, 500),
+    ]);
+
+    
+    async function breakAnimation(objs: GameObject[]) {
+        let bhv: BlockBehaviour[] = objs.map(obj => obj.behaviourComponent() as BlockBehaviour);
+
+        while (true) {
+            await sleep(500);
+            for (let i = 0; i < bhv.length; i++) {
+                const cur = bhv[i];
+                if (cur.getHealth() <= 0) {
+                    // ressurect
+                    objs[i].setEnabled(true);
+                    cur.setHealth(cur.maxHealth);
+                    scene.addObject(objs[i]);
+                } else {
+                    cur.applyDamage(10);
+                }
+            }
+        }
+    }
 }
 game();

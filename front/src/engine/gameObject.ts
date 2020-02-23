@@ -3,7 +3,12 @@ import { RigidBody, Display, Collider, Behaviour } from './components';
 import { Scene } from './scene';
 
 export class GameObject {
-    transform: Transform;
+    private static currentId: number = 0;
+
+    public readonly id: number;
+    private enabled: boolean;
+
+    private transform: Transform;
 
     private display?: Display;
     private rigidBody?: RigidBody;
@@ -12,6 +17,7 @@ export class GameObject {
 
     private _scene?: Scene;
 
+
     /**
      * @brief Creates a new GameObject.
      * @param x Horizontal center of the object
@@ -19,6 +25,8 @@ export class GameObject {
      */
     constructor(x: number, y: number) {
         this.transform = Transform.Identity.center(x, y);
+        this.enabled = true;
+        this.id = GameObject.currentId++;
     }
 
     /**********************************************************************************************
@@ -26,6 +34,14 @@ export class GameObject {
      * Methods related to components
      * 
      *********************************************************************************************/
+
+    public isEnabled(): boolean {
+        return this.enabled;
+    }
+
+    public setEnabled(enabled: boolean): void {
+        this.enabled = enabled;
+    }
 
     public scene(): Scene | undefined {
         return this._scene;

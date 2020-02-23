@@ -12,7 +12,7 @@ export abstract class ObjectComponent {
      * as it may be used a lot by object components
      */
     protected tick(): number {
-        return this.object?.scene()?.tick() || -1;
+        return this.object.scene()?.tick() || -1;
     }
 
     /**
