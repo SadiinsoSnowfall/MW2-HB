@@ -8,7 +8,7 @@ import { InputManager } from './utils/inputManager';
 import * as BP from './game/prefabs/blockPrefabs';
 import { BlockBehaviour } from './game/components/blockComponents';
 import { GameObject } from './engine/gameObject';
-import { square } from './game/prefabs/debugPrefabs';
+import { square, wanderer } from './game/prefabs/debugPrefabs';
 
 async function game() {
     InputManager.init();
@@ -95,6 +95,7 @@ async function game() {
     scene.instantiate(square, 400, 400);
     scene.instantiate(square, 500, 425);
     scene.instantiate(square, 300, 312);
+    scene.instantiate(wanderer, 300, 350);
 
     
     async function breakAnimation(objs: GameObject[]) {

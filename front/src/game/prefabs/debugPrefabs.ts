@@ -1,5 +1,5 @@
 import { Prefab } from "../../engine/prefab";
-import { SpinnyDisplay, SpinnyBehaviour, WigglyDisplay, WigglyBehaviour, FPSMetterDisplay, ImageDisplay, SpriteDisplay, YoloSpritesheetDisplay, CircleBehaviour, SquareCollider } from "../components/debugComponents";
+import { SpinnyDisplay, SpinnyBehaviour, WigglyDisplay, WigglyBehaviour, FPSMetterDisplay, ImageDisplay, SpriteDisplay, YoloSpritesheetDisplay, CircleBehaviour, SquareCollider, WandererBehaviour } from "../components/debugComponents";
 import { Alignment, Style } from "../../engine/utils/textFormat";
 import { Scene } from "../../engine/scene";
 import { Assets, Img } from "../../utils";
@@ -54,6 +54,12 @@ export const square = new Prefab(obj => {
     obj.setDisplayComponent(new SpinnyDisplay(obj, "#FFFFFF", 50));
     obj.setColliderComponent(new SquareCollider(obj));
     obj.setBehaviourComponent(new SpinnyBehaviour(obj, 0.01));
+});
+
+export const wanderer = new Prefab(obj => {
+    obj.setDisplayComponent(new SpinnyDisplay(obj, "#FFFFFF", 50));
+    obj.setColliderComponent(new SquareCollider(obj));
+    obj.setBehaviourComponent(new WandererBehaviour(obj, 0.01));
 });
 
 /*

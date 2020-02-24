@@ -212,3 +212,20 @@ export class SquareCollider extends Collider {
         super(o, square);
     }
 }
+
+export class WandererBehaviour extends SpinnyBehaviour {
+    private x: number;
+    private y: number;
+
+    constructor(o: GameObject, r: number, x: number = 1, y: number = 1) {
+        super(o, r);
+        this.x = x;
+        this.y = y;
+    }
+
+    public update(): boolean {
+        super.update();
+        this.object.translate(this.x, this.y);
+        return true;
+    }
+}
