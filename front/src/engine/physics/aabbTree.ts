@@ -3,7 +3,6 @@ import { Collider } from '../components';
 import { assert } from "../../utils";
 
 function bboxFromCollider(collider: Collider): Rectangle {
-    // TODO Must apply the object's transformations!
     let transform = collider.object.getTransform();
     return collider.getShape().transform(transform).boundingBox();
 }
@@ -38,14 +37,14 @@ class NodeData {
         if (cost <= r.bestCost) {
             r.bestCost = cost;
             r.bestSibling = this;
+        }
 
-            // Not sure if this piece of code belongs here or outside the condition
-            let newInheritedCost = mergedArea - this.bbox.area() + inheritedCost;
-            let lowerBound = r.newNode.bbox.area() + newInheritedCost;
-            if (lowerBound < r.bestCost) {
-                r.queue.push([this.left, newInheritedCost]);
-                r.queue.push([this.right, newInheritedCost]);
-            }
+        // Not sure if this piece of code belongs here or inside the condition
+        let newInheritedCost = mergedArea - this.bbox.area() + inheritedCost;
+        let lowerBound = r.newNode.bbox.area() + newInheritedCost;
+        if (lowerBound < r.bestCost) {
+            r.queue.push([this.left, newInheritedCost]);
+            r.queue.push([this.right, newInheritedCost]);
         }
     }
 
@@ -259,6 +258,14 @@ export class AABBTree implements Iterable<Collider> {
         }
     }
 
+    // Recomputes bounding boxes from node to the root but does not perform rotations.
+    private refitNoRotation(node: NodeData | null): void {
+        while (node != null) {
+            node.bbox = node.right.bbox.merge(node.left.bbox);
+            node = node.parent;
+        }
+    }
+
 
     /**********************************************************************************************
      * 
@@ -315,8 +322,9 @@ export class AABBTree implements Iterable<Collider> {
             } else {
                 parent.parent.setNode(parent, sibling);
                 parent.parent = null;
+                //this.refit(parent.parent);
+                this.refitNoRotation(parent.parent);
             }
-            this.refit(parent.parent);
         }
     }
 

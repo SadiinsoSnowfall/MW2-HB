@@ -217,10 +217,10 @@ export class WandererBehaviour extends SpinnyBehaviour {
     private x: number;
     private y: number;
 
-    constructor(o: GameObject, r: number, x: number = 1, y: number = 1) {
+    constructor(o: GameObject, r: number) {
         super(o, r);
-        this.x = x;
-        this.y = y;
+        this.x = (Math.random() - 0.5) * 20;
+        this.y = (Math.random() - 0.5) * 20;
     }
 
     public update(): boolean {

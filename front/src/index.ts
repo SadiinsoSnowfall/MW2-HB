@@ -23,7 +23,7 @@ async function game() {
     scene.instantiate(FPSMetter, 600, 120);
     screen.setScene(scene);
 
-    breakAnimation([
+    /*breakAnimation([
         scene.instantiate(BP.wooden_ball_md, 100, 300),
         scene.instantiate(BP.stone_ball_md, 200, 300),
         scene.instantiate(BP.ice_ball_md, 300, 300),
@@ -89,14 +89,6 @@ async function game() {
         scene.instantiate(BP.stone_tris_hl_2, 1300, 500),
         scene.instantiate(BP.ice_tris_hl_2, 1400, 500),
     ]);
-
-    scene.instantiate(square, 100, 200);
-    scene.instantiate(square, 200, 225);
-    scene.instantiate(square, 400, 400);
-    scene.instantiate(square, 500, 425);
-    scene.instantiate(square, 300, 312);
-    scene.instantiate(wanderer, 300, 350);
-
     
     async function breakAnimation(objs: GameObject[]) {
         let bhv: BlockBehaviour[] = objs.map(obj => obj.behaviourComponent() as BlockBehaviour);
@@ -114,6 +106,19 @@ async function game() {
                     cur.applyDamage(10);
                 }
             }
+        }
+    }*/
+
+    scene.instantiate(square, 100, 200);
+    scene.instantiate(square, 200, 225);
+    scene.instantiate(square, 400, 400);
+    scene.instantiate(square, 500, 425);
+    scene.instantiate(square, 300, 312);
+    scene.instantiate(wanderer, 300, 350);
+
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+            scene.instantiate(wanderer, 100 + i * 50, 300 + j * 50);
         }
     }
 }

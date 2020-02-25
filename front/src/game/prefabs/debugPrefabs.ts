@@ -51,13 +51,13 @@ export const dicedice = new Prefab(obj => {
 });
 
 export const square = new Prefab(obj => {
-    obj.setDisplayComponent(new SpinnyDisplay(obj, "#FFFFFF", 50));
+    obj.setDisplayComponent(new SpinnyDisplay(obj, "#77FF77", 50));
     obj.setColliderComponent(new SquareCollider(obj));
     obj.setBehaviourComponent(new SpinnyBehaviour(obj, 0.01));
 });
 
 export const wanderer = new Prefab(obj => {
-    obj.setDisplayComponent(new SpinnyDisplay(obj, "#FFFFFF", 50));
+    obj.setDisplayComponent(new SpinnyDisplay(obj, "#77FF77", 50));
     obj.setColliderComponent(new SquareCollider(obj));
     obj.setBehaviourComponent(new WandererBehaviour(obj, 0.01));
 });
