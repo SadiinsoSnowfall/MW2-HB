@@ -200,6 +200,22 @@ export const Sound = Object.freeze({
 export const Img = Object.freeze({
     LEVELS_ICON: require('assets/images/blocks/levels_icon.png'),
 
+    /**
+     * BIRDS
+     */
+
+    BIRD_RED: require('assets/images/characters/red.png'),
+    BIRD_YELLOW: require('assets/images/characters/yellow.png'),
+    BIRD_BLUE: require('assets/images/characters/blue.png'),
+    BIRD_BLACK: require('assets/images/characters/black.png'),
+    BIRD_WHITE: require('assets/images/characters/white.png'),
+    BIRD_GREEN: require('assets/images/characters/green.png'),
+    BIRD_BIG: require('assets/images/characters/big.png'),
+
+    /**
+     * BLOCKS
+     */
+
     MISC_MD: require('assets/images/blocks/misc_md.png'),
     MISC_LG: require('assets/images/blocks/misc_lg.png'),
     MISC_XL: require('assets/images/blocks/misc_xl.png'),
@@ -224,17 +240,24 @@ export const Img = Object.freeze({
     PLANKS_SM: require('assets/images/blocks/planks_sm.png'),
     PLANKS_XS: require('assets/images/blocks/planks_xs.png'),
 
-    BIRD_RED: require('assets/images/characters/red.png'),
-    BIRD_YELLOW: require('assets/images/characters/yellow.png'),
-    BIRD_BLUE: require('assets/images/characters/blue.png'),
-    BIRD_BLACK: require('assets/images/characters/black.png'),
-    BIRD_WHITE: require('assets/images/characters/white.png'),
-    BIRD_GREEN: require('assets/images/characters/green.png'),
-    BIRD_BIG: require('assets/images/characters/big.png'),
+    /**
+     * PARTICLES
+     */
 
     SCORES: require('assets/images/particles/scores.png'),
     SMOKE: require('assets/images/particles/smoke.png'),
     DEBRIS: require('assets/images/particles/debris.png'),
     FEATHERS: require('assets/images/particles/feathers.png'),
     EXPLOSION: require('assets/images/particles/explosion.png'),
+
+    /**
+     * PIGS
+     */
+
+    PIG_KING: require('assets/images/characters/pig_king.png'),
+    PIG_MUSTACHE: require('assets/images/characters/pig_mustache.png'),
+    PIG_HELMET: require('assets/images/characters/pig_helmet.png'),
+    PIG_LG: require('assets/images/characters/pig_lg.png'),
+    PIG_MD: require('assets/images/characters/pig_lg.png'),
+    PIG_SM: require('assets/images/characters/pig_lg.png'),
 });
