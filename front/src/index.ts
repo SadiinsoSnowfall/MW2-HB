@@ -116,8 +116,9 @@ async function game() {
     scene.instantiate(square, 300, 312);
     scene.instantiate(wanderer, 300, 350);
 
-    for (let i = 0; i < 10; i++) {
-        for (let j = 0; j < 10; j++) {
+    const nb = 10;
+    for (let i = 0; i < nb; i++) {
+        for (let j = 0; j < nb; j++) {
             scene.instantiate(wanderer, 100 + i * 50, 300 + j * 50);
         }
     }

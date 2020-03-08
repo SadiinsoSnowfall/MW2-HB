@@ -97,7 +97,8 @@ export class FPSMetterDisplay extends Display {
         let format = TextFormat.using(a, s);
         this.text = new Text(format, [
             "Current frame: ${0}",
-            "Frame time: ${1}ms (${2} fps)\nReal: ${3}ms (${4} fps)"
+            "Frame time: ${1}ms (${2} fps)",
+            "Real: ${3}ms (${4} fps)"
         ]);
     }
 
@@ -114,6 +115,7 @@ export class FPSMetterDisplay extends Display {
                 rtime.toFixed(2),
                 (1000 / rtime).toFixed(1)
             ]);
+            console.log("\t" + ftime + "\t" + rtime);
         }
         this.text.draw(ctx);
     }

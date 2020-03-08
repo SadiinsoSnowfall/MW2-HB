@@ -43,8 +43,10 @@ class NodeData {
         let newInheritedCost = mergedArea - this.bbox.area() + inheritedCost;
         let lowerBound = r.newNode.bbox.area() + newInheritedCost;
         if (lowerBound < r.bestCost) {
-            r.queue.push([this.left, newInheritedCost]);
-            r.queue.push([this.right, newInheritedCost]);
+            /*r.queue.push([this.left, newInheritedCost]);
+            r.queue.push([this.right, newInheritedCost]);*/
+            this.left.pickBest(r, newInheritedCost);
+            this.right.pickBest(r, newInheritedCost);
         }
     }
 
@@ -280,9 +282,12 @@ export class AABBTree implements Iterable<Collider> {
         } else {
             // Looking for the best sibling to pair leaf with
             let r = new InsertInfo(this.root, leaf);
-            let e: [Node, number] | undefined;
+            /*let e: [Node, number] | undefined;
             while ((e = r.queue.shift()) != undefined) {
                 e[0].pickBest(r, e[1]);
+            }*/
+            if (this.root != null) {
+                this.root.pickBest(r, 0);
             }
 
             // Adding the leaf
