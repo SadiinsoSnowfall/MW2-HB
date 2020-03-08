@@ -1,6 +1,12 @@
 import { Vec2, Transform } from "../utils";
 import { assert } from "../../utils";
 
+/**************************************************************************************************
+ * 
+ * General data structures (and helper functions)
+ * 
+ *************************************************************************************************/
+
 /**
  * @brief Interface for all classes that can be used as shapes.
  */
@@ -27,6 +33,13 @@ export interface Shape {
     draw(ctx: CanvasRenderingContext2D): void;
 }
 
+/**
+ * @brief Holds useful data on a collision between two shapes.
+ */
+export class CollisionData {
+
+}
+
 function drawCross(ctx: CanvasRenderingContext2D, dot: Vec2): void {
     ctx.setLineDash([]);
     ctx.lineWidth = 1;
@@ -39,6 +52,103 @@ function drawCross(ctx: CanvasRenderingContext2D, dot: Vec2): void {
     ctx.stroke();
     ctx.closePath();
 }
+
+/*
+ * Returns the convex hull of a set of points.
+ */
+function quickHull(set: Vec2[]): ConvexPolygon {
+    // https://en.wikipedia.org/wiki/Quickhull
+
+    // Left and right most points
+    let left = set[0];
+    let right = left;
+    for (const p of set) {
+        if (p.x < left.x) {
+            left = p;
+        } else if (p.x > right.x) {
+            right = p;
+        }
+    }
+    
+    // Partition in two subsets
+    let n = Vec2.normalEdge(left, right);
+    console.log("quickHull:", left, right);
+    let above: Vec2[] = [];
+    let below: Vec2[] = [];
+    for (const p of set) {
+        if (Vec2.sub(p, left).dot(n) > 0) {
+            above.push(p);
+        } else {
+            below.push(p);
+        }
+    }
+
+    let vertices = [left, right];
+
+    function selectRight(set: Vec2[], A: Vec2, B: Vec2): Vec2[] {
+        let r: Vec2[] = [];
+        let n = Vec2.normalEdge(A, B);
+        for (const p of set) {
+            if (Vec2.sub(p, A).dot(n) > 0) {
+                r.push(p);
+            }
+        }
+        console.log("selectRight:");
+        console.log("A:", A);
+        console.log("B:", B);
+        console.log("n:", n);
+        console.log("set:", set);
+        console.log("result:", r);
+        return r;
+    }
+
+    // Pi: index of P
+    function findHull(set: Vec2[], P: Vec2, Q: Vec2, Pi: number, d: number): void {
+        if (d > 10) {
+            throw new Error("gotta stop");
+        }
+
+        if (set.length == 0) {
+            return;
+        }
+        
+        // Find the farthest point from PQ
+        let normal = Vec2.normalEdge(P, Q);
+        let C = set[0];
+        let max = C.dot(normal);
+        for (const p of set) {
+            let dot = p.dot(normal);
+            if (dot > max) {
+                max = dot;
+                C = p;
+            }
+        }
+
+        // Add C to the convex hull
+        vertices.splice(Pi + 1, 0, C);
+
+        // Compute the remaining sets
+        let s1 = selectRight(set, P, C);
+        let s2 = selectRight(set, C, Q);
+        console.log("findHull:");
+        console.log("s1: ", s1);
+        console.log("s2: ", s2);
+
+        findHull(s1, P, C, Pi, d+1);
+        findHull(s2, C, Q, vertices.indexOf(C), d+1);
+    }
+
+    findHull(above, left, right, 0, 0);
+    findHull(below, right, left, vertices.length - 1, 0);
+    return new ConvexPolygon(Vec2.Zero, vertices);
+} 
+
+
+/**************************************************************************************************
+ * 
+ * Specialized shapes
+ * 
+ *************************************************************************************************/
 
 /**
  * @brief Class for axis-aligned bounding boxes.
@@ -215,7 +325,7 @@ export class Circle implements Shape {
  * @brief Class specialized in convex polygons.
  */
 export class ConvexPolygon implements Shape {
-    private center: Vec2;
+    private readonly center: Vec2;
     private vertices: Vec2[];
 
     /**
@@ -307,5 +417,70 @@ export class ConvexPolygon implements Shape {
         ctx.stroke();
         ctx.closePath();
         drawCross(ctx, this.center);
+    }
+
+    private minkowskiDifference(o: ConvexPolygon): ConvexPolygon {
+        let vertices: Vec2[] = [];
+        for (const tp of this.vertices) {
+            for (const op of o.vertices) {
+                vertices.push(Vec2.sub(tp, op));
+            }
+        }
+        return quickHull(vertices);
+    }
+
+    /**
+     * @brief Specialized case of intersection().
+     * @see intersection
+     */
+    public intersectConvex(o: ConvexPolygon): CollisionData | null {
+        /*let a = this.vertices[this.vertices.length - 1];
+        for (let bi = 0; bi < this.vertices.length; bi++) {
+            const b = this.vertices[bi];
+            let n = Vec2.normalEdge(a, b);
+            for (const p of o.vertices) {
+                const v = Vec2.add(o.center, p);
+                if (Vec2.sub(v, a).dot(n) <= 0) {
+                    // TODO the two polygons are intersecting
+                    return null;
+                }
+            }
+
+            a = b;
+        }
+        
+        // The two polygons are not intersecting
+        return null;*/
+
+
+        let minkowski = this.minkowskiDifference(o);
+        // Since the minimum distance between minkowski and (0, 0) is the distance between the two polygons,
+        // we could change the condition to consider close enough polygons to be intersecting.
+        if (minkowski.pointIn(Vec2.Zero)) {
+            // The two polygons intersect
+            return new CollisionData();
+        } else {
+            // No intersection
+            return null;
+        }
+    }
+}
+
+
+/**************************************************************************************************
+ * 
+ * Global collision detection algorithm
+ * 
+ *************************************************************************************************/
+
+/**
+ * @brief Returns the collision data between s1 and s2.
+ * Returns null if both shapes are not actually intersecting. 
+ */
+export function intersection(s1: Shape, s2: Shape): CollisionData | null {
+    if (s1 instanceof ConvexPolygon && s2 instanceof ConvexPolygon) {
+        return s1.intersectConvex(s2);
+    } else {
+        throw new Error("Shapes.ts: intersection(): only convex polygons are supported for now");
     }
 }

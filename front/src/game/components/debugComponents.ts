@@ -115,7 +115,6 @@ export class FPSMetterDisplay extends Display {
                 rtime.toFixed(2),
                 (1000 / rtime).toFixed(1)
             ]);
-            console.log("\t" + ftime + "\t" + rtime);
         }
         this.text.draw(ctx);
     }
@@ -205,7 +204,7 @@ export class CircleBehaviour extends Display {
 export class SquareCollider extends Collider {
     constructor(o: GameObject) {
         let square = new ConvexPolygon(
-            new Vec2(0, 0), [
+            Vec2.Zero, [
             new Vec2(-50, 50),
             new Vec2(50, 50),
             new Vec2(50, -50),

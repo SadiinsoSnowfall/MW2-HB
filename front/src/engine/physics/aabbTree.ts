@@ -1,10 +1,14 @@
-import { Rectangle } from "../utils"
+import { Shape, CollisionData, Rectangle, intersection } from "../utils"
 import { Collider } from '../components';
 import { assert } from "../../utils";
 
-function bboxFromCollider(collider: Collider): Rectangle {
+function shapeFromCollider(collider: Collider): Shape {
     let transform = collider.object.getTransform();
-    return collider.getShape().transform(transform).boundingBox();
+    return collider.getShape().transform(transform);
+}
+
+function bboxFromCollider(collider: Collider): Rectangle {
+    return shapeFromCollider(collider).boundingBox();
 }
 
 let lastId = 0;
@@ -359,6 +363,27 @@ export class AABBTree implements Iterable<Collider> {
         }
         return r;
     }
+
+    /**
+     * @brief Returns a list of all colliders that are colliding with the one provided.
+     * collider itself is not included.
+     * @todo Wrong return type since we need a reference to the colliding object 
+     */
+    public query(collider: Collider): CollisionData[] {
+        let shape = shapeFromCollider(collider);
+        let bbox = shape.boundingBox();
+
+        let r: CollisionData[] = [];
+        for (const leaf of this.broadSearch(bbox)) {
+            if (leaf.collider != collider) {
+                let collision = intersection(shape, shapeFromCollider(leaf.collider));
+                if (collision != null) {
+                    r.push(collision);
+                }
+            }
+        }
+        return r;
+    } 
 
     /**********************************************************************************************
      * 

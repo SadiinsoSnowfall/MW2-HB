@@ -3,12 +3,13 @@ import './assets/stylesheets/styles.scss';
 import { screen } from './screen';
 import { Scene } from './engine/scene';
 import { FPSMetter} from './game/prefabs/debugPrefabs';
-import { Assets, sleep } from './utils';
+import { Assets, sleep, assert } from './utils';
 import { InputManager } from './utils/inputManager';
 import * as BP from './game/prefabs/blockPrefabs';
 import { BlockBehaviour } from './game/components/blockComponents';
 import { GameObject } from './engine/gameObject';
 import { square, wanderer } from './game/prefabs/debugPrefabs';
+import { ConvexPolygon, Vec2 } from './engine/utils';
 
 async function game() {
     InputManager.init();
@@ -23,6 +24,7 @@ async function game() {
     scene.instantiate(FPSMetter, 600, 120);
     screen.setScene(scene);
 
+    // Resistance test
     /*breakAnimation([
         scene.instantiate(BP.wooden_ball_md, 100, 300),
         scene.instantiate(BP.stone_ball_md, 200, 300),
@@ -109,7 +111,8 @@ async function game() {
         }
     }*/
 
-    scene.instantiate(square, 100, 200);
+    // AABB tree test
+    /*scene.instantiate(square, 100, 200);
     scene.instantiate(square, 200, 225);
     scene.instantiate(square, 400, 400);
     scene.instantiate(square, 500, 425);
@@ -121,6 +124,29 @@ async function game() {
         for (let j = 0; j < nb; j++) {
             scene.instantiate(wanderer, 100 + i * 50, 300 + j * 50);
         }
+    }*/
+
+    // Polygon collision detection test
+    scene.instantiate(wanderer, 500, 500); // Just so something is displayed
+
+    function makeSquare(x: number, y: number, side: number): ConvexPolygon {
+        side /= 2;
+        let maxX = x + side;
+        let minX = x - side;
+        let maxY = y + side;
+        let minY = y - side;
+        return new ConvexPolygon(Vec2.Zero, [
+            new Vec2(minX, maxY),
+            new Vec2(maxX, maxY),
+            new Vec2(maxX, minY),
+            new Vec2(maxX, minY)
+        ]);
     }
+
+    let p01 = makeSquare(-2, 2, 2);
+    let p02 = makeSquare(2, 2, 2);
+    assert(p01.intersectConvex(p01) != null, "p01 vs p01 failed");
+    assert(p02.intersectConvex(p02) != null, "p02 vs p02 failed");
+    assert(p01.intersectConvex(p02) == null, "p01 vs p02 failed");
 }
 game();

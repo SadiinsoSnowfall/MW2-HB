@@ -204,4 +204,19 @@ export class Vec2 {
         return a.eq(b);
     }
 
+    /**
+     * Returns the counterclockwise normal of a.
+     * The result is not normalized (i.e. its magnitude may not be 1).
+     */
+    public static normalVector(a: Vec2): Vec2 {
+        return new Vec2(a.y, -a.x);
+    }
+
+    /**
+     * Returns the counterclockwise normal of ab.
+     * Shortcut for Vec2.normal(Vec2.sub(b, a)).
+     */
+    public static normalEdge(a: Vec2, b: Vec2): Vec2 {
+        return new Vec2(b.y - a.y, a.x - b.x);
+    }
 }
