@@ -55,24 +55,30 @@ function drawCross(ctx: CanvasRenderingContext2D, dot: Vec2): void {
 
 /*
  * Returns the convex hull of a set of points.
+ * set should not contain twice the same vale ideally
+ * (though the algorithm would still return the correct value)
  */
 function quickHull(set: Vec2[]): ConvexPolygon {
     // https://en.wikipedia.org/wiki/Quickhull
 
     // Left and right most points
-    let left = set[0];
+    let it = set.values();
+    let itr = it.next();
+    let left = itr.value;
     let right = left;
-    for (const p of set) {
+    itr = it.next();
+    while (!itr.done) {
+        const p = itr.value;
         if (p.x < left.x) {
             left = p;
         } else if (p.x > right.x) {
             right = p;
         }
+        itr = it.next();
     }
     
     // Partition in two subsets
     let n = Vec2.normalEdge(left, right);
-    console.log("quickHull:", left, right);
     let above: Vec2[] = [];
     let below: Vec2[] = [];
     for (const p of set) {
@@ -93,35 +99,30 @@ function quickHull(set: Vec2[]): ConvexPolygon {
                 r.push(p);
             }
         }
-        console.log("selectRight:");
-        console.log("A:", A);
-        console.log("B:", B);
-        console.log("n:", n);
-        console.log("set:", set);
-        console.log("result:", r);
         return r;
     }
 
     // Pi: index of P
-    function findHull(set: Vec2[], P: Vec2, Q: Vec2, Pi: number, d: number): void {
-        if (d > 10) {
-            throw new Error("gotta stop");
-        }
-
+    function findHull(set: Vec2[], P: Vec2, Q: Vec2, Pi: number): void {
         if (set.length == 0) {
             return;
         }
         
         // Find the farthest point from PQ
         let normal = Vec2.normalEdge(P, Q);
-        let C = set[0];
+        let it = set.values();
+        let itr = it.next();
+        let C = itr.value;
         let max = C.dot(normal);
-        for (const p of set) {
+        itr = it.next();
+        while (!itr.done) {
+            const p = itr.value;
             let dot = p.dot(normal);
             if (dot > max) {
                 max = dot;
                 C = p;
             }
+            itr = it.next();
         }
 
         // Add C to the convex hull
@@ -130,16 +131,13 @@ function quickHull(set: Vec2[]): ConvexPolygon {
         // Compute the remaining sets
         let s1 = selectRight(set, P, C);
         let s2 = selectRight(set, C, Q);
-        console.log("findHull:");
-        console.log("s1: ", s1);
-        console.log("s2: ", s2);
 
-        findHull(s1, P, C, Pi, d+1);
-        findHull(s2, C, Q, vertices.indexOf(C), d+1);
+        findHull(s1, P, C, Pi);
+        findHull(s2, C, Q, vertices.indexOf(C));
     }
 
-    findHull(above, left, right, 0, 0);
-    findHull(below, right, left, vertices.length - 1, 0);
+    findHull(above, left, right, 0);
+    findHull(below, right, left, vertices.length - 1);
     return new ConvexPolygon(Vec2.Zero, vertices);
 } 
 
@@ -346,17 +344,14 @@ export class ConvexPolygon implements Shape {
      * @brief Returns whether or not point belongs in this shape.
      */
     public pointIn(point: Vec2): boolean {
-        let ax = this.vertices[0].x + this.center.x;
-        let ay = this.vertices[0].y + this.center.y;
-        for (let i = 1; i < this.vertices.length; i++) {
-            let bx = this.vertices[i].x + this.center.x;
-            let by = this.vertices[i].y + this.center.y;
-            let det = (bx - ax) * (point.x - ax) - (by - ay) * (point.y - ay);
-            ax = bx;
-            ay = by;
-            if (det < 0) {
+        let a = Vec2.add(this.vertices[this.vertices.length - 1], this.center);
+        for (const bc of this.vertices) {
+            const b = Vec2.add(bc, this.center);
+            const n = Vec2.normalEdge(a, b);
+            if (Vec2.sub(point, a).dot(n) > 0) {
                 return false;
             }
+            a = b;
         }
         return true;
     }
@@ -423,7 +418,21 @@ export class ConvexPolygon implements Shape {
         let vertices: Vec2[] = [];
         for (const tp of this.vertices) {
             for (const op of o.vertices) {
-                vertices.push(Vec2.sub(tp, op));
+                let sub = Vec2.sub(tp, op);
+
+                // Making sure all values are unique
+                /*let found = false;
+                for (const v of vertices) {
+                    if (v.x == sub.x && v.y == sub.y) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    vertices.push(sub);
+                }*/
+                vertices.push(sub);
             }
         }
         return quickHull(vertices);
@@ -434,25 +443,6 @@ export class ConvexPolygon implements Shape {
      * @see intersection
      */
     public intersectConvex(o: ConvexPolygon): CollisionData | null {
-        /*let a = this.vertices[this.vertices.length - 1];
-        for (let bi = 0; bi < this.vertices.length; bi++) {
-            const b = this.vertices[bi];
-            let n = Vec2.normalEdge(a, b);
-            for (const p of o.vertices) {
-                const v = Vec2.add(o.center, p);
-                if (Vec2.sub(v, a).dot(n) <= 0) {
-                    // TODO the two polygons are intersecting
-                    return null;
-                }
-            }
-
-            a = b;
-        }
-        
-        // The two polygons are not intersecting
-        return null;*/
-
-
         let minkowski = this.minkowskiDifference(o);
         // Since the minimum distance between minkowski and (0, 0) is the distance between the two polygons,
         // we could change the condition to consider close enough polygons to be intersecting.

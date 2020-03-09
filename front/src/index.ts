@@ -139,12 +139,17 @@ async function game() {
             new Vec2(minX, maxY),
             new Vec2(maxX, maxY),
             new Vec2(maxX, minY),
-            new Vec2(maxX, minY)
+            new Vec2(minX, minY)
         ]);
     }
 
+    var a = new Vec2(5, -10);
+    var b = Vec2.normalVector(a);
+    assert(b.x == 10 && b.y == 5, "Vec2#normal failed");
+
     let p01 = makeSquare(-2, 2, 2);
     let p02 = makeSquare(2, 2, 2);
+    assert(p01.pointIn(new Vec2(-2, 2)), "p01 does not contain its center lol");
     assert(p01.intersectConvex(p01) != null, "p01 vs p01 failed");
     assert(p02.intersectConvex(p02) != null, "p02 vs p02 failed");
     assert(p01.intersectConvex(p02) == null, "p01 vs p02 failed");

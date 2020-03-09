@@ -69,7 +69,7 @@ export class Vec2 {
      * @param v The given vector
      */
     public dot(v: Vec2): number {
-        return this.x * v.x + this.y + v.y;
+        return this.x * v.x + this.y * v.y;
     }
 
     /**
@@ -209,7 +209,7 @@ export class Vec2 {
      * The result is not normalized (i.e. its magnitude may not be 1).
      */
     public static normalVector(a: Vec2): Vec2 {
-        return new Vec2(a.y, -a.x);
+        return new Vec2(-a.y, a.x);
     }
 
     /**
@@ -217,6 +217,6 @@ export class Vec2 {
      * Shortcut for Vec2.normal(Vec2.sub(b, a)).
      */
     public static normalEdge(a: Vec2, b: Vec2): Vec2 {
-        return new Vec2(b.y - a.y, a.x - b.x);
+        return new Vec2(a.y - b.y, b.x - a.x);
     }
 }
