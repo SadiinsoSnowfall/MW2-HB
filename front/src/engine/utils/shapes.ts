@@ -341,6 +341,14 @@ export class ConvexPolygon implements Shape {
     }
 
     /**
+     * @brief Debug only; used only by PolygonDisplay for debug purpose.
+     * Should not be used.
+     */
+    public getVertices(): Vec2[] {
+        return this.vertices;
+    }
+
+    /**
      * @brief Returns whether or not point belongs in this shape.
      */
     public pointIn(point: Vec2): boolean {

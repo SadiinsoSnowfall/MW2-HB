@@ -10,6 +10,8 @@ import { BlockBehaviour } from './game/components/blockComponents';
 import { GameObject } from './engine/gameObject';
 import { square, wanderer } from './game/prefabs/debugPrefabs';
 import { ConvexPolygon, Vec2 } from './engine/utils';
+import { Collider } from './engine/components';
+import { PolygonDisplay } from './game/components/debugComponents';
 
 async function game() {
     InputManager.init();
@@ -128,30 +130,81 @@ async function game() {
 
     // Polygon collision detection test
     scene.instantiate(wanderer, 500, 500); // Just so something is displayed
+    const offset = 500;
+    const scale = 100;
 
-    function makeSquare(x: number, y: number, side: number): ConvexPolygon {
-        side /= 2;
+    function tr(x: number): number {
+        return x * scale + offset;
+    }
+
+    function test(p1: any, p2: any, expected: boolean) {
+        assert(
+            (p1.p.intersectConvex(p2.p) == null) != expected,
+            `${p1.n} vs ${p2.n} failed`
+        );
+    }
+
+    function lol(p: any, color: string) {
+        test(p, p, true);
+        let obj = new GameObject(0, 0);
+        obj.setColliderComponent(new Collider(obj, p.p));
+        obj.setDisplayComponent(new PolygonDisplay(obj, p.p, color));
+        scene.addObject(obj);
+        return p;
+    }
+
+    function makeSquare(name: string, color: string, x: number, y: number, side: number) {
+        side = (side * scale) /2;
+        x = tr(x);
+        y = tr(y);
         let maxX = x + side;
         let minX = x - side;
         let maxY = y + side;
         let minY = y - side;
-        return new ConvexPolygon(Vec2.Zero, [
-            new Vec2(minX, maxY),
-            new Vec2(maxX, maxY),
-            new Vec2(maxX, minY),
-            new Vec2(minX, minY)
-        ]);
+        let r = {
+            n: name,
+            p: new ConvexPolygon(Vec2.Zero, [
+                new Vec2(minX, maxY),
+                new Vec2(maxX, maxY),
+                new Vec2(maxX, minY),
+                new Vec2(minX, minY)
+            ])
+        };
+        assert(r.p.pointIn(new Vec2(x, y)), `${name} does not contain its own center`);
+        return lol(r, color);
     }
 
-    var a = new Vec2(5, -10);
-    var b = Vec2.normalVector(a);
+    function makeTriangle(name: string, color: string, x1: number, y1: number, x2: number, y2: number, x3: number, y3: number) {
+        let r = {
+            n: name,
+            p: new ConvexPolygon(Vec2.Zero, [
+                new Vec2(tr(x1), tr(y1)),
+                new Vec2(tr(x2), tr(y2)),
+                new Vec2(tr(x3), tr(y3))
+            ])
+        };
+        return lol(r, color);
+    }
+
+    let a = new Vec2(5, -10);
+    let b = Vec2.normalVector(a);
     assert(b.x == 10 && b.y == 5, "Vec2#normal failed");
 
-    let p01 = makeSquare(-2, 2, 2);
-    let p02 = makeSquare(2, 2, 2);
-    assert(p01.pointIn(new Vec2(-2, 2)), "p01 does not contain its center lol");
-    assert(p01.intersectConvex(p01) != null, "p01 vs p01 failed");
-    assert(p02.intersectConvex(p02) != null, "p02 vs p02 failed");
-    assert(p01.intersectConvex(p02) == null, "p01 vs p02 failed");
+    let p01 = makeSquare("p01", "#FF7777", -2, 2, 2);
+    let p02 = makeSquare("p02", "#FF77FF", 2, 2, 2);
+    let p03 = makeSquare("p03", "#7777FF", 0, 0, 2);
+    let p04 = makeTriangle("p04", "#FFFF77", 1, 2, -1, 0, -2, 2);
+    let p05 = makeTriangle("p05", "#77FFFF", 0.82, 1.29, -0.24, -0.51, 4.26, 1.01);
+
+    test(p01, p02, false);
+    test(p01, p03, true);
+    test(p02, p03, true);
+    test(p04, p05, false);
+    test(p01, p04, true);
+    test(p01, p05, false);
+    test(p02, p04, true);
+    test(p02, p05, true);
+    test(p03, p04, true);
+    test(p03, p05, true);
 }
 game();

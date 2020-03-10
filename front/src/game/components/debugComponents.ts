@@ -230,3 +230,29 @@ export class WandererBehaviour extends SpinnyBehaviour {
         return true;
     }
 }
+
+export class PolygonDisplay extends Display {
+    private c: string;
+    private p: ConvexPolygon;
+
+    constructor(o: GameObject, p: ConvexPolygon, c: string = "#FFFFFF") {
+        super(o);
+        this.c = c;
+        this.p = p;
+    }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        ctx.fillStyle = this.c;
+        ctx.beginPath();
+        // Polygons that are displayed by this Display have all (0, 0) as their center
+        // (not that it should be the case, it's just for debug purpose)
+        let vertices = this.p.getVertices();
+        let last = vertices[vertices.length - 1];
+        ctx.moveTo(last.x, last.y);
+        for (const p of vertices) {
+            ctx.lineTo(p.x, p.y);
+        }
+        ctx.closePath();
+        ctx.fill();
+    }
+}
