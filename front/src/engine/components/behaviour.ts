@@ -4,14 +4,12 @@ import { ObjectComponent } from "./";
 /**
  * ObjectComponent for scripting objects
  */
-export class Behaviour extends ObjectComponent {
+export abstract class Behaviour extends ObjectComponent {
     
     constructor(object: GameObject) {
         super(object);
     }
 
-    public update(): boolean {
-        return false;
-    }
+    public abstract update(): boolean;
 
 }
