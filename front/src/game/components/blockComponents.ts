@@ -1,7 +1,8 @@
-import { Display, Behaviour } from "../../engine/components";
+import { Display } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { Spritesheet, Sprite } from "../../engine/utils/spritesheet";
 import { assert } from "../../utils";
+import { Damagable } from "./baseComponents";
 
 /**
  * Virtual Spritesheet Block Display
@@ -17,7 +18,7 @@ export class VSBlockDisplay extends Display {
         super(o);
         this.sheet = sheet;
         this.col = col;
-        this.sprite = sheet.getSprite(this.col, 0)
+        this.sprite = sheet.getSprite(this.col, 0);
     }
 
     public useSprite(id: number): void {
@@ -30,25 +31,17 @@ export class VSBlockDisplay extends Display {
 
 }
 
-export class BlockBehaviour extends Behaviour {
-    public readonly maxHealth: number;
+export class BlockBehaviour extends Damagable {
     private spriteIndex: number;
-    private health: number;
     private display: VSBlockDisplay;
 
     constructor(o: GameObject, health: number) {
-        super(o);
-        this.maxHealth = health;
-        this.health = health;
+        super(o, health);
         this.spriteIndex = 0;
 
         const display = o.displayComponent();
         assert(display instanceof VSBlockDisplay, 'BlockBehaviour#init: target object display is not a VSBlockDisplay');
         this.display = display as VSBlockDisplay;
-    }
-
-    public getHealth() {
-        return this.health;
     }
 
     public setHealth(health: number) {

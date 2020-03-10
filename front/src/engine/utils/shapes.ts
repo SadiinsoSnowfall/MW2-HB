@@ -37,7 +37,11 @@ export interface Shape {
  * @brief Holds useful data on a collision between two shapes.
  */
 export class CollisionData {
+    public point: Vec2;
 
+    constructor(p: Vec2) {
+        this.point = p;
+    }
 }
 
 function drawCross(ctx: CanvasRenderingContext2D, dot: Vec2): void {
@@ -139,7 +143,7 @@ function quickHull(set: Vec2[]): ConvexPolygon {
     findHull(above, left, right, 0);
     findHull(below, right, left, vertices.length - 1);
     return new ConvexPolygon(Vec2.Zero, vertices);
-} 
+}
 
 
 /**************************************************************************************************
@@ -317,6 +321,28 @@ export class Circle implements Shape {
         ctx.closePath();
         drawCross(ctx, this.center);
     }
+
+    public intersectCircle(c: Circle): CollisionData | null {
+        let d = Vec2.distance(this.center, c.center);
+        let rpr = this.radius + c.radius;
+        let rmr = Math.abs(this.radius - c.radius);
+
+        // return null if :
+        // - the two circles don't intersect
+        // - one circle is contained inside the other one
+        // - the two circles are identicals
+        if (d > rpr || d < rmr || (d == 0 && rmr == 0)) {
+            return null;
+        }
+
+        let dd = d * d;
+        let da = (this.radius * this.radius - c.radius * c.radius + dd) / (2 * dd);
+        let invd = 1 - da;
+
+        let x = invd * this.center.x + da * c.center.x;
+        let y = invd * this.center.y + da * c.center.y;
+        return new CollisionData(new Vec2(x, y));
+    }
 }
 
 /**
@@ -448,7 +474,8 @@ export class ConvexPolygon implements Shape {
         // we could change the condition to consider close enough polygons to be intersecting.
         if (minkowski.pointIn(Vec2.Zero)) {
             // The two polygons intersect
-            return new CollisionData();
+            let inter = new Vec2(0, 0); //TODO give intersection point
+            return new CollisionData(inter);
         } else {
             // No intersection
             return null;
@@ -470,6 +497,8 @@ export class ConvexPolygon implements Shape {
 export function intersection(s1: Shape, s2: Shape): CollisionData | null {
     if (s1 instanceof ConvexPolygon && s2 instanceof ConvexPolygon) {
         return s1.intersectConvex(s2);
+    } else if (s1 instanceof Circle && s2 instanceof Circle) {
+        return s1.intersectCircle(s2);
     } else {
         throw new Error("Shapes.ts: intersection(): only convex polygons are supported for now");
     }

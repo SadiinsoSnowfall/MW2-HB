@@ -29,6 +29,13 @@ import { assert } from "../utils";
  * 240-249: planks_sm
  * 250-259: planks_xs
  * 
+ * 500: pig_king
+ * 501: ping_mustache
+ * 502: pig_helmet
+ * 503: pig_lg
+ * 504: pig_md
+ * 505: pig_sm
+ * 
  */
 export class PrefabsManager {
     private static prefabs: Map<number, Prefab> = new Map();
