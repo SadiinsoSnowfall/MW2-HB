@@ -65,6 +65,14 @@ export class Vec2 {
     }
 
     /**
+     * Multiplies both components by -1.
+     */
+    public neg(): void {
+        this.x = -this.x;
+        this.y = -this.y;
+    }
+
+    /**
      * Return the dot product of the two vectors
      * @param v The given vector
      */
@@ -182,6 +190,13 @@ export class Vec2 {
     }
 
     /**
+     * Returns the opposite of a.
+     */
+    public static neg(a: Vec2): Vec2 {
+        return new Vec2(-a.x, -a.y);
+    }
+
+    /**
      * Return a copy of the given vector with a magnitude of 1
      */
     public static normalize(v: Vec2): Vec2 {
@@ -218,5 +233,10 @@ export class Vec2 {
      */
     public static normalEdge(a: Vec2, b: Vec2): Vec2 {
         return new Vec2(a.y - b.y, b.x - a.x);
+    }
+
+    public static tripleProduct(a: Vec2, b: Vec2, c: Vec2): Vec2 {
+        let f = a.x * b.y - a.y * b.x;
+        return new Vec2(-f * c.y, f * c.x);
     }
 }

@@ -27,10 +27,29 @@ export interface Shape {
     transform(t: Transform): Shape;
 
     /**
-     * @brief Draws the shape.
+     * @brief Returns the point that has the highest dot product with d.
+     * Geometrically, such a point is the farthest in the direction of d.
+     */
+    support(d: Vec2): Vec2;
+
+    /**
+     * @brief Returns an arbitraty point on the boundary of the shape.
+     */
+    pick(): Vec2;
+
+    /**
+     * @brief Draws the boundary of the shape.
      * This method should only be called by objects which have already set the right Transform.
      */
-    draw(ctx: CanvasRenderingContext2D): void;
+    stroke(ctx: CanvasRenderingContext2D): void;
+
+    /**
+     * Draws the interior of the shape.
+     * Like stroke(), this method should only be called by objets which have already set the right Transform.
+     * @param ctx The context to draw on
+     * @param color The color to be used
+     */
+    fill(ctx: CanvasRenderingContext2D, color: string): void;
 }
 
 /**
@@ -311,7 +330,23 @@ export class Circle implements Shape {
         return new Circle(t.multiplyVector(this.center), this.radius);
     }
 
-    public draw(ctx: CanvasRenderingContext2D): void {
+    public support(d: Vec2): Vec2 {
+        if (d.eq(Vec2.Zero)) {
+            // Vec2.Zero or this.center? Not sure
+            return this.center;
+        } else {
+            let magnitude = d.magnitude();
+            let r = Vec2.mul(d, this.radius / magnitude);
+            r.add(this.center);
+            return r;
+        }
+    }
+
+    public pick(): Vec2 {
+        return new Vec2(this.center.x + this.radius, this.center.y);
+    }
+
+    public stroke(ctx: CanvasRenderingContext2D): void {
         ctx.strokeStyle = "#000000";
         ctx.lineWidth = 1;
         ctx.setLineDash([5, 5]);
@@ -322,26 +357,16 @@ export class Circle implements Shape {
         drawCross(ctx, this.center);
     }
 
-    public intersectCircle(c: Circle): CollisionData | null {
-        let d = Vec2.distance(this.center, c.center);
-        let rpr = this.radius + c.radius;
-        let rmr = Math.abs(this.radius - c.radius);
-
-        // return null if :
-        // - the two circles don't intersect
-        // - one circle is contained inside the other one
-        // - the two circles are identicals
-        if (d > rpr || d < rmr || (d == 0 && rmr == 0)) {
-            return null;
-        }
-
-        let dd = d * d;
-        let da = (this.radius * this.radius - c.radius * c.radius + dd) / (2 * dd);
-        let invd = 1 - da;
-
-        let x = invd * this.center.x + da * c.center.x;
-        let y = invd * this.center.y + da * c.center.y;
-        return new CollisionData(new Vec2(x, y));
+    public fill(ctx: CanvasRenderingContext2D, color: string): void {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.ellipse(
+            this.center.x, this.center.y, 
+            this.radius, this.radius,
+            0, 0, 2 * Math.PI
+        );
+        ctx.closePath();
+        ctx.fill();
     }
 }
 
@@ -425,6 +450,24 @@ export class ConvexPolygon implements Shape {
         return new ConvexPolygon(t.multiplyVector(this.center), r);
     }
 
+    public support(d: Vec2): Vec2 {
+        let max = Vec2.add(this.vertices[0], this.center);
+        let dot = max.dot(d);
+        for (let i = 1; i < this.vertices.length; i++) {
+            const p = Vec2.add(this.vertices[i], this.center);
+            let tmp = p.dot(d);
+            if (tmp > dot) {
+                max = p;
+                dot = tmp;
+            }
+        }
+        return max;
+    }
+
+    public pick(): Vec2 {
+        return Vec2.add(this.center, this.vertices[0]);
+    }
+
     /**
      * @brief Returns null if this and other are not colliding.
      * Otherwise, returns the penetration vector.
@@ -433,7 +476,7 @@ export class ConvexPolygon implements Shape {
         return null;
     }
 
-    public draw(ctx: CanvasRenderingContext2D): void {
+    public stroke(ctx: CanvasRenderingContext2D): void {
         ctx.strokeStyle = "#000000";
         ctx.lineWidth = 1;
         ctx.setLineDash([5, 5]);
@@ -448,35 +491,33 @@ export class ConvexPolygon implements Shape {
         drawCross(ctx, this.center);
     }
 
+    public fill(ctx: CanvasRenderingContext2D, color: string): void {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        let last = this.vertices[this.vertices.length - 1]
+        ctx.moveTo(last.x + this.center.x, last.y + this.center.y);
+        for (const p of this.vertices) {
+            ctx.lineTo(p.x + this.center.x, p.y + this.center.y);
+        }
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    /*
+    // Unused
     private minkowskiDifference(o: ConvexPolygon): ConvexPolygon {
         let vertices: Vec2[] = [];
         for (const tp of this.vertices) {
             for (const op of o.vertices) {
                 let sub = Vec2.sub(tp, op);
-
-                // Making sure all values are unique
-                /*let found = false;
-                for (const v of vertices) {
-                    if (v.x == sub.x && v.y == sub.y) {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found) {
-                    vertices.push(sub);
-                }*/
                 vertices.push(sub);
             }
         }
         return quickHull(vertices);
     }
 
-    /**
-     * @brief Specialized case of intersection().
-     * @see intersection
-     */
-    public intersectConvex(o: ConvexPolygon): CollisionData | null {
+    // Unused
+    private intersectConvex(o: ConvexPolygon): CollisionData | null {
         let minkowski = this.minkowskiDifference(o);
         // Since the minimum distance between minkowski and (0, 0) is the distance between the two polygons,
         // we could change the condition to consider close enough polygons to be intersecting.
@@ -489,6 +530,7 @@ export class ConvexPolygon implements Shape {
             return null;
         }
     }
+    */
 }
 
 
@@ -503,11 +545,134 @@ export class ConvexPolygon implements Shape {
  * Returns null if both shapes are not actually intersecting. 
  */
 export function intersection(s1: Shape, s2: Shape): CollisionData | null {
-    if (s1 instanceof ConvexPolygon && s2 instanceof ConvexPolygon) {
+    /*if (s1 instanceof ConvexPolygon && s2 instanceof ConvexPolygon) {
         return s1.intersectConvex(s2);
     } else if (s1 instanceof Circle && s2 instanceof Circle) {
         return s1.intersectCircle(s2);
     } else {
-        throw new Error("Shapes.ts: intersection(): only convex polygons are supported for now");
+        throw new Error("Shapes.ts: intersection(): unsupported shapes type");
+    }*/
+
+    /*// https://caseymuratori.com/blog_0003
+    let s = Vec2.sub(s1.pick(), s2.pick());
+    let simplex = [s];
+    let d = Vec2.neg(s);
+    while (true) {
+        let a = Vec2.sub(s1.support(d), s2.support(Vec2.neg(d)));
+        if (a.dot(d) < 0) {
+            // The two shapes are not intersecting
+            return null;
+        }
+
+        // A is not explicity added to the simplex...
+        let contains = false;
+        if (simplex.length == 1) {
+            // ... So this case actually covers lines, and not single points
+            // Isn't A past the origin compared to b ?
+            // Which would mean we need one less condition
+            let ao = Vec2.neg(a);
+            let ab = Vec2.sub(simplex[0], a);
+            if (ab.dot(ao) > 0) {
+                // Closer to some point of the segment of AB that is not A or B
+                simplex.push(a);
+                d = Vec2.tripleProduct(ab, ao, ab);
+            } else {
+                // Closer to A
+                d = ao;
+            }
+            // Can not be closer to B (simplex[0])
+        } else {
+            // https://blog.hamaluik.ca/posts/building-a-collision-engine-part-1-2d-gjk-collision-detection/
+            // The video considers 3D vectir, which is not our case
+            // So I used the above link to complete this case
+            let b = simplex[1];
+            let c = simplex[0];
+            let ab = Vec2.sub(b, a);
+            let ac = Vec2.sub(c, a);
+            let ao = Vec2.neg(a);
+            let abPerp = Vec2.tripleProduct(ac, ab, ab);
+            if (abPerp.dot(ao) > 0) {
+                // Outside ab
+                simplex = [b, a];
+                d = abPerp;
+            } else {
+                let acPerp = Vec2.tripleProduct(ab, ac, ac);
+                if (acPerp.dot(ao) > 0) {
+                    // Outside ac
+                    simplex = [c, a];
+                    d = acPerp;
+                } else {
+                    // Inside both ab and ac: the simplex contains the origin
+                    contains = true;
+                }
+            }
+        }
+
+        if (contains) {
+            return new CollisionData(Vec2.Zero);
+        }
+    }*/
+
+    // https://blog.hamaluik.ca/posts/building-a-collision-engine-part-1-2d-gjk-collision-detection/
+    let simplex: Vec2[] = [];
+    let d = Vec2.Zero;
+    while (true) {
+        switch (simplex.length) {
+            case 0: {
+                d = Vec2.sub(s1.pick(), s2.pick());
+                break;
+            }
+
+            case 1: {
+                d.neg();
+                break;
+            }
+
+            case 2: {
+                let c = simplex[0];
+                let cb = Vec2.sub(simplex[1], c);
+                let co = Vec2.neg(c);
+                d = Vec2.tripleProduct(cb, co, cb);
+                break;
+            }
+
+            case 3: {
+                let a = simplex[2];
+                let b = simplex[1];
+                let c = simplex[0];
+                let ao = Vec2.neg(a);
+                let ab = Vec2.sub(b, a);
+                let ac = Vec2.sub(c, a);
+                let abPerp = Vec2.tripleProduct(ac, ab, ab);
+                if (abPerp.dot(ao) > 0) {
+                    // Outside ab
+                    simplex = [b, a];
+                    d = abPerp;
+                } else {
+                    let acPerp = Vec2.tripleProduct(ab, ac, ac);
+                    if (acPerp.dot(ao) > 0) {
+                        // Outside ac
+                        simplex = [c, a];
+                        d = acPerp;
+                    } else {
+                        // Outside botj ab and ac => simplex encloses (0, 0)
+                        return new CollisionData(/*TODO*/Vec2.Zero);
+                    }
+                }
+                break;
+            }
+
+            default: {
+                throw new Error(`shapes.ts: intersection(): simplex with ${simplex.length} vertices`);
+            }
+        }
+
+        // Add a new support if possible
+        let newVertex = Vec2.sub(s1.support(d), s2.support(Vec2.neg(d)));
+        if (d.dot(newVertex) < 0) {
+            // The two shapes are not intersecting
+            return null
+        }
+        simplex.push(newVertex);
     }
 }

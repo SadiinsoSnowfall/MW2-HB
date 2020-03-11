@@ -3,7 +3,7 @@ import { GameObject } from "../../engine/gameObject";
 import { TextFormat, Alignment, Style, Text } from "../../engine/utils/textFormat";
 import { Spritesheet, Sprite } from "../../engine/utils/spritesheet";
 import { Assets, randomIn, Img } from "../../utils";
-import { ConvexPolygon, Vec2, Circle } from "../../engine/utils";
+import { ConvexPolygon, Vec2, Shape } from "../../engine/utils";
 
 export class WigglyBehaviour extends Behaviour {
     public rotation: number;
@@ -231,28 +231,17 @@ export class WandererBehaviour extends SpinnyBehaviour {
     }
 }
 
-export class PolygonDisplay extends Display {
+export class ShapeDisplay extends Display {
     private c: string;
-    private p: ConvexPolygon;
+    private s: Shape;
 
-    constructor(o: GameObject, p: ConvexPolygon, c: string = "#FFFFFF") {
+    constructor(o: GameObject, s: Shape, c: string = "#FFFFFF") {
         super(o);
         this.c = c;
-        this.p = p;
+        this.s = s;
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
-        ctx.fillStyle = this.c;
-        ctx.beginPath();
-        // Polygons that are displayed by this Display have all (0, 0) as their center
-        // (not that it should be the case, it's just for debug purpose)
-        let vertices = this.p.getVertices();
-        let last = vertices[vertices.length - 1];
-        ctx.moveTo(last.x, last.y);
-        for (const p of vertices) {
-            ctx.lineTo(p.x, p.y);
-        }
-        ctx.closePath();
-        ctx.fill();
+        this.s.fill(ctx, this.c);
     }
 }
