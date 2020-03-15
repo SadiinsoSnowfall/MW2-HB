@@ -9,7 +9,8 @@ import * as BP from './game/prefabs/blockPrefabs';
 import { BlockBehaviour } from './game/components/blockComponents';
 import { GameObject } from './engine/gameObject';
 import { square, wanderer } from './game/prefabs/debugPrefabs';
-import { ConvexPolygon, intersection, Vec2, Circle } from './engine/utils';
+import { Vec2 } from './engine/utils';
+import { ConvexPolygon, intersection, Circle } from './engine/shapes';
 import { Collider } from './engine/components';
 import { ShapeDisplay } from './game/components/debugComponents';
 

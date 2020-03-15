@@ -1,6 +1,6 @@
 import { GameObject } from '../gameObject';
 import { ObjectComponent } from "./";
-import { Rectangle, Shape } from '../utils';
+import { Rectangle, Shape } from '../shapes';
 
 /**
  * ObjectComponent for basic hitbox management

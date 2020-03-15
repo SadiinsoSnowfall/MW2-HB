@@ -3,7 +3,8 @@ import { GameObject } from "../../engine/gameObject";
 import { TextFormat, Alignment, Style, Text } from "../../engine/utils/textFormat";
 import { Spritesheet, Sprite } from "../../engine/utils/spritesheet";
 import { Assets, randomIn, Img } from "../../utils";
-import { ConvexPolygon, Vec2, Shape } from "../../engine/utils";
+import { ConvexPolygon, Shape } from "../../engine/shapes";
+import { Vec2 } from "../../engine/utils";
 
 export class WigglyBehaviour extends Behaviour {
     public rotation: number;

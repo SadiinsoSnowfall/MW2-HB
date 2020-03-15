@@ -190,6 +190,29 @@ export class Vec2 {
     }
 
     /**
+     * Rotates a vector by the given angle (in radians!).
+     */
+    public static rotate(v: Vec2, radians: number) {
+        let cos = Math.cos(radians);
+        let sin = Math.sin(radians);
+        return new Vec2(v.x * cos + v.y * sin, -v.x * sin + v.y * cos);
+    }
+
+    /**
+     * Rotates a series of vector by the given angle.
+     * Only one call to cos and sin is performed.
+     */
+    public static rotateMultiple(vs: Vec2[], radians: number): Vec2[] {
+        let cos = Math.cos(radians);
+        let sin = Math.sin(radians);
+        let r: Vec2[] = [];
+        for (const v of vs) {
+            r.push(new Vec2(v.x * cos + v.y * sin, -v.x * sin + v.y * cos));
+        }
+        return r;
+    }
+
+    /**
      * Returns the opposite of a.
      */
     public static neg(a: Vec2): Vec2 {
@@ -235,6 +258,11 @@ export class Vec2 {
         return new Vec2(a.y - b.y, b.x - a.x);
     }
 
+    /**
+     * Returns the triple product of a, b, c.
+     * The cross product is not defined for 2D vectors, so vectors are considered to have z component equal to z.
+     * The z component of the result is always equal to z, so returning a Vec2 makes sense.
+     */
     public static tripleProduct(a: Vec2, b: Vec2, c: Vec2): Vec2 {
         let f = a.x * b.y - a.y * b.x;
         return new Vec2(-f * c.y, f * c.x);

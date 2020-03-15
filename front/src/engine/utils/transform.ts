@@ -41,12 +41,49 @@ export class Transform {
      * 
      *********************************************************************************************/
 
+    /**
+     * @brief Returns the same angle expressed in radians.
+     */
     public static degreesToRadians(degrees: number): number {
         return (degrees * Math.PI) / 180;
     }
 
+    /**
+     * @brief Returns the same angle expressed in degrees.
+     */
     public static radiansToDegrees(radians: number): number {
         return (radians * 180) / Math.PI;
+    }
+
+    /**
+     * @brief Returns the translation matrix for (x, y)
+     */
+    public static translationMatrix(x: number, y: number) {
+        return new Transform(
+            1, 0, 0, 1, x, y
+        );
+    }
+
+    /**
+     * @brief Returns the scale matrix for horizontal factor x and vertical factor y
+     */
+    public static scaleMatrix(x: number, y: number): Transform {
+        return new Transform(
+            x, 0, 0, y, 0, 0
+        );
+    }
+
+    /**
+     * @brief Returns the rotation matrix for the given angle (in radians)
+     */
+    public static rotationMatrix(radians: number): Transform {
+        let cos = Math.cos(radians);
+        let sin = Math.sin(radians);
+        return new Transform(
+            cos, -sin,
+            sin, cos,
+            0, 0
+        );
     }
 
     /**********************************************************************************************

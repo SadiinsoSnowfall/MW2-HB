@@ -1,4 +1,4 @@
-import { Shape, CollisionData, Rectangle, intersection } from "../utils"
+import { Shape, CollisionData, Rectangle, intersection } from "../shapes"
 import { Collider } from '../components';
 import { assert } from "../../utils";
 
