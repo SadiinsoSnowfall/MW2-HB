@@ -260,8 +260,8 @@ export class Vec2 {
 
     /**
      * Returns the triple product of a, b, c.
-     * The cross product is not defined for 2D vectors, so vectors are considered to have z component equal to z.
-     * The z component of the result is always equal to z, so returning a Vec2 makes sense.
+     * The cross product is not defined for 2D vectors, so vectors are considered to have z component equal to 0.
+     * The z component of the result is always equal to 0, so returning a Vec2 makes sense.
      */
     public static tripleProduct(a: Vec2, b: Vec2, c: Vec2): Vec2 {
         let f = a.x * b.y - a.y * b.x;

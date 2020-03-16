@@ -120,4 +120,5 @@ export class CScreen {
 }
 
 let canvas = document.getElementsByTagName('canvas')[0];
+InputManager.init(canvas);
 export const screen: CScreen = new CScreen(canvas, 1080, 16 / 9);

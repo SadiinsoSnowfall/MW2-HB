@@ -4,7 +4,7 @@ import { screen } from './screen';
 import { Scene } from './engine/scene';
 import { FPSMetter} from './game/prefabs/debugPrefabs';
 import { Assets, sleep, assert } from './utils';
-import { InputManager } from './utils/inputManager';
+import { InputManager, MouseAction } from './utils/inputManager';
 import * as BP from './game/prefabs/blockPrefabs';
 import { BlockBehaviour } from './game/components/blockComponents';
 import { GameObject } from './engine/gameObject';
@@ -15,7 +15,6 @@ import { Collider } from './engine/components';
 import { ShapeDisplay } from './game/components/debugComponents';
 
 async function game() {
-    InputManager.init();
     await Assets.load();
 
     const ctx = screen.getContext();
@@ -128,6 +127,18 @@ async function game() {
             scene.instantiate(wanderer, 100 + i * 50, 300 + j * 50);
         }
     }*/
+
+    let xw = 50;
+    let yw = 50;
+    InputManager.subscribe("w", () => {
+        scene.instantiate(wanderer, xw, yw);
+        xw += 10;
+        yw += 10;
+    });
+    InputManager.subscribeMouse(MouseAction.LEFT_CLICK, (p: Vec2) => {
+        console.log("click");
+        scene.instantiate(wanderer, p.x, p.y);
+    });
 
     // Polygon collision detection test
     //scene.instantiate(wanderer, 500, 500); // Just so something is displayed

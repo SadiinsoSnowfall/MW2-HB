@@ -1,5 +1,6 @@
 import { Vec2, Transform } from "../utils";
-import { Shape, Rectangle, drawCross } from './shapes';
+import { Shape, drawCross } from './shapes';
+import { Rectangle } from './rectangle';
 import { assert } from '../../utils';
 
 /*

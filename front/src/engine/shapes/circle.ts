@@ -1,5 +1,6 @@
 import { Vec2, Transform } from "../utils";
-import { Shape, Rectangle, drawCross } from './shapes';
+import { Shape, drawCross } from './shapes';
+import { Rectangle } from './rectangle';
 import { assert } from '../../utils';
 
 /**
@@ -80,73 +81,6 @@ export class Circle implements Shape {
     }
 }
 
-export class Ellipse implements Shape {
-    private center: Vec2;
-    private radiusX: number;
-    private radiusY: number;
-    private angle: number;
-
-    /**
-     * @brief Constructor.
-     * @param center Center of the ellipse
-     * @param radiusX Radius along the x axis (if angle were to be 0)
-     * @param radiusY Radius along the y axis
-     * @param radians Orientation, in radians
-     */
-    constructor(center: Vec2, radiusX: number, radiusY: number, radians: number) {
-        this.center = center;
-        this.radiusX = radiusX;
-        this.radiusY = radiusY;
-        this.angle = radians;
-    }
-
-    public pointIn(p: Vec2): boolean {
-        let cp = Vec2.sub(p, this.center);
-        let cq = Vec2.rotate(cp, -this.angle);
-        return (cq.x * cq.x) / (this.radiusX * this.radiusX)
-             + (cq.y * cq.y) / (this.radiusY * this.radiusY)
-             <= 1;
-    }
-
-    public boundingBox(): Rectangle {
-
-    }
-
-    public transform(transform: Transform): Ellipse {
-        
-    }
-
-    public support(d: Vec2): Vec2 {
-
-    }
-
-    public pick(): Vec2 {
-        return Vec2.add(Vec2.rotate(new Vec2(this.radiusX, 0), this.angle), this.center);
-    }
-
-    public stroke(ctx: CanvasRenderingContext2D): void {
-        ctx.strokeStyle = "#000000";
-        ctx.lineWidth = 1;
-        ctx.setLineDash([5, 5]);
-        ctx.beginPath();
-        ctx.ellipse(this.center.x, this.center.y,
-            this.radiusX, this.radiusY,
-            this.angle, 0, 2 * Math.PI);
-        ctx.closePath();
-        ctx.stroke();
-    }
-
-    public fill(ctx: CanvasRenderingContext2D, color: string): void {
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.ellipse(this.center.x, this.center.y,
-            this.radiusX, this.radiusY,
-            this.angle, 0, 2 * Math.PI);
-        ctx.closePath();
-        ctx.fill();
-    }
-}
-
 /**
  * @brief Oriented ellipse.
  */
@@ -169,25 +103,34 @@ export class Ellipse implements Shape {
     private angle: number;
 
     /**
-     * @brief Constructor.
+     * @brief To be used in place of the constructor.
      * @param center Center of the ellipse
      * @param radiusX Radius along the x axis (if angle were to be 0)
      * @param radiusY Radius along the y axis
      * @param radians Orientation, in radians
      */
-    constructor(center: Vec2, radiusX: number, radiusY: number, radians: number) {
+    public static create(center: Vec2, radiusX: number, radiusY: number, radians: number): Ellipse {
+        let xy = [
+            new Vec2(radiusX + center.x, center.y),
+            new Vec2(center.x, radiusY + center.y)
+        ];
+        xy = Vec2.rotateMultiple(xy, radians);
+        return new Ellipse(center, radiusX, radiusY, radians, xy[0], xy[1]);
+    }
+
+    /**
+     * @brief Private constructor.
+     * Use create() instead.
+     * Private for optimization issues but I don't think it's actually beneficial 
+     * since the gain is marginal, if it exists at all...
+     */
+    private constructor(center: Vec2, radiusX: number, radiusY: number, radians: number, x: Vec2, y: Vec2) {
         this.center = center;
         this.radiusX = radiusX;
         this.radiusY = radiusY;
         this.angle = radians;
-
-        let xy = [
-            new Vec2(radiusX + this.center.x, this.center.y),
-            new Vec2(this.center.x, radiusY + this.center.y)
-        ];
-        xy = Vec2.rotateMultiple(xy, radians);
-        this.x = xy[0];
-        this.y = xy[1];
+        this.x = x;
+        this.y = y;
     }
 
     public pointIn(p: Vec2): boolean {
@@ -199,15 +142,30 @@ export class Ellipse implements Shape {
     }
 
     public boundingBox(): Rectangle {
+        let cy = Vec2.sub(this.y, this.center);
+        let xc = Vec2.sub(this.center, this.x);
+        let yc = Vec2.neg(cy);
 
+        return Rectangle.bound([
+            Vec2.add(this.x, cy),
+            Vec2.add(this.x, yc),
+            Vec2.add(this.center, Vec2.add(xc, cy)),
+            Vec2.add(this.center, Vec2.add(xc, yc))
+        ]);
     }
 
     public transform(transform: Transform): Ellipse {
-        
+        let center = transform.multiplyVector(this.center);
+        let x = transform.multiplyVector(this.x);
+        let y = transform.multiplyVector(this.y);
+        let radiusX = Vec2.sub(x, center).magnitude();
+        let radiusY = Vec2.sub(y, center).magnitude();
+        let angle = transform.getRotation();
+        return new Ellipse(center, radiusX, radiusY, this.angle + angle, x, y);
     }
 
     public support(d: Vec2): Vec2 {
-
+        return Vec2.Zero; // TODO
     }
 
     public pick(): Vec2 {
