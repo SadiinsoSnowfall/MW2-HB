@@ -9,31 +9,20 @@ export interface InputListener {
 }
 
 /**
- * List of all possible actions with the mouse.
- * For the sake of simplicity, only two buttons can be used, left and right.
+ * List of generic mouse actions
  */
 export enum MouseAction {
-    LEFT_CLICK,
-    RIGHT_CLICK,
-    DOUBLE_CLICK, // Double left click
-    MOVE
+    MOVE = -2,
+    DOUBLE_CLICK = -1, // Double left click
+    LEFT_CLICK = 0,
+    MIDDLE_CLICK = 1,
+    RIGHT_CLICK = 2,
 }
 
-export interface MouseListener {
-    /**
-     * The type of action that's been detected.
-     */
-    action: MouseAction;
-
-    /**
-     * Callback.
-     * @param p The position of the click relative to the canvas
-     * Because callbacks take a vector as an input,
-     * there is for now no way to handle the use of the middle button
-     * (which would allow for scrolling).
-     */
-    callback: (p: Vec2) => void;
-}
+/**
+ * Listener for mouse event
+ */
+type MouseListener = (p: Vec2) => void;
 
 export class InputManager {
 
@@ -51,9 +40,7 @@ export class InputManager {
         canvas.addEventListener('mousedown', InputManager.onMouseButtonDown);
         canvas.addEventListener('mouseup', InputManager.onMouseButtonUp);
         canvas.addEventListener('mousemove', InputManager.onMouseMove);
-        canvas.addEventListener('click', InputManager.onLeftClick);
         canvas.addEventListener('dblclick', InputManager.onDoubleClick);
-        canvas.addEventListener('contextmenu', InputManager.onRightClick);
     }
 
     public static print(): void {
@@ -86,7 +73,7 @@ export class InputManager {
      */
     private static listeners: Map<string[], Set<InputListener>> = new Map();
 
-    private static mouseListeners: Map<MouseAction, Set<MouseListener>> = new Map();
+    private static mouseListeners: Map<number, Set<MouseListener>> = new Map();
 
     public static subscribe(keys: string | string[], callback: () => void, consume: boolean = true): InputListener {
         // sort keys to reduce listener map size
@@ -177,82 +164,73 @@ export class InputManager {
      * 
      *********************************************************************************************/
 
-    // Since only two mouse buttons are supported,
-    // There is no real need for a map
-    private static leftMouseButtonPressed: boolean = false;
-    private static rightMouseButtonPressed: boolean = false;
+    /**
+     * Map to store the state of each buttons
+     */
+    private static buttonsState: Map<number, boolean> = new Map();
 
-    public static subscribeMouse(action: MouseAction, callback: (p: Vec2) => void): MouseListener {
-        const listener: MouseListener = {
-            action: action,
-            callback: callback
-        };
-
+    public static subscribeMouse(action: number, callback: (p: Vec2) => void): MouseListener{
         let tmp = InputManager.mouseListeners.get(action);
         if (tmp === undefined) {
             tmp = new Set();
             InputManager.mouseListeners.set(action, tmp);
         }
-        tmp.add(listener);
 
-        return listener;
+        tmp.add(callback);
+        return callback;
+    }
+
+    public static isButtonPressed(button: number): boolean {
+        return InputManager.buttonsState.get(button) || false;
     }
 
     public static unsubMouse(listener: MouseListener): void {
-        InputManager.mouseListeners.get(listener.action)?.delete(listener);
-    }
-
-    private static setMouseButtonPressed(e: Event, state: boolean): void {
-        switch ((e as MouseEvent).button) {
-            case 0: {
-                InputManager.leftMouseButtonPressed = state;
-                break;
+        // memory layout / comsumption to unsub compute time tradeoff
+        // as the mouseListeners map will always be very small (5 elems max)
+        // the increase in compute time will be minimal
+        for (const set of InputManager.mouseListeners.values()) {
+            if (set.delete(listener)) {
+                return;
             }
-
-            case 1: {
-                InputManager.rightMouseButtonPressed = state;
-                break;
-            }
-
-            default:
-                break;
         }
     }
 
-    private static onMouseButtonDown(e: Event): void {
-        InputManager.setMouseButtonPressed(e, true);
-    }
-
-    private static onMouseButtonUp(e: Event): void {
-        InputManager.setMouseButtonPressed(e, false);
-    }
-
-    private static handleMouseEvent(e: Event, a: MouseAction): void {
-        let e2 = e as MouseEvent;
-        let p = new Vec2(e2.clientX, e2.clientY);
-        let listeners = InputManager.mouseListeners.get(a);
+    private static handleMouseEvent(e: MouseEvent, a: number): void {
+        const pos = new Vec2(e.clientX, e.clientY);
+        const listeners = InputManager.mouseListeners.get(a);
         if (listeners !== undefined) {
             for (const listener of listeners) {
-                listener.callback(p);
+                listener(pos);
             }
         }
     }
 
-    private static onLeftClick(e: Event): void {
-        console.log("onLeftClick");
-        InputManager.handleMouseEvent(e, MouseAction.LEFT_CLICK);
+    /**
+     * Called on button press
+     */
+    private static onMouseButtonDown(e: MouseEvent): void {
+        InputManager.buttonsState.set(e.button, true);
     }
 
-    private static onRightClick(e: Event): void {
-        InputManager.handleMouseEvent(e, MouseAction.RIGHT_CLICK);
+    /**
+     * Called on button release
+     */
+    private static onMouseButtonUp(e: MouseEvent): void {
+        InputManager.buttonsState.set(e.button, false);
+        InputManager.handleMouseEvent(e, e.button); // handle event on release
     }
 
-    private static onDoubleClick(e: Event): void {
+    /**
+     * Generic double left click event
+     */
+    private static onDoubleClick(e: MouseEvent): void {
         InputManager.handleMouseEvent(e, MouseAction.DOUBLE_CLICK);
     }
 
-    private static onMouseMove(e: Event): void {
-        console.log("onMouseMove");
+    /**
+     * Mouse move event
+     */
+    private static onMouseMove(e: MouseEvent): void {
         InputManager.handleMouseEvent(e, MouseAction.MOVE);
     }
 

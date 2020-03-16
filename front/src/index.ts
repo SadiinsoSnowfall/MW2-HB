@@ -140,6 +140,19 @@ async function game() {
         scene.instantiate(wanderer, p.x, p.y);
     });
 
+    InputManager.subscribeMouse(MouseAction.RIGHT_CLICK, (p: Vec2) => {
+        console.log("click2");
+        scene.instantiate(wanderer, p.x, p.y);
+        scene.instantiate(wanderer, p.x, p.y);
+    });
+
+    InputManager.subscribeMouse(MouseAction.MIDDLE_CLICK, (p: Vec2) => {
+        console.log("click3");
+        scene.instantiate(wanderer, p.x, p.y);
+        scene.instantiate(wanderer, p.x, p.y);
+        scene.instantiate(wanderer, p.x, p.y);
+    });
+
     // Polygon collision detection test
     //scene.instantiate(wanderer, 500, 500); // Just so something is displayed
     const offset = 500;
