@@ -48,12 +48,12 @@ export class InputManager {
 
         // The program won't compile if InputManager#onLeftClick and similar functions
         // don't take an Event as their input, instead of a MouseEvent.
-        canvas.addEventListener('onmousedown', InputManager.onMouseButtonDown);
-        canvas.addEventListener('onmouseup', InputManager.onMouseButtonUp);
-        canvas.addEventListener('onmousemove', InputManager.onMouseMove);
-        canvas.addEventListener('onclick', InputManager.onLeftClick);
-        canvas.addEventListener('ondblclick', InputManager.onDoubleClick);
-        canvas.addEventListener('oncontextmenu', InputManager.onRightClick);
+        canvas.addEventListener('mousedown', InputManager.onMouseButtonDown);
+        canvas.addEventListener('mouseup', InputManager.onMouseButtonUp);
+        canvas.addEventListener('mousemove', InputManager.onMouseMove);
+        canvas.addEventListener('click', InputManager.onLeftClick);
+        canvas.addEventListener('dblclick', InputManager.onDoubleClick);
+        canvas.addEventListener('contextmenu', InputManager.onRightClick);
     }
 
     public static print(): void {
