@@ -57,3 +57,10 @@ export function assert(value: unknown, msg: string = "[no_err_msg]"): void {
 export function randomIn(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+/**
+ * @return true if the point [x, y] in in the rectangle [rx, ry, rw, rh]
+ */
+export function inRect(x: number, y: number, rx: number, ry: number, rw: number, rh: number): boolean {
+    return (x >= rx) && (x <= (rx + rw)) && (y >= ry) && (y <= (ry + rh));
+}

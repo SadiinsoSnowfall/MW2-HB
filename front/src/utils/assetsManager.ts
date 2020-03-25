@@ -260,4 +260,11 @@ export const Img = Object.freeze({
     PIG_LG: require('assets/images/characters/pig_lg.png'),
     PIG_MD: require('assets/images/characters/pig_lg.png'),
     PIG_SM: require('assets/images/characters/pig_lg.png'),
+
+    /**
+     * MENUS
+     */
+
+     BUTTONS: require('assets/images/menu/buttons.png'),
+     
 });

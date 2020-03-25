@@ -101,10 +101,10 @@ export class Sprite {
     }
 
     /**
-     * @brief Draws the sprite centered on (0,0) (relative to the current transform)
+     * @brief Draws the sprite centered on (dx=0,dy=0) (relative to the current transform)
      */
-    public draw(ctx: CanvasRenderingContext2D): void {
-        ctx.drawImage(this.image, this.x, this.y, this.w, this.h, -this.w/2, -this.h/2, this.w, this.h);
+    public draw(ctx: CanvasRenderingContext2D, dx: number = 0, dy: number = 0): void {
+        ctx.drawImage(this.image, this.x, this.y, this.w, this.h, dx-this.w/2, dy-this.h/2, this.w, this.h);
     }
 }
 

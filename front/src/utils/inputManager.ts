@@ -41,6 +41,10 @@ export class InputManager {
         canvas.addEventListener('mouseup', InputManager.onMouseButtonUp);
         canvas.addEventListener('mousemove', InputManager.onMouseMove);
         canvas.addEventListener('dblclick', InputManager.onDoubleClick);
+
+        canvas.oncontextmenu = () => { return false; }; // disable context menu
+        //window.addEventListener("wheel", (e) => { e.preventDefault(); }, { passive: false }); // uncomment to prevent scroll using mouse wheel
+
     }
 
     public static print(): void {
@@ -107,8 +111,8 @@ export class InputManager {
     }
 
     private static keysPressed(keys: string[]): boolean {
-        for (const key of keys) {
-            if (!InputManager.keyMap[key]) {
+        for (let i = 0; i < keys.length; ++i) {
+            if (!InputManager.keyMap[keys[i]]) {
                 return false;
             }
         }
@@ -134,14 +138,15 @@ export class InputManager {
         for (const [keys, listeners] of InputManager.listeners.entries()) {
             if (InputManager.keysPressed(keys)) {
                 let shallConsume: boolean = false;
+                
                 for (const listener of listeners) {
                     listener.callback();
                     shallConsume = shallConsume || listener.consume;
                 }
 
                 if (shallConsume) {
-                    for (const key of keys) {
-                        InputManager.keyMap[key] = false;
+                    for (let i = 0; i < keys.length; ++i) {
+                        InputManager.keyMap[keys[i]] = false;
                     }
                 }
             }
@@ -209,6 +214,7 @@ export class InputManager {
      * Called on button press
      */
     private static onMouseButtonDown(e: MouseEvent): void {
+        e.preventDefault(); // prevent browser actions
         InputManager.buttonsState.set(e.button, true);
     }
 

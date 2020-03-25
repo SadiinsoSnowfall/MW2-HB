@@ -3,7 +3,7 @@ import './assets/stylesheets/styles.scss';
 import { screen } from './screen';
 import { Scene } from './engine/scene';
 import { FPSMetter} from './game/prefabs/debugPrefabs';
-import { Assets, sleep, assert } from './utils';
+import { Assets, sleep, assert, range } from './utils';
 import { InputManager, MouseAction } from './utils/inputManager';
 import * as BP from './game/prefabs/blockPrefabs';
 import { BlockBehaviour } from './game/components/blockComponents';
@@ -135,15 +135,25 @@ async function game() {
         xw += 10;
         yw += 10;
     });
+
+    let count = 0;
+
     InputManager.subscribeMouse(MouseAction.LEFT_CLICK, (p: Vec2) => {
         console.log("click");
-        scene.instantiate(wanderer, p.x, p.y);
+        for (let i of range(100)) {
+            scene.instantiate(wanderer, p.x, p.y);
+        }
+
+        count += 100;
+        console.log(count);
     });
 
     InputManager.subscribeMouse(MouseAction.RIGHT_CLICK, (p: Vec2) => {
         console.log("click2");
         scene.instantiate(wanderer, p.x, p.y);
         scene.instantiate(wanderer, p.x, p.y);
+        count += 2;
+        console.log(count);
     });
 
     InputManager.subscribeMouse(MouseAction.MIDDLE_CLICK, (p: Vec2) => {
@@ -151,6 +161,8 @@ async function game() {
         scene.instantiate(wanderer, p.x, p.y);
         scene.instantiate(wanderer, p.x, p.y);
         scene.instantiate(wanderer, p.x, p.y);
+        count +=3;
+        console.log(count);
     });
 
     // Polygon collision detection test
