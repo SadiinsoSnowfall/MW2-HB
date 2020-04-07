@@ -1,8 +1,12 @@
-import { Display } from "../../engine/components";
+import { Display, RigidBody } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { Spritesheet, Sprite } from "../../engine/utils/spritesheet";
 import { assert } from "../../utils";
 import { Damagable } from "./baseComponents";
+
+export interface BlockDisplay {
+    useSprite(id: number): void;
+};
 
 /**
  * Virtual Spritesheet Block Display
@@ -31,17 +35,41 @@ export class VSBlockDisplay extends Display {
 
 }
 
+/**
+ * Horizontal Spritesheet Block Display
+ */
+export class HSBlockDisplay extends Display {
+    private sheet: Spritesheet;
+    private base: number;
+    private sprite: Sprite;
+
+    constructor(o: GameObject, sheet: Spritesheet, row: number) {
+        super(o);
+        this.sheet = sheet;
+        this.base = row;
+        this.sprite = sheet.getSprite(0, row);
+    }
+
+    public useSprite(id: number): void {
+        this.sprite = this.sheet.getSprite(0, this.base + id);
+    }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        this.sprite.draw(ctx);
+    }
+
+}
+
 export class BlockBehaviour extends Damagable {
     private spriteIndex: number;
-    private display: VSBlockDisplay;
+    private display: BlockDisplay;
 
     constructor(o: GameObject, health: number) {
         super(o, health);
         this.spriteIndex = 0;
 
         const display = o.displayComponent();
-        assert(display instanceof VSBlockDisplay, 'BlockBehaviour#init: target object display is not a VSBlockDisplay');
-        this.display = display as VSBlockDisplay;
+        this.display = (display as VSBlockDisplay) as BlockDisplay;
     }
 
     public setHealth(health: number) {
@@ -73,4 +101,12 @@ export class BlockBehaviour extends Damagable {
     public update(): boolean {
         return false;
     }
+}
+
+export class BlockRigidBody extends RigidBody {
+    constructor(o: GameObject, weight: number) {
+        super(o, weight);
+    }
+
+
 }

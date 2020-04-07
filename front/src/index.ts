@@ -13,6 +13,7 @@ import { Vec2 } from './engine/utils';
 import { ConvexPolygon, intersection, Circle } from './engine/shapes';
 import { Collider } from './engine/components';
 import { ShapeDisplay } from './game/components/debugComponents';
+import { createGround } from './game/prefabs/basePrefabs';
 
 async function game() {
     await Assets.load();
@@ -26,147 +27,14 @@ async function game() {
     scene.instantiate(FPSMetter, 600, 120);
     screen.setScene(scene);
 
-    // Resistance test
-    /*breakAnimation([
-        scene.instantiate(BP.wooden_ball_md, 100, 300),
-        scene.instantiate(BP.stone_ball_md, 200, 300),
-        scene.instantiate(BP.ice_ball_md, 300, 300),
-        scene.instantiate(BP.sand_ball_md, 400, 300),
-        scene.instantiate(BP.wooden_ball_md_2, 500, 300),
-        scene.instantiate(BP.stone_ball_md_2, 600, 300),
-        scene.instantiate(BP.ice_ball_md_2, 700, 300),
-
-        scene.instantiate(BP.wooden_ball_sm, 100, 400),
-        scene.instantiate(BP.stone_ball_sm, 200, 400),
-        scene.instantiate(BP.ice_ball_sm, 300, 400),
-        scene.instantiate(BP.wooden_ball_sm_2, 500, 400),
-        scene.instantiate(BP.stone_ball_sm_2, 600, 400),
-        scene.instantiate(BP.ice_ball_sm_2, 700, 400),
-
-
-
-        scene.instantiate(BP.wooden_cube_md, 100, 500),
-        scene.instantiate(BP.stone_cube_md, 200, 500),
-        scene.instantiate(BP.ice_cube_md, 300, 500),
-        scene.instantiate(BP.sand_cube_md, 400, 500),
-
-        scene.instantiate(BP.wooden_cube_sm, 100, 600),
-        scene.instantiate(BP.stone_cube_sm, 200, 600),
-        scene.instantiate(BP.ice_cube_sm, 300, 600),
-        scene.instantiate(BP.wooden_cube_sm_2, 500, 600),
-        scene.instantiate(BP.stone_cube_sm_2, 600, 600),
-        scene.instantiate(BP.ice_cube_sm_2, 700, 600),
-
-        scene.instantiate(BP.wooden_cube_xs, 100, 700),
-        scene.instantiate(BP.stone_cube_xs, 200, 700),
-        scene.instantiate(BP.ice_cube_xs, 300, 700),
-        scene.instantiate(BP.wooden_cube_xs_2, 500, 700),
-        scene.instantiate(BP.stone_cube_xs_2, 600, 700),
-        scene.instantiate(BP.ice_cube_xs_2, 700, 700),
-
-        scene.instantiate(BP.wooden_cube_hl, 100, 800),
-        scene.instantiate(BP.stone_cube_hl, 200, 800),
-        scene.instantiate(BP.ice_cube_hl, 300, 800),
-        scene.instantiate(BP.wooden_cube_hl_2, 500, 800),
-        scene.instantiate(BP.stone_cube_hl_2, 600, 800),
-        scene.instantiate(BP.ice_cube_hl_2, 700, 800),
-
-
-
-        scene.instantiate(BP.wooden_tris_md, 800, 300),
-        scene.instantiate(BP.stone_tris_md, 900, 300),
-        scene.instantiate(BP.ice_tris_md, 1000, 300),
-        scene.instantiate(BP.sand_tris_md, 1100, 300),
-        scene.instantiate(BP.wooden_tris_md_2, 1200, 300),
-        scene.instantiate(BP.stone_tris_md_2, 1300, 300),
-        scene.instantiate(BP.ice_tris_md_2, 1400, 300),
-
-        scene.instantiate(BP.wooden_tris_sm, 800, 400),
-        scene.instantiate(BP.stone_tris_sm, 900, 400),
-        scene.instantiate(BP.ice_tris_sm, 1000, 400),
-        scene.instantiate(BP.sand_tris_sm, 1100, 400),
-
-        scene.instantiate(BP.wooden_tris_hl, 800, 500),
-        scene.instantiate(BP.stone_tris_hl, 900, 500),
-        scene.instantiate(BP.ice_tris_hl, 1000, 500),
-        scene.instantiate(BP.wooden_tris_hl_2, 1200, 500),
-        scene.instantiate(BP.stone_tris_hl_2, 1300, 500),
-        scene.instantiate(BP.ice_tris_hl_2, 1400, 500),
-    ]);
-    
-    async function breakAnimation(objs: GameObject[]) {
-        let bhv: BlockBehaviour[] = objs.map(obj => obj.behaviourComponent() as BlockBehaviour);
-
-        while (true) {
-            await sleep(500);
-            for (let i = 0; i < bhv.length; i++) {
-                const cur = bhv[i];
-                if (cur.getHealth() <= 0) {
-                    // ressurect
-                    objs[i].setEnabled(true);
-                    cur.setHealth(cur.maxHealth);
-                    scene.addObject(objs[i]);
-                } else {
-                    cur.applyDamage(10);
-                }
-            }
-        }
-    }*/
-
-    // AABB tree test
-    /*scene.instantiate(square, 100, 200);
-    scene.instantiate(square, 200, 225);
-    scene.instantiate(square, 400, 400);
-    scene.instantiate(square, 500, 425);
-    scene.instantiate(square, 300, 312);
-    scene.instantiate(wanderer, 300, 350);
-
-    const nb = 10;
-    for (let i = 0; i < nb; i++) {
-        for (let j = 0; j < nb; j++) {
-            scene.instantiate(wanderer, 100 + i * 50, 300 + j * 50);
-        }
-    }*/
-
-    let xw = 50;
-    let yw = 50;
-    InputManager.subscribe("w", () => {
-        scene.instantiate(wanderer, xw, yw);
-        xw += 10;
-        yw += 10;
-    });
-
-    let count = 0;
-
     InputManager.subscribeMouse(MouseAction.LEFT_CLICK, (p: Vec2) => {
-        console.log("click");
-        for (let i of range(100)) {
-            scene.instantiate(wanderer, p.x, p.y);
-        }
-
-        count += 100;
-        console.log(count);
+       scene.instantiate(BP.wooden_plank_xs, p.x ,p.y);
     });
 
-    InputManager.subscribeMouse(MouseAction.RIGHT_CLICK, (p: Vec2) => {
-        console.log("click2");
-        scene.instantiate(wanderer, p.x, p.y);
-        scene.instantiate(wanderer, p.x, p.y);
-        count += 2;
-        console.log(count);
-    });
-
-    InputManager.subscribeMouse(MouseAction.MIDDLE_CLICK, (p: Vec2) => {
-        console.log("click3");
-        scene.instantiate(wanderer, p.x, p.y);
-        scene.instantiate(wanderer, p.x, p.y);
-        scene.instantiate(wanderer, p.x, p.y);
-        count +=3;
-        console.log(count);
-    });
+    scene.addObject(createGround(675, 800, 1200, 50));
 
     // Polygon collision detection test
-    //scene.instantiate(wanderer, 500, 500); // Just so something is displayed
+    /*
     const offset = 500;
     const scale = 100;
 
@@ -260,5 +128,6 @@ async function game() {
     test(p03, p06, true);
     test(p04, p06, true);
     test(p05, p06, false);
+    */
 }
 game();

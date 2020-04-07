@@ -18,6 +18,7 @@ export class Menu {
         this.zIndex = zIndex;
         this.background = background;
         this.visible = false;
+        this.widgets = [];
     }
 
     public isVisible(): boolean {
