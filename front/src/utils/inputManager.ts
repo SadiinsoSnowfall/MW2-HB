@@ -26,6 +26,7 @@ type MouseListener = (p: Vec2) => void;
 
 export class InputManager {
 
+    private static canvas: HTMLCanvasElement | undefined;
     private static initialized: boolean = false;
 
     public static init(canvas: HTMLCanvasElement): void {
@@ -34,6 +35,8 @@ export class InputManager {
 
         addEventListener('keydown', InputManager.onKeyDown);
         addEventListener('keyup', InputManager.onKeyUp);
+
+        InputManager.canvas = canvas;
 
         // The program won't compile if InputManager#onLeftClick and similar functions
         // don't take an Event as their input, instead of a MouseEvent.
@@ -200,8 +203,12 @@ export class InputManager {
         }
     }
 
+    private static getCanvas(): HTMLCanvasElement {
+        return InputManager.canvas as HTMLCanvasElement;
+    }
+
     private static handleMouseEvent(e: MouseEvent, a: number): void {
-        const pos = new Vec2(e.clientX, e.clientY);
+        const pos = new Vec2(e.pageX - InputManager.getCanvas().offsetLeft, e.pageY - InputManager.getCanvas().offsetTop);
         const listeners = InputManager.mouseListeners.get(a);
         if (listeners !== undefined) {
             for (const listener of listeners) {
