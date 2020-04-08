@@ -27,16 +27,32 @@ async function game() {
     scene.instantiate(FPSMetter, 600, 120);
     screen.setScene(scene);
 
+    let objs: GameObject[] = []
+
+    let index = -1;
+    let particle = [
+        BP.wood_particle,
+        BP.stone_particle,
+        BP.ice_particle,
+    ];
+
+    InputManager.subscribeMouse(MouseAction.RIGHT_CLICK, (p: Vec2) => {
+        if (++index >= particle.length) index = 0;
+        for (let i of range(50)) scene.addObject(particle[index](p.x, p.y, 3));
+    });
+
     InputManager.subscribeMouse(MouseAction.LEFT_CLICK, (p: Vec2) => {
-        let obj = scene.instantiate(forcePickOne([
-            BP.wooden_cube_md,
-            BP.stone_cube_md,
-            BP.ice_cube_md,
-            BP.sand_cube_md
-        ]), p.x ,p.y);
+        objs.push(scene.instantiate(forcePickOne([
+            BP.wooden_tris_md_2,
+            BP.stone_tris_md_2,
+            BP.ice_tris_md_2,
+            BP.sand_tris_md
+        ]), p.x ,p.y));
 
        setInterval(() => {
-            (obj.behaviourComponent() as BlockBehaviour).applyDamage(10);
+            for (const obj of objs) {
+                (obj.getBehaviour() as BlockBehaviour).applyDamage(10);
+            }
             console.log("applied 10 damages");
        }, 250);
     });

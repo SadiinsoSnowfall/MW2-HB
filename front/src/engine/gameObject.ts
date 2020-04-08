@@ -51,35 +51,35 @@ export class GameObject {
         this._scene = scene;
     }
 
-    public displayComponent(): Display | undefined {
+    public getDisplay(): Display | undefined {
         return this.display;
     }
 
-    public setDisplayComponent(display?: Display): void {
+    public setDisplay(display?: Display): void {
         this.display = display;
     }
 
-    public rigidBodyComponent(): RigidBody | undefined {
+    public getRigidBody(): RigidBody | undefined {
         return this.rigidBody;
     }
     
-    public setRigidBodyComponent(body?: RigidBody): void {
+    public setRigidBody(body?: RigidBody): void {
         this.rigidBody = body;
     }
 
-    public colliderComponent(): Collider | undefined {
+    public getCollider(): Collider | undefined {
         return this.collider;
     }
 
-    public setColliderComponent(collider?: Collider): void {
+    public setCollider(collider?: Collider): void {
         this.collider = collider;
     }
 
-    public behaviourComponent(): Behaviour | undefined {
+    public getBehaviour(): Behaviour | undefined {
         return this.behaviour;
     }
 
-    public setBehaviourComponent(behaviour?: Behaviour): void {
+    public setBehaviour(behaviour?: Behaviour): void {
         this.behaviour = behaviour;
     }
 

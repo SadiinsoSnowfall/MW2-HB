@@ -79,3 +79,10 @@ export function pickOne<T>(items: T[]): T | undefined {
 export function forcePickOne<T>(items: T[]): T {
     return items[Math.floor(Math.random() * items.length)];
 }
+
+/**
+ * @return The value clamped to the given interval
+ */
+export function clamp(value: number, min: number, max: number): number {
+    return Math.max(min, Math.min(max, value));
+}

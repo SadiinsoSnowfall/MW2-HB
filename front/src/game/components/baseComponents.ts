@@ -1,7 +1,32 @@
-import { Behaviour } from "../../engine/components";
+import { Behaviour, Display } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
-import { pickOne } from "../../utils";
+import { pickOne, clamp } from "../../utils";
 import { AudioManager } from "../../engine/audioManager";
+import { Sprite } from "../../engine/utils";
+
+export class SSDisplay extends Display {
+    private sprite: Sprite;
+    private opacity: number;
+
+    constructor(o: GameObject, sprite: Sprite, opacity: number = 1) {
+        super(o);
+        this.sprite = sprite;
+        this.opacity = opacity;
+    }
+
+    public getOpacity(): number {
+        return this.opacity;
+    }
+
+    public setOpacity(opacity: number): void {
+        this.opacity = clamp(opacity, 0, 1);
+    }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        ctx.globalAlpha = this.opacity;
+        this.sprite.draw(ctx);
+    }
+}
 
 export abstract class Damagable extends Behaviour  {
     protected readonly maxHealth: number;
@@ -24,16 +49,14 @@ export abstract class Damagable extends Behaviour  {
     }
 
     public onDamage() {
-        //TODO emmit particles
         AudioManager.playIfDefined(pickOne(this.damageSounds), 0.1);
     }
 
     public onDestroyed() {
-        if (!this.object.isEnabled()) {
+        if (!this.object.isEnabled()) { // TODO remove this once the AABBTree is fixed
             return;
         }
 
-        //TODO emmit particles
         AudioManager.playIfDefined(pickOne(this.destroySonds), 0.20);
         this.object.setEnabled(false); // destroy the object
     }
