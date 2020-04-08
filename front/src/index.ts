@@ -49,13 +49,14 @@ async function game() {
             BP.sand_tris_md
         ]), p.x ,p.y));
 
-       setInterval(() => {
-            for (const obj of objs) {
-                (obj.getBehaviour() as BlockBehaviour).applyDamage(10);
-            }
-            console.log("applied 10 damages");
-       }, 250);
     });
+
+    setInterval(() => {
+        for (const obj of objs) {
+            (obj.getBehaviour() as BlockBehaviour).applyDamage(10);
+        }
+        console.log("applied 10 damages");
+   }, 250);
 
     scene.addObject(createGround(675, 800, 1200, 50));
 
