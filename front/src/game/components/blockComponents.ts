@@ -64,8 +64,8 @@ export class BlockBehaviour extends Damagable {
     private spriteIndex: number;
     private display: BlockDisplay;
 
-    constructor(o: GameObject, health: number) {
-        super(o, health);
+    constructor(o: GameObject, health: number, hitSounds: string[] = [], damageSound: string[] = [], destroySound: string[] = []) {
+        super(o, health, hitSounds, damageSound, destroySound);
         this.spriteIndex = 0;
 
         const display = o.displayComponent();
@@ -81,8 +81,7 @@ export class BlockBehaviour extends Damagable {
         this.health -= damage;
 
         if (this.health <= 0) {
-            //TODO emmit destroy particles & sound
-            this.object.setEnabled(false); // destroy the object
+            this.onDestroyed();
         } else {
             // find the quarter to use and update the sprite accordingly 
             const quarter = 4 - Math.ceil((this.health / (this.maxHealth / 4)));
@@ -91,9 +90,9 @@ export class BlockBehaviour extends Damagable {
                 this.display.useSprite(quarter);
                 this.spriteIndex = quarter;
 
-                //TODO emmit damage particles & sound
+                this.onDamage();
             } else {
-                //TODO emmit collision sound
+                this.onHit();
             }
         }
     }

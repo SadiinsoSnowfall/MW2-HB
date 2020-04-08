@@ -7,6 +7,10 @@ export class AudioManager {
      */
     private static readonly alwaysWatchTimeUpdate: boolean = false;
 
+    public static playIfDefined(sound: string | undefined, volume: number = 1.0, from: number = 0, to?: number): HTMLAudioElement | undefined {
+        return sound ? this.play(sound, volume, from, to) : undefined;
+    }
+
     public static play(sound: string, volume: number = 1.0, from: number = 0, to?: number): HTMLAudioElement {
         const audio = new Audio(AudioManager.buildURI(sound, from, to));
         audio.volume = volume;

@@ -64,3 +64,18 @@ export function randomIn(min: number, max: number): number {
 export function inRect(x: number, y: number, rx: number, ry: number, rw: number, rh: number): boolean {
     return (x >= rx) && (x <= (rx + rw)) && (y >= ry) && (y <= (ry + rh));
 }
+
+/**
+ * @return A random element from the given array
+ */
+export function pickOne<T>(items: T[]): T | undefined {
+    const len = items.length | 0;
+    return len ? items[Math.floor(Math.random() * len)] : undefined;
+}
+
+/**
+ * @return A random element from the given array known to be non-empty
+ */
+export function forcePickOne<T>(items: T[]): T {
+    return items[Math.floor(Math.random() * items.length)];
+}

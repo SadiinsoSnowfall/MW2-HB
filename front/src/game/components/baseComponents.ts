@@ -1,32 +1,60 @@
 import { Behaviour } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
+import { pickOne } from "../../utils";
+import { AudioManager } from "../../engine/audioManager";
 
 export abstract class Damagable extends Behaviour  {
     protected readonly maxHealth: number;
     protected health: number;
 
-    constructor(o: GameObject, health: number) {
+    private hitSounds: string[]
+    private damageSounds: string[];
+    private destroySonds: string[];
+
+    constructor(o: GameObject, health: number, hitSounds: string[], damageSound: string[], destroySound: string[]) {
         super(o);
         this.maxHealth = this.health = health;
+        this.hitSounds = hitSounds;
+        this.damageSounds = damageSound;
+        this.destroySonds = destroySound;
     }
 
-    public getHealth() {
+    public onHit() {
+        AudioManager.playIfDefined(pickOne(this.hitSounds), 0.05);
+    }
+
+    public onDamage() {
+        //TODO emmit particles
+        AudioManager.playIfDefined(pickOne(this.damageSounds), 0.1);
+    }
+
+    public onDestroyed() {
+        if (!this.object.isEnabled()) {
+            return;
+        }
+
+        //TODO emmit particles
+        AudioManager.playIfDefined(pickOne(this.destroySonds), 0.20);
+        this.object.setEnabled(false); // destroy the object
+    }
+
+    public getHealth(): number {
         return this.health;
     }
 
-    public getMaxHealth() {
+    public getMaxHealth(): number {
         return this.maxHealth;
     }
 
-    public setHealth(health: number) {
+    public setHealth(health: number): void {
         this.health = health;
     }
 
-    public applyDamage(damage: number) {
+    public applyDamage(damage: number): void {
         this.health -= damage;
     }
 
-    public restoreHealth() {
+    public restoreHealth(): void {
         this.health = this.maxHealth;
     }
 

@@ -3,7 +3,7 @@ import './assets/stylesheets/styles.scss';
 import { screen } from './screen';
 import { Scene } from './engine/scene';
 import { FPSMetter} from './game/prefabs/debugPrefabs';
-import { Assets, sleep, assert, range } from './utils';
+import { Assets, sleep, assert, range, forcePickOne } from './utils';
 import { InputManager, MouseAction } from './utils/inputManager';
 import * as BP from './game/prefabs/blockPrefabs';
 import { BlockBehaviour } from './game/components/blockComponents';
@@ -28,7 +28,17 @@ async function game() {
     screen.setScene(scene);
 
     InputManager.subscribeMouse(MouseAction.LEFT_CLICK, (p: Vec2) => {
-       scene.instantiate(BP.wooden_plank_xs, p.x ,p.y);
+        let obj = scene.instantiate(forcePickOne([
+            BP.wooden_cube_md,
+            BP.stone_cube_md,
+            BP.ice_cube_md,
+            BP.sand_cube_md
+        ]), p.x ,p.y);
+
+       setInterval(() => {
+            (obj.behaviourComponent() as BlockBehaviour).applyDamage(10);
+            console.log("applied 10 damages");
+       }, 250);
     });
 
     scene.addObject(createGround(675, 800, 1200, 50));

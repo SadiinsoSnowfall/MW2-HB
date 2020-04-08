@@ -22,7 +22,7 @@ export class RigidBody extends ObjectComponent {
     }
 
     public update(): boolean {
-        this.momentum.y += this.mass * RigidBody.gravityPerTick; // add gravity
+        //this.momentum.y += this.mass * RigidBody.gravityPerTick; // add gravity
 
         this.object.translate(this.momentum.x, this.momentum.y);
         return true;
