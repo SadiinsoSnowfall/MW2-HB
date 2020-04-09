@@ -92,7 +92,7 @@ export class BlockBehaviour extends Damagable {
         this.health -= damage;
 
         if (this.health <= 0) {
-            this.emmitParticles(20, 4);
+            this.emmitParticles(12, 4);
             this.onDestroyed();
         } else {
             // find the quarter to use and update the sprite accordingly 
@@ -101,7 +101,7 @@ export class BlockBehaviour extends Damagable {
             if (this.spriteIndex != quarter) {
                 this.display.useSprite(quarter);
                 this.spriteIndex = quarter;
-                this.emmitParticles(10, 4);
+                this.emmitParticles(6, 4);
                 this.onDamage();
             } else {
                 this.onHit();

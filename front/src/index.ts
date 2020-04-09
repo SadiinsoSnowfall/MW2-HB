@@ -36,6 +36,17 @@ async function game() {
         BP.ice_particle,
     ];
 
+    InputManager.subscribeMouse(MouseAction.MIDDLE_CLICK, (p: Vec2) => {
+        for (const x of range(15)) {
+            for (const y of range(8)) {
+                objs.push(scene.instantiate(forcePickOne([
+                    BP.stone_tris_md_2,
+                ]), x * 60 , y * 60 + 200));
+        
+            }
+        }
+    });
+
     InputManager.subscribeMouse(MouseAction.RIGHT_CLICK, (p: Vec2) => {
         if (++index >= particle.length) index = 0;
         for (let i of range(50)) scene.addObject(particle[index](p.x, p.y, 3));
@@ -51,13 +62,15 @@ async function game() {
 
     });
 
+    // ugly af, only for demonstration purpose
     setInterval(() => {
         for (const obj of objs) {
-            (obj.getBehaviour() as BlockBehaviour).applyDamage(10);
+            if (obj.isEnabled()) {
+                (obj.getBehaviour() as BlockBehaviour).applyDamage(10);
+            }
         }
-        console.log("applied 10 damages");
    }, 250);
-
+   
     scene.addObject(createGround(675, 800, 1200, 50));
 
     // Polygon collision detection test

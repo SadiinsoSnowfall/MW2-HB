@@ -53,10 +53,6 @@ export abstract class Damagable extends Behaviour  {
     }
 
     public onDestroyed() {
-        if (!this.object.isEnabled()) { // TODO remove this once the AABBTree is fixed
-            return;
-        }
-
         AudioManager.playIfDefined(pickOne(this.destroySonds), 0.20);
         this.object.setEnabled(false); // destroy the object
     }

@@ -3,6 +3,7 @@ import { CScreen } from "../screen";
 import { Prefab } from "./prefab";
 import { AABBTree } from "./physics";
 import { Vec2 } from "./utils";
+import { Collider } from "./components";
 
 /**
 * @brief Defines any object that can interact with the game loop.
@@ -10,6 +11,7 @@ import { Vec2 } from "./utils";
 export class Scene {
     protected _screen?: CScreen;
     protected foreground: GameObject[] = [];
+    protected background: GameObject[] = [];
     protected tree: AABBTree;
     
     constructor() {
@@ -89,35 +91,74 @@ export class Scene {
             this.tree.insert(collider);
         }
     }
-    
+
     /**
     * @brief Displays this Scene on a canvas.
     * @param ctx The context from the canvas the scene must be drawn on.
     */
     public draw(ctx: CanvasRenderingContext2D): void {
+        for (let i = 0; i < this.background.length; ++i) {
+            this.background[i].draw(ctx);
+        }
+        
+        let toRem: Collider[] = [];
+
         for (const c of this.tree) {
-            c.object.draw(ctx);
+            if (c.object.isEnabled()) {
+                c.object.draw(ctx);
+                c.getShape().stroke(ctx); // stroke the object shape
+            } else {
+                toRem.push(c);
+            }
+        }
+
+        for (const tr of toRem) {
+            this.tree.remove(tr);
         }
         
         for (let i = 0; i < this.foreground.length; ++i) {
             this.foreground[i].draw(ctx);
         }
-        
+
         this.tree.draw(ctx); // debug only
     }
     
-    total: number = 0;
-    sample: number = 0;
+    protected filterDisabled(base: GameObject[], count: number): GameObject[] {
+        let index = 0;
+        let enabled: GameObject[] = [];
+        enabled.length = base.length - count;
+        for (let i = 0; i < base.length; ++i) {
+            const obj = base[i];
+            if (obj.isEnabled()) {
+                enabled[index++] = obj;
+            }
+        }
+
+        return enabled;
+    }
     
-
-
     /**
     * @brief Updates the game without displaying it.
     * @returns The next scene to update and display (usually, itself)
     */
     public update(): Scene {
         let count = 0;
-
+        
+        // update background
+        for (let i = 0; i < this.background.length; ++i) {
+            const obj = this.background[i];
+            obj.update();
+            if (!obj.isEnabled()) {
+                ++count;
+            }
+        }
+        
+        if (count > 0) {
+            this.background = this.filterDisabled(this.background, count);
+            count = 0;
+        }
+        
+        // update foreground
         for (let i = 0; i < this.foreground.length; ++i) {
             const obj = this.foreground[i];
             obj.update();
@@ -126,22 +167,13 @@ export class Scene {
             }
         }
 
-        // if some objects are disabled, resize the GO list
         if (count > 0) {
-            let index = 0;
-            let enabled: GameObject[] = [];
-            enabled.length = this.foreground.length - count;
-            for (let i = 0; i < this.foreground.length; ++i) {
-                const obj = this.foreground[i];
-                if (obj.isEnabled()) {
-                    enabled[index++] = obj;
-                }
-            }
-
-            this.foreground = enabled;
+            this.foreground = this.filterDisabled(this.foreground, count);
         }
         
+        // update colliders
         this.tree.update();
+
         return this;
     }
 }
