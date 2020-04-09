@@ -105,8 +105,7 @@ export class Scene {
 
         for (const c of this.tree) {
             if (c.object.isEnabled()) {
-                c.object.draw(ctx);
-                c.getShape().stroke(ctx); // stroke the object shape
+                c.object.draw(ctx);               
             } else {
                 toRem.push(c);
             }

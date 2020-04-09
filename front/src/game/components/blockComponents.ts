@@ -1,7 +1,7 @@
 import { Display, RigidBody, Behaviour } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { Spritesheet, Sprite } from "../../engine/utils/spritesheet";
-import { assert, randomIn, range } from "../../utils";
+import { assert, randomIn, range, clamp, randomFloatIn } from "../../utils";
 import { Damagable, SSDisplay } from "./baseComponents";
 import { Vec2 } from "../../engine/utils";
 import { wood_particle, ParticleCreator } from "../prefabs/blockPrefabs";
@@ -83,9 +83,7 @@ export class BlockBehaviour extends Damagable {
     public emmitParticles(volume: number, amplitude: number, lifespanMult: number = 1): void {
         const scene = this.object.scene() as Scene; // to bypass the nonnull checks
         const pos = this.object.getPosition();
-        for (let i = 0; i < volume; i++) {
-            scene.addObject(this.particle(pos.x, pos.y, amplitude, lifespanMult));
-        }
+        scene.addObject(this.particle(pos.x, pos.y, volume, amplitude, lifespanMult));
     }
 
     public applyDamage(damage: number): void {
@@ -122,30 +120,66 @@ export class BlockRigidBody extends RigidBody {
 
 }
 
-export class ParticleBehaviour extends Behaviour {
-    private speedX: number;
-    private speedY: number;
-    private initialLifeSpan: number;
-    private lifespan: number;
-    private rotation: number;
+export class ParticleDisplay extends Display {
+    private data: number[] = [];
+    private delta: number[] = [];
 
-    constructor(o: GameObject, amplitude: number, lifespanMult: number = 1) {
+    private sprites: Sprite[] = [];
+    private initialLifeSpan: number[] = [];
+    private lifespan: number[] = [];
+
+    constructor(o: GameObject, spritesheet: Spritesheet, row: number, maxCol: number, amount: number, amplitude: number, lifespanMult: number = 1) {
         super(o);
-        this.speedX = randomIn(-amplitude, amplitude);
-        this.speedY = randomIn(-amplitude, amplitude);
-        this.lifespan = this.initialLifeSpan = randomIn(15, 30) * lifespanMult;
-        this.rotation = randomIn(-2, 2) * Math.PI / 180;
+        const dataLen = amount * 3; // (x, y, r) * amount
+        this.data.length = this.delta.length = dataLen;
+        this.lifespan.length = this.initialLifeSpan.length = this.sprites.length = amount;
+
+        this.data.fill(0); // x, y, r initialized to 0 for each
+        for (let i = 0; i < dataLen; i += 3) {
+            this.delta[i] = randomFloatIn(-amplitude, amplitude);
+            this.delta[i + 1] = randomFloatIn(-amplitude, amplitude);
+            this.delta[i + 2] = randomFloatIn(-2, 2) * Math.PI / 180; // angle in deg
+        }
+
+        for (let i = 0; i < amount; i++) {
+            this.sprites[i] = spritesheet.getSprite(randomIn(0, maxCol), row)
+            this.lifespan[i] = randomIn(15, 30) * lifespanMult;
+            this.initialLifeSpan[i] = this.lifespan[i] / 4; // divided by 4 to smooth out the animation
+        }
     }
 
     public update(): boolean {
-        if (--this.lifespan <= 0) {
+        // update positions
+        for (let i = 0; i < this.data.length; ++i) {
+            this.data[i] += this.delta[i];
+        }
+
+        // update lifespan
+        let finished: boolean = true;
+        for (let i = 0; i < this.lifespan.length; ++i) {
+            if (--this.lifespan[i] > 0) {
+                finished = false;
+            }
+        }
+
+        if (finished) {
             this.object.setEnabled(false);
-        } else {
-            (this.object.getDisplay() as SSDisplay).setOpacity(4 * this.lifespan / this.initialLifeSpan);
-            this.object.translate(this.speedX, this.speedY);
-            this.object.rotateRadians(this.rotation);
         }
 
         return false;
     }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        for (let i = 0, j = 0; i < this.sprites.length; ++i, j += 3) {
+            if (this.lifespan[i] > 0) {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, this.lifespan[i] / this.initialLifeSpan[i]); // clamp only minimum value
+                ctx.translate(this.data[j] | 0, this.data[j + 1] | 0); // convert to integer, ctx operation are way slower when using floats
+                ctx.rotate(this.data[j + 2]);
+                this.sprites[i].draw(ctx); // draw at (0, 0) instead of (x, y), because of the previous translation
+                ctx.restore();
+            }
+        }
+    }
+
 }

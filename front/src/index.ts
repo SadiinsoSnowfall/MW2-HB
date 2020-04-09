@@ -42,14 +42,13 @@ async function game() {
                 objs.push(scene.instantiate(forcePickOne([
                     BP.stone_tris_md_2,
                 ]), x * 60 , y * 60 + 200));
-        
             }
         }
     });
 
     InputManager.subscribeMouse(MouseAction.RIGHT_CLICK, (p: Vec2) => {
         if (++index >= particle.length) index = 0;
-        for (let i of range(50)) scene.addObject(particle[index](p.x, p.y, 3));
+        scene.addObject(particle[index](p.x, p.y, 1000, 3, 10));
     });
 
     InputManager.subscribeMouse(MouseAction.LEFT_CLICK, (p: Vec2) => {
@@ -70,7 +69,7 @@ async function game() {
             }
         }
    }, 250);
-   
+
     scene.addObject(createGround(675, 800, 1200, 50));
 
     // Polygon collision detection test

@@ -52,10 +52,17 @@ export function assert(value: unknown, msg: string = "[no_err_msg]"): void {
 }
 
 /**
- * Return a random value between $min and $max
+ * @return a random value between $min and $max
  */
 export function randomIn(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+/**
+ * @return a random floating value between $min and $max
+ */
+export function randomFloatIn(min: number, max: number): number {
+    return Math.random() * (max - min + 1) + min;
 }
 
 /**

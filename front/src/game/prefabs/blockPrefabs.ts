@@ -1,11 +1,10 @@
 import { PrefabsManager } from "../../engine/prefabsManager";
 import { Prefab } from "../../engine/prefab";
-import { Img, Sound, randomIn } from "../../utils";
+import { Img, Sound } from "../../utils";
 import { SSManager, Vec2 } from "../../engine/utils";
-import { VSBlockDisplay, BlockBehaviour, BlockRigidBody, HSBlockDisplay, ParticleBehaviour } from "../components/blockComponents";
+import { VSBlockDisplay, BlockBehaviour, BlockRigidBody, HSBlockDisplay, ParticleDisplay } from "../components/blockComponents";
 import { ConvexPolygon, Circle } from "../../engine/shapes";
 import { Collider } from "../../engine/components";
-import { SSDisplay } from "../components/baseComponents";
 import { GameObject } from "../../engine/gameObject";
 
 /**
@@ -225,40 +224,35 @@ export const sand_sound: string[] = [
  * 
  */
 
-export type ParticleCreator = (x: number, y: number, amplitude: number, lifespan?: number) => GameObject;
+export type ParticleCreator = (x: number, y: number, amount: number, amplitude: number, lifespan?: number) => GameObject;
 
-export function wood_particle(x: number, y: number, amplitude: number, lifeSpanMult: number = 1): GameObject {
-    let obj = new GameObject(x, y);
-    obj.setDisplay(new SSDisplay(obj, SSManager.get(Img.DEBRIS, 5, 5).getSprite(randomIn(0, 1), 3)));
-    obj.setBehaviour(new ParticleBehaviour(obj, amplitude, lifeSpanMult));
+export function wood_particle(x: number, y: number, amount: number, amplitude: number, lifeSpanMult: number = 1): GameObject {
+    const obj = new GameObject(x, y);
+    obj.setDisplay(new ParticleDisplay(obj, SSManager.get(Img.DEBRIS, 5, 5), 3, 1, amount, amplitude, lifeSpanMult));
     return obj;
 }
 
-export function stone_particle(x: number, y: number, amplitude: number, lifeSpanMult: number = 1): GameObject {
-    let obj = new GameObject(x, y);
-    obj.setDisplay(new SSDisplay(obj, SSManager.get(Img.DEBRIS, 5, 5).getSprite(randomIn(0, 1), 2)));
-    obj.setBehaviour(new ParticleBehaviour(obj, amplitude, lifeSpanMult));
+export function stone_particle(x: number, y: number, amount: number, amplitude: number, lifeSpanMult: number = 1): GameObject {
+    const obj = new GameObject(x, y);
+    obj.setDisplay(new ParticleDisplay(obj, SSManager.get(Img.DEBRIS, 5, 5), 2, 1, amount, amplitude, lifeSpanMult));
     return obj;
 }
 
-export function ice_particle(x: number, y: number, amplitude: number, lifeSpanMult: number = 1): GameObject {
-    let obj = new GameObject(x, y);
-    obj.setDisplay(new SSDisplay(obj, SSManager.get(Img.DEBRIS, 5, 5).getSprite(randomIn(0, 4), 0)));
-    obj.setBehaviour(new ParticleBehaviour(obj, amplitude, lifeSpanMult));
+export function ice_particle(x: number, y: number, amount: number, amplitude: number, lifeSpanMult: number = 1): GameObject {
+    const obj = new GameObject(x, y);
+    obj.setDisplay(new ParticleDisplay(obj, SSManager.get(Img.DEBRIS, 5, 5), 0, 4, amount, amplitude, lifeSpanMult));
     return obj;
 }
 
-export function sand_particle(x: number, y: number, amplitude: number, lifeSpanMult: number = 1): GameObject {
-    let obj = new GameObject(x, y);
-    obj.setDisplay(new SSDisplay(obj, SSManager.get(Img.DEBRIS, 5, 5).getSprite(0, 4)));
-    obj.setBehaviour(new ParticleBehaviour(obj, amplitude, lifeSpanMult));
+export function sand_particle(x: number, y: number, amount: number, amplitude: number, lifeSpanMult: number = 1): GameObject {
+    const obj = new GameObject(x, y);
+    obj.setDisplay(new ParticleDisplay(obj, SSManager.get(Img.DEBRIS, 5, 5), 4, 0, amount, amplitude, lifeSpanMult));
     return obj;
 }
 
-export function egg_particle(x: number, y: number, amplitude: number, lifeSpanMult: number = 1): GameObject {
-    let obj = new GameObject(x, y);
-    obj.setDisplay(new SSDisplay(obj, SSManager.get(Img.DEBRIS, 5, 5).getSprite(randomIn(0, 2), 1)));
-    obj.setBehaviour(new ParticleBehaviour(obj, amplitude, lifeSpanMult));
+export function egg_particle(x: number, y: number, amount: number, amplitude: number, lifeSpanMult: number = 1): GameObject {
+    const obj = new GameObject(x, y);
+    obj.setDisplay(new ParticleDisplay(obj, SSManager.get(Img.DEBRIS, 5, 5), 1, 2, amount, amplitude, lifeSpanMult));
     return obj;
 }
 

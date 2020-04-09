@@ -98,6 +98,9 @@ export class GameObject {
         ctx.save();
         this.transform.applyToContext(ctx);
         this.display?.draw(ctx);
+        if (this.collider != undefined) {
+            this.collider.getShape().stroke(ctx);
+        }
         ctx.restore();
     }
 
