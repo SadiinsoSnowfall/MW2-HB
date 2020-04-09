@@ -4,14 +4,13 @@
   "description": "Master Weeb2: Hungry Board",
   "main": "src/mw2hb.js",
   "scripts": {
-    "tsc": "tsc && copyfiles -s -u 1 src/config/** dist",
-    "start": "NODE_ENV=development webpack",
-    "build": "webpack"
+    "tsc": "tsc && copyfiles -s -u 1 src/config.json dist"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/compression": "^1.7.0",
+    "@types/cors": "^2.8.6",
     "@types/express": "^4.17.4",
     "@types/express-validator": "^3.0.0",
     "@types/helmet": "0.0.45",
@@ -19,9 +18,11 @@
     "compression": "^1.7.4",
     "copy-webpack-plugin": "^5.1.1",
     "copyfiles": "^2.2.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-validator": "^6.4.0",
     "helmet": "^3.22.0",
+    "sanitize-filename": "^1.6.3",
     "terser-webpack-plugin": "^2.3.5",
     "ts-loader": "^6.2.2",
     "typescript": "^3.8.3",

@@ -1,5 +1,5 @@
 import express = require('express');
-
+import cors = require('cors');
 import helmet = require('helmet')
 import compression = require('compression');
 
@@ -17,6 +17,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(helmet());
 app.use(compression());
+
+// allow CORS on all addresses
+app.use(cors({
+    origin: '*'
+}));
 
 // add routes
 app.use('/', base_route);

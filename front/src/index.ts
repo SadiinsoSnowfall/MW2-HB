@@ -3,7 +3,7 @@ import './assets/stylesheets/styles.scss';
 import { screen } from './screen';
 import { Scene } from './engine/scene';
 import { FPSMetter} from './game/prefabs/debugPrefabs';
-import { Assets, sleep, assert, range, forcePickOne } from './utils';
+import { Assets, sleep, assert, range, forcePickOne, loadLevel } from './utils';
 import { InputManager, MouseAction } from './utils/inputManager';
 import * as BP from './game/prefabs/blockPrefabs';
 import { BlockBehaviour } from './game/components/blockComponents';
@@ -35,6 +35,8 @@ async function game() {
         BP.stone_particle,
         BP.ice_particle,
     ];
+
+    await loadLevel(0, scene);
 
     InputManager.subscribeMouse(MouseAction.MIDDLE_CLICK, (p: Vec2) => {
         for (const x of range(15)) {
