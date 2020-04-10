@@ -66,7 +66,7 @@ export class SpinnyBehaviour extends Behaviour {
         o.scale(2, 0.5);
     }
 
-    public update(): boolean {
+    public update(delta: number): boolean {
         this.object.rotateRadians(this.rotation);
         return true;
     }
@@ -184,7 +184,7 @@ export class CircleBehaviour extends Display {
         this.shearFactor = 0.01;
     }
 
-    public update(): boolean {
+    public update(delta: number): boolean {
         let tick = this.tick();
         if (tick % 15 == 0) {
             this.shearFactor *= -1;
@@ -225,8 +225,8 @@ export class WandererBehaviour extends SpinnyBehaviour {
         this.y = (Math.random() - 0.5) * 20;
     }
 
-    public update(): boolean {
-        super.update();
+    public update(delta: number): boolean {
+        super.update(delta);
         this.object.translate(this.x, this.y);
         return true;
     }

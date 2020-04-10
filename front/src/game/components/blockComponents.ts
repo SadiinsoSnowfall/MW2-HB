@@ -1,10 +1,9 @@
-import { Display, RigidBody, Behaviour } from "../../engine/components";
+import { Display } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { Spritesheet, Sprite } from "../../engine/utils/spritesheet";
-import { assert, randomIn, range, clamp, randomFloatIn } from "../../utils";
-import { Damagable, SSDisplay } from "./baseComponents";
-import { Vec2 } from "../../engine/utils";
-import { wood_particle, ParticleCreator } from "../prefabs/blockPrefabs";
+import { randomIn, randomFloatIn } from "../../utils";
+import { Damagable } from "./baseComponents";
+import { ParticleCreator } from "../prefabs/blockPrefabs";
 import { Scene } from "../../engine/scene";
 
 export interface BlockDisplay {
@@ -107,17 +106,6 @@ export class BlockBehaviour extends Damagable {
         }
     }
 
-    public update(): boolean {
-        return false;
-    }
-}
-
-export class BlockRigidBody extends RigidBody {
-    constructor(o: GameObject, weight: number) {
-        super(o, weight);
-    }
-
-
 }
 
 export class ParticleDisplay extends Display {
@@ -148,7 +136,7 @@ export class ParticleDisplay extends Display {
         }
     }
 
-    public update(): boolean {
+    public update(delta: number): boolean {
         // update positions
         for (let i = 0; i < this.data.length; ++i) {
             this.data[i] += this.delta[i];

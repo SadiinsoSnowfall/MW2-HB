@@ -140,13 +140,13 @@ export class Scene {
     * @brief Updates the game without displaying it.
     * @returns The next scene to update and display (usually, itself)
     */
-    public update(): Scene {
+    public update(delta: number): Scene {
         let count = 0;
         
         // update background
         for (let i = 0; i < this.background.length; ++i) {
             const obj = this.background[i];
-            obj.update();
+            obj.update(delta);
             if (!obj.isEnabled()) {
                 ++count;
             }
@@ -160,7 +160,7 @@ export class Scene {
         // update foreground
         for (let i = 0; i < this.foreground.length; ++i) {
             const obj = this.foreground[i];
-            obj.update();
+            obj.update(delta);
             if (!obj.isEnabled()) {
                 ++count;
             }
@@ -171,7 +171,7 @@ export class Scene {
         }
         
         // update colliders
-        this.tree.update();
+        this.tree.update(delta);
 
         return this;
     }

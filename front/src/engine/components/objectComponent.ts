@@ -21,6 +21,6 @@ export abstract class ObjectComponent {
      * (typically, Display components will always return false,
      * whereas a Behaviour might return true if it made the object move).
      */
-    public abstract update(): boolean;
+    public abstract update(delta: number): boolean;
     
 }

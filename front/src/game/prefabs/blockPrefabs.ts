@@ -2,9 +2,9 @@ import { PrefabsManager } from "../../engine/prefabsManager";
 import { Prefab } from "../../engine/prefab";
 import { Img, Sound } from "../../utils";
 import { SSManager, Vec2 } from "../../engine/utils";
-import { VSBlockDisplay, BlockBehaviour, BlockRigidBody, HSBlockDisplay, ParticleDisplay } from "../components/blockComponents";
+import { VSBlockDisplay, BlockBehaviour, HSBlockDisplay, ParticleDisplay } from "../components/blockComponents";
 import { ConvexPolygon, Circle } from "../../engine/shapes";
-import { Collider } from "../../engine/components";
+import { RigidBody } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 
 /**
@@ -265,50 +265,43 @@ export function egg_particle(x: number, y: number, amount: number, amplitude: nu
 export const wooden_ball_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_MD, 4, 7), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.BALL_MD, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.BALL_MD));
-    obj.setCollider(new Collider(obj, new Circle(Vec2.Zero, ball_md_radius)));
+    obj.setCollider(new RigidBody(obj, new Circle(Vec2.Zero, ball_md_radius), BlockWeight.WOOD * BlockMod.BALL_MD));
 }), 100);
 
 export const stone_ball_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_MD, 4, 7), 1));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.BALL_MD, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.BALL_MD));
-    obj.setCollider(new Collider(obj, new Circle(Vec2.Zero, ball_md_radius)));
+    obj.setCollider(new RigidBody(obj, new Circle(Vec2.Zero, ball_md_radius), BlockWeight.STONE * BlockMod.BALL_MD));
 }), 101);
 
 export const ice_ball_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_MD, 4, 7), 2));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.BALL_MD, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.BALL_MD));
-    obj.setCollider(new Collider(obj, new Circle(Vec2.Zero, ball_md_radius)));
+    obj.setCollider(new RigidBody(obj, new Circle(Vec2.Zero, ball_md_radius), BlockWeight.ICE * BlockMod.BALL_MD));
 }), 102);
 
 export const sand_ball_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_MD, 4, 7), 3));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.SAND * BlockMod.BALL_MD, sand_particle, sand_sound, sand_sound, sand_sound));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.SAND * BlockMod.BALL_MD));
-    obj.setCollider(new Collider(obj, new Circle(Vec2.Zero, ball_md_radius)));
+    obj.setCollider(new RigidBody(obj, new Circle(Vec2.Zero, ball_md_radius), BlockWeight.SAND * BlockMod.BALL_MD));
 }), 103);
 
 export const wooden_ball_md_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_MD, 4, 7), 4));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.BALL_MD, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.BALL_MD));
-    obj.setCollider(new Collider(obj, new Circle(Vec2.Zero, ball_md_radius)));
+    obj.setCollider(new RigidBody(obj, new Circle(Vec2.Zero, ball_md_radius), BlockWeight.WOOD * BlockMod.BALL_MD));
 }), 104);
 
 export const stone_ball_md_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_MD, 4, 7), 5));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.BALL_MD, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.BALL_MD));
-    obj.setCollider(new Collider(obj, new Circle(Vec2.Zero, ball_md_radius)));
+    obj.setCollider(new RigidBody(obj, new Circle(Vec2.Zero, ball_md_radius), BlockWeight.STONE * BlockMod.BALL_MD));
 }), 105);
 
 export const ice_ball_md_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_MD, 4, 7), 6));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.BALL_MD, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.BALL_MD));
-    obj.setCollider(new Collider(obj, new Circle(Vec2.Zero, ball_md_radius)));
+    obj.setCollider(new RigidBody(obj, new Circle(Vec2.Zero, ball_md_radius), BlockWeight.ICE * BlockMod.BALL_MD));
 }), 106);
 
 
@@ -316,43 +309,37 @@ export const ice_ball_md_2 = PrefabsManager.register(new Prefab(obj => {
 export const wooden_ball_sm = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_SM, 4, 6), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.BALL_SM, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.BALL_SM));
-    obj.setCollider(new Collider(obj, new Circle(Vec2.Zero, ball_sm_radius)));
+    obj.setCollider(new RigidBody(obj, new Circle(Vec2.Zero, ball_sm_radius), BlockWeight.WOOD * BlockMod.BALL_SM));
 }), 110);
 
 export const stone_ball_sm = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_SM, 4, 6), 1));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.BALL_SM, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.BALL_SM));
-    obj.setCollider(new Collider(obj, new Circle(Vec2.Zero, ball_sm_radius)));
+    obj.setCollider(new RigidBody(obj, new Circle(Vec2.Zero, ball_sm_radius), BlockWeight.STONE * BlockMod.BALL_SM));
 }), 111);
 
 export const ice_ball_sm = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_SM, 4, 6), 2));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.BALL_SM, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.BALL_SM));
-    obj.setCollider(new Collider(obj, new Circle(Vec2.Zero, ball_sm_radius)));
+    obj.setCollider(new RigidBody(obj, new Circle(Vec2.Zero, ball_sm_radius), BlockWeight.ICE * BlockMod.BALL_SM));
 }), 112);
 
 export const wooden_ball_sm_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_SM, 4, 6), 3));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.BALL_SM, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.BALL_SM));
-    obj.setCollider(new Collider(obj, new Circle(Vec2.Zero, ball_sm_radius)));
+    obj.setCollider(new RigidBody(obj, new Circle(Vec2.Zero, ball_sm_radius), BlockWeight.WOOD * BlockMod.BALL_SM));
 }), 114);
 
 export const stone_ball_sm_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_SM, 4, 6), 4));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.BALL_SM, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.BALL_SM));
-    obj.setCollider(new Collider(obj, new Circle(Vec2.Zero, ball_sm_radius)));
+    obj.setCollider(new RigidBody(obj, new Circle(Vec2.Zero, ball_sm_radius), BlockWeight.STONE * BlockMod.BALL_SM));
 }), 115);
 
 export const ice_ball_sm_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.BALLS_SM, 4, 6), 5));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.BALL_SM, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.BALL_SM));
-    obj.setCollider(new Collider(obj, new Circle(Vec2.Zero, ball_sm_radius)));
+    obj.setCollider(new RigidBody(obj, new Circle(Vec2.Zero, ball_sm_radius), BlockWeight.ICE * BlockMod.BALL_SM));
 }), 116);
 
 /**
@@ -364,29 +351,25 @@ export const ice_ball_sm_2 = PrefabsManager.register(new Prefab(obj => {
 export const wooden_cube_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_MD, 4, 4), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.CUBE_MD, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.CUBE_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_md_vertices), BlockWeight.WOOD * BlockMod.CUBE_MD));
 }), 120);
 
 export const stone_cube_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_MD, 4, 4), 1));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.CUBE_MD, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.CUBE_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_md_vertices), BlockWeight.STONE * BlockMod.CUBE_MD));
 }), 121);
 
 export const ice_cube_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_MD, 4, 4), 2));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.CUBE_MD, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.CUBE_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_md_vertices), BlockWeight.ICE * BlockMod.CUBE_MD));
 }), 122);
 
 export const sand_cube_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_MD, 4, 4), 3));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.SAND * BlockMod.CUBE_MD, sand_particle, sand_sound, sand_sound, sand_sound));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.SAND * BlockMod.CUBE_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_md_vertices), BlockWeight.SAND * BlockMod.CUBE_MD));
 }), 123);
 
 
@@ -394,50 +377,43 @@ export const sand_cube_md = PrefabsManager.register(new Prefab(obj => {
 export const wooden_cube_sm = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_SM, 4, 7), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.CUBE_SM, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.CUBE_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_sm_vertices), BlockWeight.WOOD * BlockMod.CUBE_SM));
 }), 130);
 
 export const stone_cube_sm = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_SM, 4, 7), 1));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.CUBE_SM, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.CUBE_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_sm_vertices), BlockWeight.STONE * BlockMod.CUBE_SM));
 }), 131);
 
 export const ice_cube_sm = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_SM, 4, 7), 2));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.CUBE_SM, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.CUBE_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_sm_vertices), BlockWeight.ICE * BlockMod.CUBE_SM));
 }), 132);
 
 export const sand_cube_sm = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_SM, 4, 7), 3));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.SAND * BlockMod.CUBE_SM, sand_particle, sand_sound, sand_sound, sand_sound));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.SAND * BlockMod.CUBE_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_sm_vertices), BlockWeight.SAND * BlockMod.CUBE_SM));
 }), 133);
 
 export const wooden_cube_sm_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_SM, 4, 7), 4));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.CUBE_SM, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.CUBE_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_sm_vertices), BlockWeight.WOOD * BlockMod.CUBE_SM));
 }), 134);
 
 export const stone_cube_sm_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_SM, 4, 7), 5));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.CUBE_SM, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.CUBE_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_sm_vertices), BlockWeight.STONE * BlockMod.CUBE_SM));
 }), 135);
 
 export const ice_cube_sm_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_SM, 4, 7), 6));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.CUBE_SM, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.CUBE_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_sm_vertices), BlockWeight.ICE * BlockMod.CUBE_SM));
 }), 136);
 
 
@@ -445,43 +421,37 @@ export const ice_cube_sm_2 = PrefabsManager.register(new Prefab(obj => {
 export const wooden_cube_xs = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_XS, 4, 6), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.CUBE_XS, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.CUBE_XS));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_xs_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_xs_vertices), BlockWeight.WOOD * BlockMod.CUBE_XS));
 }), 140);
 
 export const stone_cube_xs = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_XS, 4, 6), 1));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.CUBE_XS, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.CUBE_XS));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_xs_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_xs_vertices), BlockWeight.STONE * BlockMod.CUBE_XS));
 }), 141);
 
 export const ice_cube_xs = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_XS, 4, 6), 2));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.CUBE_XS, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.CUBE_XS));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_xs_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_xs_vertices), BlockWeight.ICE * BlockMod.CUBE_XS));
 }), 142);
 
 export const wooden_cube_xs_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_XS, 4, 6), 3));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.CUBE_XS, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.CUBE_XS));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_xs_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_xs_vertices), BlockWeight.WOOD * BlockMod.CUBE_XS));
 }), 144);
 
 export const stone_cube_xs_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_XS, 4, 6), 4));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.CUBE_XS, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.CUBE_XS));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_xs_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_xs_vertices), BlockWeight.STONE * BlockMod.CUBE_XS));
 }), 145);
 
 export const ice_cube_xs_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_XS, 4, 6), 5));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.CUBE_XS, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.CUBE_XS));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_xs_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_xs_vertices), BlockWeight.ICE * BlockMod.CUBE_XS));
 }), 146);
 
 
@@ -489,43 +459,37 @@ export const ice_cube_xs_2 = PrefabsManager.register(new Prefab(obj => {
 export const wooden_cube_hl = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_HOLLOW, 4, 6), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.CUBE_HOLLOW, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.CUBE_HOLLOW));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_hl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_hl_vertices), BlockWeight.WOOD * BlockMod.CUBE_HOLLOW));
 }), 150);
 
 export const stone_cube_hl = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_HOLLOW, 4, 6), 1));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.CUBE_HOLLOW, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.CUBE_HOLLOW));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_hl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_hl_vertices), BlockWeight.STONE * BlockMod.CUBE_HOLLOW));
 }), 151);
 
 export const ice_cube_hl = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_HOLLOW, 4, 6), 2));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.CUBE_HOLLOW, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.CUBE_HOLLOW));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_hl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_hl_vertices), BlockWeight.ICE * BlockMod.CUBE_HOLLOW));
 }), 152);
 
 export const wooden_cube_hl_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_HOLLOW, 4, 6), 3));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.CUBE_HOLLOW, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.CUBE_HOLLOW));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_hl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_hl_vertices), BlockWeight.WOOD * BlockMod.CUBE_HOLLOW));
 }), 154);
 
 export const stone_cube_hl_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_HOLLOW, 4, 6), 4));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.CUBE_HOLLOW, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.CUBE_HOLLOW));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_hl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_hl_vertices), BlockWeight.STONE * BlockMod.CUBE_HOLLOW));
 }), 155);
 
 export const ice_cube_hl_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.CUBES_HOLLOW, 4, 6), 5));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.CUBE_HOLLOW, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.CUBE_HOLLOW));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, cube_hl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, cube_hl_vertices), BlockWeight.ICE * BlockMod.CUBE_HOLLOW));
 }), 156);
 
 /**
@@ -537,50 +501,43 @@ export const ice_cube_hl_2 = PrefabsManager.register(new Prefab(obj => {
 export const wooden_tris_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_MD, 4, 7), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.TRIS_MD, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.TRIS_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_md_vertices), BlockWeight.WOOD * BlockMod.TRIS_MD));
 }), 160);
 
 export const stone_tris_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_MD, 4, 7), 1));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.TRIS_MD, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.TRIS_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_md_vertices), BlockWeight.STONE * BlockMod.TRIS_MD));
 }), 161);
 
 export const ice_tris_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_MD, 4, 7), 2));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.TRIS_MD, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.TRIS_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_md_vertices), BlockWeight.ICE * BlockMod.TRIS_MD));
 }), 162);
 
 export const sand_tris_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_MD, 4, 7), 3));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.SAND * BlockMod.TRIS_MD, sand_particle, sand_sound, sand_sound, sand_sound));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.SAND * BlockMod.TRIS_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_md_vertices), BlockWeight.SAND * BlockMod.TRIS_MD));
 }), 163);
 
 export const wooden_tris_md_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_MD, 4, 7), 4));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.TRIS_MD, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.TRIS_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_md_vertices), BlockWeight.WOOD * BlockMod.TRIS_MD));
 }), 164);
 
 export const stone_tris_md_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_MD, 4, 7), 5));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.TRIS_MD, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.TRIS_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_md_vertices), BlockWeight.STONE * BlockMod.TRIS_MD));
 }), 165);
 
 export const ice_tris_md_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_MD, 4, 7), 6));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.TRIS_MD, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.TRIS_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_md_vertices), BlockWeight.ICE * BlockMod.TRIS_MD));
 }), 166);
 
 
@@ -588,29 +545,25 @@ export const ice_tris_md_2 = PrefabsManager.register(new Prefab(obj => {
 export const wooden_tris_sm = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_SM, 4, 4), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.TRIS_SM, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.TRIS_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_sm_vertices), BlockWeight.WOOD * BlockMod.TRIS_SM));
 }), 170);
 
 export const stone_tris_sm = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_SM, 4, 4), 1));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.TRIS_SM, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.TRIS_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_sm_vertices), BlockWeight.STONE * BlockMod.TRIS_SM));
 }), 171);
 
 export const ice_tris_sm = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_SM, 4, 4), 2));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.TRIS_SM, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.TRIS_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_sm_vertices), BlockWeight.ICE * BlockMod.TRIS_SM));
 }), 172);
 
 export const sand_tris_sm = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_SM, 4, 4), 3));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.SAND * BlockMod.TRIS_SM, sand_particle, sand_sound, sand_sound, sand_sound));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.SAND * BlockMod.TRIS_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_sm_vertices), BlockWeight.SAND * BlockMod.TRIS_SM));
 }), 173);
 
 
@@ -618,43 +571,37 @@ export const sand_tris_sm = PrefabsManager.register(new Prefab(obj => {
 export const wooden_tris_hl = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_HOLLOW, 4, 6), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.TRIS_HOLLOW, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.TRIS_HOLLOW));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_hl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_hl_vertices), BlockWeight.WOOD * BlockMod.TRIS_HOLLOW));
 }), 180);
 
 export const stone_tris_hl = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_HOLLOW, 4, 6), 1));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.TRIS_HOLLOW, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.TRIS_HOLLOW));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_hl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_hl_vertices), BlockWeight.STONE * BlockMod.TRIS_HOLLOW));
 }), 181);
 
 export const ice_tris_hl = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_HOLLOW, 4, 6), 2));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.TRIS_HOLLOW, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.TRIS_HOLLOW));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_hl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_hl_vertices), BlockWeight.ICE * BlockMod.TRIS_HOLLOW));
 }), 182);
 
 export const wooden_tris_hl_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_HOLLOW, 4, 6), 3));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.TRIS_HOLLOW, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.TRIS_HOLLOW));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_hl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_hl_vertices), BlockWeight.WOOD * BlockMod.TRIS_HOLLOW));
 }), 184);
 
 export const stone_tris_hl_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_HOLLOW, 4, 6), 4));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.TRIS_HOLLOW, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.TRIS_HOLLOW));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_hl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_hl_vertices), BlockWeight.STONE * BlockMod.TRIS_HOLLOW));
 }), 185);
 
 export const ice_tris_hl_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.TRIS_HOLLOW, 4, 6), 5));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.TRIS_HOLLOW, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.TRIS_HOLLOW));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, tris_hl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, tris_hl_vertices), BlockWeight.ICE * BlockMod.TRIS_HOLLOW));
 }), 186);
 
 /**
@@ -666,50 +613,43 @@ export const ice_tris_hl_2 = PrefabsManager.register(new Prefab(obj => {
 export const wooden_plank_fat = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.FAT_PLANKS, 4, 7), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.FAT_PLANK, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.FAT_PLANK));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_fat_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_fat_vertices), BlockWeight.WOOD * BlockMod.FAT_PLANK));
 }), 190);
 
 export const stone_plank_fat = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.FAT_PLANKS, 4, 7), 1));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.FAT_PLANK, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.FAT_PLANK));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_fat_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_fat_vertices), BlockWeight.STONE * BlockMod.FAT_PLANK));
 }), 191);
 
 export const ice_plank_fat = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.FAT_PLANKS, 4, 7), 2));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.FAT_PLANK, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.FAT_PLANK));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_fat_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_fat_vertices), BlockWeight.ICE * BlockMod.FAT_PLANK));
 }), 192);
 
 export const sand_plank_fat = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.FAT_PLANKS, 4, 7), 3));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.SAND * BlockMod.FAT_PLANK, sand_particle, sand_sound, sand_sound, sand_sound));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.SAND * BlockMod.FAT_PLANK));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_fat_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_fat_vertices), BlockWeight.SAND * BlockMod.FAT_PLANK));
 }), 193);
 
 export const wooden_plank_fat_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.FAT_PLANKS, 4, 7), 4));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.FAT_PLANK, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.FAT_PLANK));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_fat_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_fat_vertices), BlockWeight.WOOD * BlockMod.FAT_PLANK));
 }), 194);
 
 export const stone_plank_fat_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.FAT_PLANKS, 4, 7), 5));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.FAT_PLANK, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.FAT_PLANK));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_fat_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_fat_vertices), BlockWeight.STONE * BlockMod.FAT_PLANK));
 }), 195);
 
 export const ice_plank_fat_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new VSBlockDisplay(obj, SSManager.get(Img.FAT_PLANKS, 4, 7), 6));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.FAT_PLANK, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.FAT_PLANK));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_fat_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_fat_vertices), BlockWeight.ICE * BlockMod.FAT_PLANK));
 }), 196);
 
 
@@ -717,22 +657,19 @@ export const ice_plank_fat_2 = PrefabsManager.register(new Prefab(obj => {
 export const wooden_plank_xl = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_XL, 3 * 4, 1), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.PLANK_XL, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.PLANK_XL));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_xl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_xl_vertices), BlockWeight.WOOD * BlockMod.PLANK_XL));
 }), 210);
 
 export const stone_plank_xl = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_XL, 3 * 4, 1), 4));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.PLANK_XL, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.PLANK_XL));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_xl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_xl_vertices), BlockWeight.STONE * BlockMod.PLANK_XL));
 }), 211);
 
 export const ice_plank_xl = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_XL, 3 * 4, 1), 8));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.PLANK_XL, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.PLANK_XL));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_xl_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_xl_vertices), BlockWeight.ICE * BlockMod.PLANK_XL));
 }), 212);
 
 
@@ -740,43 +677,37 @@ export const ice_plank_xl = PrefabsManager.register(new Prefab(obj => {
 export const wooden_plank_lg = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_LG, 6 * 4, 1), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.PLANK_LG, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.PLANK_LG));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_lg_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_lg_vertices), BlockWeight.WOOD * BlockMod.PLANK_LG));
 }), 220);
 
 export const stone_plank_lg = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_LG, 6 * 4, 1), 4));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.PLANK_LG, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.PLANK_LG));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_lg_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_lg_vertices), BlockWeight.STONE * BlockMod.PLANK_LG));
 }), 221);
 
 export const ice_plank_lg = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_LG, 6 * 4, 1), 8));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.PLANK_LG, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.PLANK_LG));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_lg_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_lg_vertices), BlockWeight.ICE * BlockMod.PLANK_LG));
 }), 222);
 
 export const wooden_plank_lg_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_LG, 6 * 4, 1), 12));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.PLANK_LG, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.PLANK_LG));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_lg_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_lg_vertices), BlockWeight.WOOD * BlockMod.PLANK_LG));
 }), 223);
 
 export const stone_plank_lg_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_LG, 6 * 4, 1), 16));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.PLANK_LG, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.PLANK_LG));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_lg_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_lg_vertices), BlockWeight.STONE * BlockMod.PLANK_LG));
 }), 224);
 
 export const ice_plank_lg_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_LG, 6 * 4, 1), 20));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.PLANK_LG, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.PLANK_LG));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_lg_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_lg_vertices), BlockWeight.ICE * BlockMod.PLANK_LG));
 }), 225);
 
 
@@ -784,43 +715,37 @@ export const ice_plank_lg_2 = PrefabsManager.register(new Prefab(obj => {
 export const wooden_plank_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_MD, 6 * 4, 1), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.PLANK_MD, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.PLANK_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_md_vertices), BlockWeight.WOOD * BlockMod.PLANK_MD));
 }), 230);
 
 export const stone_plank_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_MD, 6 * 4, 1), 4));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.PLANK_MD, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.PLANK_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_md_vertices), BlockWeight.STONE * BlockMod.PLANK_MD));
 }), 231);
 
 export const ice_plank_md = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_MD, 6 * 4, 1), 8));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.PLANK_MD, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.PLANK_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_md_vertices), BlockWeight.ICE * BlockMod.PLANK_MD));
 }), 232);
 
 export const wooden_plank_md_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_MD, 6 * 4, 1), 12));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.PLANK_MD, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.PLANK_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_md_vertices), BlockWeight.WOOD * BlockMod.PLANK_MD));
 }), 233);
 
 export const stone_plank_md_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_MD, 6 * 4, 1), 16));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.PLANK_MD, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.PLANK_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_md_vertices), BlockWeight.STONE * BlockMod.PLANK_MD));
 }), 234);
 
 export const ice_plank_md_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_MD, 6 * 4, 1), 20));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.PLANK_MD, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.PLANK_MD));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_md_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_md_vertices), BlockWeight.ICE * BlockMod.PLANK_MD));
 }), 235);
 
 
@@ -828,43 +753,37 @@ export const ice_plank_md_2 = PrefabsManager.register(new Prefab(obj => {
 export const wooden_plank_sm = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_SM, 6 * 4, 1), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.PLANK_SM, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.PLANK_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_sm_vertices), BlockWeight.WOOD * BlockMod.PLANK_SM));
 }), 240);
 
 export const stone_plank_sm = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_SM, 6 * 4, 1), 4));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.PLANK_SM, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.PLANK_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_sm_vertices), BlockWeight.STONE * BlockMod.PLANK_SM));
 }), 241);
 
 export const ice_plank_sm = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_SM, 6 * 4, 1), 8));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.PLANK_SM, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.PLANK_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_sm_vertices), BlockWeight.ICE * BlockMod.PLANK_SM));
 }), 242);
 
 export const wooden_plank_sm_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_SM, 6 * 4, 1), 12));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.PLANK_SM, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.PLANK_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_sm_vertices), BlockWeight.WOOD * BlockMod.PLANK_SM));
 }), 243);
 
 export const stone_plank_sm_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_SM, 6 * 4, 1), 16));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.PLANK_SM, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.PLANK_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_sm_vertices), BlockWeight.STONE * BlockMod.PLANK_SM));
 }), 244);
 
 export const ice_plank_sm_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_SM, 6 * 4, 1), 20));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.PLANK_SM, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.PLANK_SM));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_sm_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_sm_vertices), BlockWeight.ICE * BlockMod.PLANK_SM));
 }), 245);
 
 
@@ -872,41 +791,35 @@ export const ice_plank_sm_2 = PrefabsManager.register(new Prefab(obj => {
 export const wooden_plank_xs = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_XS, 6 * 4, 1), 0));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.PLANK_XS, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.PLANK_XS));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_xs_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_xs_vertices), BlockWeight.WOOD * BlockMod.PLANK_XS));
 }), 250);
 
 export const stone_plank_xs = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_XS, 6 * 4, 1), 4));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.PLANK_XS, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.PLANK_XS));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_xs_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_xs_vertices), BlockWeight.STONE * BlockMod.PLANK_XS));
 }), 251);
 
 export const ice_plank_xs = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_XS, 6 * 4, 1), 8));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.PLANK_XS, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.PLANK_XS));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_xs_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_xs_vertices), BlockWeight.ICE * BlockMod.PLANK_XS));
 }), 252);
 
 export const wooden_plank_xs_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_XS, 6 * 4, 1), 12));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.WOOD * BlockMod.PLANK_XS, wood_particle, wood_hit_sounds, wood_damage_sounds, wood_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.WOOD * BlockMod.PLANK_XS));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_xs_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_xs_vertices), BlockWeight.WOOD * BlockMod.PLANK_XS));
 }), 253);
 
 export const stone_plank_xs_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_XS, 6 * 4, 1), 16));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.STONE * BlockMod.PLANK_XS, stone_particle, stone_hit_sounds, stone_damage_sounds, stone_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.STONE * BlockMod.PLANK_XS));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_xs_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_xs_vertices), BlockWeight.STONE * BlockMod.PLANK_XS));
 }), 254);
 
 export const ice_plank_xs_2 = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new HSBlockDisplay(obj, SSManager.get(Img.PLANKS_XS, 6 * 4, 1), 20));
     obj.setBehaviour(new BlockBehaviour(obj, MaterialHealth.ICE * BlockMod.PLANK_XS, ice_particle, ice_hit_sounds, ice_damage_sounds, ice_destroy_sounds));
-    obj.setRigidBody(new BlockRigidBody(obj, BlockWeight.ICE * BlockMod.PLANK_XS));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(Vec2.Zero, planks_xs_vertices)));
+    obj.setCollider(new RigidBody(obj, new ConvexPolygon(Vec2.Zero, planks_xs_vertices), BlockWeight.ICE * BlockMod.PLANK_XS));
 }), 255);

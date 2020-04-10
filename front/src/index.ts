@@ -36,7 +36,7 @@ async function game() {
         BP.ice_particle,
     ];
 
-    await loadLevel(0, scene);
+    // await loadLevel(0, scene); // need to spin up the server
 
     InputManager.subscribeMouse(MouseAction.MIDDLE_CLICK, (p: Vec2) => {
         for (const x of range(15)) {

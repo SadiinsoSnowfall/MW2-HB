@@ -1,11 +1,12 @@
 import { GameObject } from '../gameObject';
-import { ObjectComponent } from './';
+import { Collider } from './collider';
 import { Vec2 } from '../utils';
+import { Shape } from '../shapes';
 
 /**
  * ObjectComponent for physics simulation
  */
-export class RigidBody extends ObjectComponent {
+export class RigidBody extends Collider {
     private momentum: Vec2;
     private mass: number;
     private bounciness: number; 
@@ -13,16 +14,16 @@ export class RigidBody extends ObjectComponent {
 
     private static gravityPerTick = 0.03;
 
-    constructor(object: GameObject, mass: number, bounciness: number = 0, roughness: number = 1) {
-        super(object);
+    constructor(object: GameObject, shape: Shape, mass: number, bounciness: number = 0, roughness: number = 1) {
+        super(object, shape);
         this.momentum = new Vec2(0, 0);
         this.mass = mass;
         this.bounciness = bounciness;
         this.roughness = roughness;
     }
 
-    public update(): boolean {
-        //this.momentum.y += this.mass * RigidBody.gravityPerTick; // add gravity
+    public update(delta: number): boolean {
+        this.momentum.y += this.mass * RigidBody.gravityPerTick; // add gravity
 
         this.object.translate(this.momentum.x, this.momentum.y);
         return true;

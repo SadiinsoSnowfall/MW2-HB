@@ -16,6 +16,8 @@ export class CScreen {
     private frameTime: number;
     private lastrefresh: number;
 
+    private updateLastRefresh: number;
+
     private rft: number; // real frame time
     private rft_accumulator: number;
 
@@ -34,7 +36,7 @@ export class CScreen {
         this.height = this.canvas.height = height;
 
         // Starts game loop
-        this.frame = this.frameTime = this.lastrefresh = this.rft = this.rft_accumulator = 0;
+        this.frame = this.frameTime = this.lastrefresh = this.rft = this.rft_accumulator = this.updateLastRefresh = 0;
         requestAnimationFrame(() => this.update());
 
         // add listener to switch the game in fullscreen mode
@@ -54,15 +56,17 @@ export class CScreen {
         }
 
         let updateBegin = performance.now();
-        this.scene = this.scene?.update();
+
+        this.scene = this.scene?.update(updateBegin - this.updateLastRefresh);
         this.draw();
-        let updateEnd = performance.now();
-        this.rft_accumulator += (updateEnd - updateBegin);
+
+        this.updateLastRefresh = performance.now();
+        this.rft_accumulator += (this.updateLastRefresh - updateBegin);
 
         if (this.frame % CScreen.AVG_FRAMETIME_COUNT == 0) {
             // update frametime
-            this.frameTime = (updateEnd - this.lastrefresh) / CScreen.AVG_FRAMETIME_COUNT;
-            this.lastrefresh = updateEnd;
+            this.frameTime = (this.updateLastRefresh - this.lastrefresh) / CScreen.AVG_FRAMETIME_COUNT;
+            this.lastrefresh = this.updateLastRefresh;
 
             // update real frametime
             this.rft = this.rft_accumulator / CScreen.AVG_FRAMETIME_COUNT;

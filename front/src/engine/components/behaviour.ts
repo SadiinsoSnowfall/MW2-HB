@@ -10,6 +10,8 @@ export abstract class Behaviour extends ObjectComponent {
         super(object);
     }
 
-    public abstract update(): boolean;
+    public update(delta: number): boolean {
+        return false;
+    }
 
 }

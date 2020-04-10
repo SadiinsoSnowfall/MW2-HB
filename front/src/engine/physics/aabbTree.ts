@@ -401,11 +401,11 @@ export class AABBTree implements Iterable<Collider> {
     /**
      * @brief Updates all contained objects and adapts the tree.
      */
-    public update(): void {
+    public update(delta: number): void {
         for (const o of this.colliders) {
             let collider: Collider = o[0];
             let leaf: LeafData = o[1];
-            if (collider.object.update()) {
+            if (collider.object.update(delta)) {
                 // The object has moved
                 let bbox = bboxFromCollider(collider);
                 if (!leaf.bbox.encloses(bbox)) {

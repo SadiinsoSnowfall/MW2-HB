@@ -18,7 +18,7 @@ export class Collider extends ObjectComponent {
         this.shape = shape;
     }
 
-    public update(): boolean {
+    public update(delta: number): boolean {
         return false;
     }
 

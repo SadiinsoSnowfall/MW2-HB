@@ -10,7 +10,7 @@ export class Display extends ObjectComponent {
         super(object);
     }
 
-    public update(): boolean {
+    public update(delta: number): boolean {
         return false;
     }
 

@@ -11,7 +11,6 @@ export class GameObject {
     private transform: Transform;
 
     private display?: Display;
-    private rigidBody?: RigidBody;
     private collider?: Collider;
     private behaviour?: Behaviour;
 
@@ -59,14 +58,6 @@ export class GameObject {
         this.display = display;
     }
 
-    public getRigidBody(): RigidBody | undefined {
-        return this.rigidBody;
-    }
-    
-    public setRigidBody(body?: RigidBody): void {
-        this.rigidBody = body;
-    }
-
     public getCollider(): Collider | undefined {
         return this.collider;
     }
@@ -83,12 +74,8 @@ export class GameObject {
         this.behaviour = behaviour;
     }
 
-    public update(): boolean {
-        let r = this.behaviour?.update()
-            || this.rigidBody?.update()
-            || this.collider?.update()
-            || this.display?.update();
-        return (r == undefined)? false : r;
+    public update(delta: number): boolean {
+        return (this.behaviour?.update(delta) || this.collider?.update(delta) || this.display?.update(delta)) || false;
     }
 
     public draw(ctx: CanvasRenderingContext2D) {
