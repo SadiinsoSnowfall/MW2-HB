@@ -56,6 +56,10 @@ export class Scene {
     public realFramerate(): number {
         return this._screen?.realFramerate() || -1;
     }
+
+    public getTree(): AABBTree {
+        return this.tree;
+    }
     
     /**
     * @brief Instantiates an Object using a Prefab
@@ -140,13 +144,13 @@ export class Scene {
     * @brief Updates the game without displaying it.
     * @returns The next scene to update and display (usually, itself)
     */
-    public update(delta: number): Scene {
+    public update(): Scene {
         let count = 0;
         
         // update background
         for (let i = 0; i < this.background.length; ++i) {
             const obj = this.background[i];
-            obj.update(delta);
+            obj.update();
             if (!obj.isEnabled()) {
                 ++count;
             }
@@ -160,7 +164,7 @@ export class Scene {
         // update foreground
         for (let i = 0; i < this.foreground.length; ++i) {
             const obj = this.foreground[i];
-            obj.update(delta);
+            obj.update();
             if (!obj.isEnabled()) {
                 ++count;
             }
@@ -171,7 +175,7 @@ export class Scene {
         }
         
         // update colliders
-        this.tree.update(delta);
+        this.tree.update();
 
         return this;
     }

@@ -12,7 +12,7 @@ export abstract class ObjectComponent {
      * as it may be used a lot by object components
      */
     protected tick(): number {
-        return this.object.scene()?.tick() || -1;
+        return this.object.getScene().tick();
     }
 
     /**
@@ -21,6 +21,6 @@ export abstract class ObjectComponent {
      * (typically, Display components will always return false,
      * whereas a Behaviour might return true if it made the object move).
      */
-    public abstract update(delta: number): boolean;
+    public abstract update(): boolean;
     
 }

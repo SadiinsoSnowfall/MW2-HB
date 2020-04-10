@@ -55,15 +55,15 @@ async function game() {
 
     InputManager.subscribeMouse(MouseAction.LEFT_CLICK, (p: Vec2) => {
         objs.push(scene.instantiate(forcePickOne([
-            BP.wooden_tris_md_2,
-            BP.stone_tris_md_2,
-            BP.ice_tris_md_2,
-            BP.sand_tris_md
+            BP.wooden_cube_hl_2,
+            //BP.stone_cube_hl_2,
+            //BP.ice_cube_hl_2
         ]), p.x ,p.y));
 
     });
 
     // ugly af, only for demonstration purpose
+    /*
     setInterval(() => {
         for (const obj of objs) {
             if (obj.isEnabled()) {
@@ -71,6 +71,7 @@ async function game() {
             }
         }
    }, 250);
+   */
 
     scene.addObject(createGround(675, 800, 1200, 50));
 

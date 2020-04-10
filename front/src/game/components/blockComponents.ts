@@ -80,9 +80,8 @@ export class BlockBehaviour extends Damagable {
     }
 
     public emmitParticles(volume: number, amplitude: number, lifespanMult: number = 1): void {
-        const scene = this.object.scene() as Scene; // to bypass the nonnull checks
         const pos = this.object.getPosition();
-        scene.addObject(this.particle(pos.x, pos.y, volume, amplitude, lifespanMult));
+        this.object.getScene().addObject(this.particle(pos.x, pos.y, volume, amplitude, lifespanMult));
     }
 
     public applyDamage(damage: number): void {
@@ -136,7 +135,7 @@ export class ParticleDisplay extends Display {
         }
     }
 
-    public update(delta: number): boolean {
+    public update(): boolean {
         // update positions
         for (let i = 0; i < this.data.length; ++i) {
             this.data[i] += this.delta[i];

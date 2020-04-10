@@ -1,31 +1,66 @@
 import { GameObject } from '../gameObject';
 import { Collider } from './collider';
 import { Vec2 } from '../utils';
-import { Shape } from '../shapes';
+import { Shape, intersection } from '../shapes';
+import { Scene } from '../scene';
 
 /**
  * ObjectComponent for physics simulation
  */
 export class RigidBody extends Collider {
-    private momentum: Vec2;
-    private mass: number;
-    private bounciness: number; 
-    private roughness: number; // used when calculating friction between two rigidbodies
+    public static gravity: Vec2 = new Vec2(0, 40);
+    public static deltaTime: number = 1 / 60;
+    public static deltaTimeSquared: number = Math.pow(RigidBody.deltaTime, 2);
 
-    private static gravityPerTick = 0.03;
+    protected velocity: Vec2;
+    protected force: Vec2;
+    protected angularVelocity: number;
+    protected prevPos: Vec2;
 
-    constructor(object: GameObject, shape: Shape, mass: number, bounciness: number = 0, roughness: number = 1) {
+    protected airFriction: number;
+    protected mass: number;
+    protected bounciness: number; 
+    protected roughness: number; // used when calculating friction between two rigidbodies
+
+    constructor(object: GameObject, shape: Shape, mass: number, airFriction: number = 0.98, bounciness: number = 0, roughness: number = 1) {
         super(object, shape);
-        this.momentum = new Vec2(0, 0);
         this.mass = mass;
+        this.airFriction = airFriction;
         this.bounciness = bounciness;
         this.roughness = roughness;
+
+        this.prevPos = object.getPosition();
+        this.velocity = new Vec2(0, 0);
+        this.force = new Vec2(0, 0);
+        this.angularVelocity = 0;
     }
 
-    public update(delta: number): boolean {
-        this.momentum.y += this.mass * RigidBody.gravityPerTick; // add gravity
+    public applyForce(force: Vec2): void {
+        this.force.add(force);
+    }
 
-        this.object.translate(this.momentum.x, this.momentum.y);
+    public update(): boolean {
+        const scene = this.object.getScene();
+        for (const c of scene.getTree()) {
+            if (c.object.id != this.object.id) {
+                const cdata = intersection(c.getShape(), this.shape);
+                if (cdata !== null) {
+                    console.log([this.object.getTransform(), c.object.getTransform(), this.object.getPosition()]);
+                }
+            }
+        }
+
+        // add gravity
+        this.applyForce(Vec2.mul(RigidBody.gravity, this.mass));
+
+        const curPos = this.object.getPosition();
+
+        const acceleration = Vec2.div(this.force, this.mass).mul(RigidBody.deltaTimeSquared);
+        this.velocity = Vec2.sub(curPos, this.prevPos).mul(this.airFriction).add(acceleration);
+
+        this.prevPos = curPos;
+
+        this.object.translate(this.velocity.x, this.velocity.y);
         return true;
     }
 
@@ -38,11 +73,11 @@ export class RigidBody extends Collider {
     }
 
     public getMomentum(): Vec2 {
-        return this.momentum;
+        return this.velocity;
     }
 
     public setMomentum(momentum: Vec2) {
-        this.momentum = momentum;
+        this.velocity = momentum;
     }
 
 }

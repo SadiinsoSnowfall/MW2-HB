@@ -66,7 +66,7 @@ export class SpinnyBehaviour extends Behaviour {
         o.scale(2, 0.5);
     }
 
-    public update(delta: number): boolean {
+    public update(): boolean {
         this.object.rotateRadians(this.rotation);
         return true;
     }
@@ -104,10 +104,10 @@ export class FPSMetterDisplay extends Display {
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
-        let tick = this.tick() || -1;
+        let tick = this.tick();
         if (!this.text.isInitialized() || tick % 15 == 0) {
-            let ftime = this.object.scene()?.framerate() || -666;
-            let rtime = this.object.scene()?.realFramerate() || -666;
+            let ftime = this.object.getScene().framerate();
+            let rtime = this.object.getScene().realFramerate();
 
             this.text.refresh(ctx, [
                 tick,
@@ -184,7 +184,7 @@ export class CircleBehaviour extends Display {
         this.shearFactor = 0.01;
     }
 
-    public update(delta: number): boolean {
+    public update(): boolean {
         let tick = this.tick();
         if (tick % 15 == 0) {
             this.shearFactor *= -1;
@@ -225,8 +225,8 @@ export class WandererBehaviour extends SpinnyBehaviour {
         this.y = (Math.random() - 0.5) * 20;
     }
 
-    public update(delta: number): boolean {
-        super.update(delta);
+    public update(): boolean {
+        super.update();
         this.object.translate(this.x, this.y);
         return true;
     }

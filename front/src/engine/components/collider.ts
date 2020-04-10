@@ -6,7 +6,7 @@ import { Rectangle, Shape } from '../shapes';
  * ObjectComponent for basic hitbox management
  */
 export class Collider extends ObjectComponent {
-    private shape: Shape;
+    protected shape: Shape;
 
     /**
      * @brief Constructor for colliders.
@@ -18,7 +18,7 @@ export class Collider extends ObjectComponent {
         this.shape = shape;
     }
 
-    public update(delta: number): boolean {
+    public update(): boolean {
         return false;
     }
 

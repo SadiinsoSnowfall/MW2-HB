@@ -42,7 +42,7 @@ export enum BlockMod {
 }
 
 export enum BlockWeight {
-    WOOD = 10,
+    WOOD = 300,
     STONE = 20,
     ICE = 10,
     SAND = 10

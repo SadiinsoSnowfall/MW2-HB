@@ -19,57 +19,64 @@ export class Vec2 {
     /**
      * Add a number to this vector components
      */
-    public add(v: Vec2): void {
+    public add(v: Vec2): Vec2 {
         this.x += v.x;
         this.y += v.y;
+        return this;
     }
 
     /**
      * Substract a number to this vector components
      */
-    public sub(v: Vec2): void {
+    public sub(v: Vec2): Vec2 {
         this.x -= v.x;
         this.y -= v.y;
+        return this;
     }
 
     /**
      * Multiplies this vector components by a number
      */
-    public mul(k: number): void {
+    public mul(k: number): Vec2 {
         this.x *= k;
         this.y *= k;
+        return this;
     }
 
     /**
      * Divides this vector components by a number
      */
-    public div(k: number): void {
+    public div(k: number): Vec2 {
         this.x /= k;
         this.y /= k;
+        return this;
     }
 
     /**
      * Multiplies this vector components by those of another vector
      */
-    public scale(v: Vec2): void {
+    public scale(v: Vec2): Vec2 {
         this.x *= v.x;
         this.y *= v.y;
+        return this;
     }
 
     /**
      * Divides this vector components by those of another vector
      */
-    public invScale(v: Vec2): void {
+    public invScale(v: Vec2): Vec2 {
         this.x /= v.x;
         this.y /= v.y;
+        return this;
     }
 
     /**
      * Multiplies both components by -1.
      */
-    public neg(): void {
+    public neg(): Vec2 {
         this.x = -this.x;
         this.y = -this.y;
+        return this;
     }
 
     /**
@@ -99,8 +106,9 @@ export class Vec2 {
     /**
      * Makes this vector have a magnitude of 1
      */
-    public normalize(): void {
+    public normalize(): Vec2 {
         this.mul(1 / this.magnitude());
+        return this;
     }
 
     /**
@@ -113,6 +121,10 @@ export class Vec2 {
 
     public toString(): string {
         return "(" + this.x + ", " + this.y + ")";
+    }
+
+    public clone(): Vec2 {
+        return new Vec2(this.x, this.y);
     }
 
     /*

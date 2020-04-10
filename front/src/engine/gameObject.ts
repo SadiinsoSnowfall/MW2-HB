@@ -42,11 +42,11 @@ export class GameObject {
         this.enabled = enabled;
     }
 
-    public scene(): Scene | undefined {
-        return this._scene;
+    public getScene(): Scene {
+        return this._scene as Scene;
     }
 
-    public setScene(scene?: Scene): void {
+    public setScene(scene: Scene): void {
         this._scene = scene;
     }
 
@@ -74,8 +74,8 @@ export class GameObject {
         this.behaviour = behaviour;
     }
 
-    public update(delta: number): boolean {
-        return (this.behaviour?.update(delta) || this.collider?.update(delta) || this.display?.update(delta)) || false;
+    public update(): boolean {
+        return (this.behaviour?.update() || this.collider?.update() || this.display?.update()) || false;
     }
 
     public draw(ctx: CanvasRenderingContext2D) {

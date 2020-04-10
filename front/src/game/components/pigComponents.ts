@@ -28,7 +28,7 @@ export class PigBehaviour extends Damagable {
         super(o, health, hitSounds, damageSound, destroySound);
     }
 
-    public update(delta: number): boolean {
+    public update(): boolean {
         return false;
     }
 
