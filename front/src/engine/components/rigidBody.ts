@@ -41,13 +41,10 @@ export class RigidBody extends Collider {
 
     public update(): boolean {
         const scene = this.object.getScene();
-        for (const c of scene.getTree()) {
-            if (c.object.id != this.object.id) {
-                const cdata = intersection(c.getShape(), this.shape);
-                if (cdata !== null) {
-                    console.log([this.object.getTransform(), c.object.getTransform(), this.object.getPosition()]);
-                }
-            }
+        let collisions = scene.getTree().query(this);
+        if (collisions.length > 0) {
+            this.force.mul(-1.01);
+            this.prevPos = this.object.getPosition();
         }
 
         // add gravity

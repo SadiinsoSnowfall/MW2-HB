@@ -5,8 +5,41 @@ import { PrefabsManager } from '../engine/prefabsManager';
 
 const serverURL = 'http://localhost:4321';
 
-export interface LevelData {
+interface LevelWrapper {
+    id: number,
+    hash: string,
+    data: LevelData,
+}
+
+interface LevelData {
     elements: [number, number, number][]; // array of (id, x, y)
+}
+
+export interface LevelEntry {
+    id: number,
+    hash: string
+}
+
+let levelList: LevelEntry[] = [];
+
+export async function queryLevelList(): Promise<LevelEntry[]> {
+    // query list
+    levelList = await http.json<LevelEntry[]>(serverURL + '/levels');
+    
+    // verify checksum & invalidate if needed
+    for (let i = 0; i < levelList.length; ++i) {
+        const shash = await get<string>(`${levelList[i].id}.hash`);
+        if ((shash !== undefined) && (shash !== levelList[i].hash)) {
+            console.log('invalidating');
+            invalidateCache(levelList[i].id);
+        }
+    }
+
+    return levelList;
+}
+
+export function getLevelList(): LevelEntry[] {
+    return levelList;
 }
 
 export async function loadLevel(id: number, scene: Scene): Promise<void> {
@@ -17,7 +50,8 @@ export async function loadLevel(id: number, scene: Scene): Promise<void> {
 
     // instantiate all elements
     try {
-        for (const e of data.elements) {
+        for (let i = 0; i < data.elements.length; ++i) {
+            const e = data.elements[i];
             scene.instantiate(PrefabsManager.get(e[0]), e[1], e[2]);
         }
     } catch (e) { 
@@ -28,24 +62,25 @@ export async function loadLevel(id: number, scene: Scene): Promise<void> {
 }
 
 export function invalidateCache(id: number) {
-    del(id);
+    del(`${id}.data`);
+    del(`${id}.hash`);
 }
 
 export async function queryLevel(id: number): Promise<LevelData | null> {
-    let level = await get<string>(id); // get from local DB
-    if (level === undefined) {
+    const stored = await get<LevelData>(`${id}.data`); // get from local DB
+    if (stored === undefined) {
         try {
-            level = await getLevelFromServer(id);
+            const wrapper = await http.json<LevelWrapper>(serverURL + `/levels/${id}`);
+            
+            // may need to add await there to prevent race conditions
+            set(`${id}.hash`, wrapper.hash);
+            set(`${id}.data`, wrapper.data); 
+
+            return wrapper.data;
         } catch {
             return null;
         }
-
-        set(id, level); // may need to add await there to prevent race conditions
-    } 
-
-    return JSON.parse(level);
-}
-
-async function getLevelFromServer(id: number): Promise<string> {
-    return await http.get(serverURL + `/levels/${id}`);
+    } else {
+        return stored;
+    }
 }

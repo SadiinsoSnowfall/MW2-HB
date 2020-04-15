@@ -119,6 +119,15 @@ export class Vec2 {
         return (this.x == v.x) && (this.y == v.y);
     }
 
+    /**
+     * Set the value of the vector
+     */
+    public setXY(x: number, y: number): Vec2 {
+        this.x = x;
+        this.y = y;
+        return this;
+    }
+
     public toString(): string {
         return "(" + this.x + ", " + this.y + ")";
     }

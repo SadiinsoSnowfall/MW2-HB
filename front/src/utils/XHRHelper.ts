@@ -1,9 +1,7 @@
-export { request, get, post }
-
 /**
  * Wrapper around XMLHttpRequest to request an endpoint
  */
-class Request {
+export class Request {
     readonly url: string;
 
     private _timeout: number;
@@ -84,7 +82,7 @@ class Request {
  * @param params The URL parameters
  * @param headers The header parameters
  */
-function request(url: string, method: string, params: Record<string, string> = {}, headers: Record<string, string> = {}, timeout = 5000): Promise<XMLHttpRequest> {
+export function request(url: string, method: string, params: Record<string, string> = {}, headers: Record<string, string> = {}, timeout = 5000): Promise<XMLHttpRequest> {
     return new Request(url).params(params).headers(headers).timeout(timeout).request(method);
 }
 
@@ -95,8 +93,19 @@ function request(url: string, method: string, params: Record<string, string> = {
  * @param headers The header parameters
  * @returns The request response text
  */
-async function get(url: string, params: Record<string, string> = {}, headers: Record<string, string> = {}, timeout = 5000): Promise<string> {
+export async function get(url: string, params: Record<string, string> = {}, headers: Record<string, string> = {}, timeout = 5000): Promise<string> {
     return new Request(url).params(params).headers(headers).timeout(timeout).get();
+}
+
+/**
+ * Shortcut for [[request]] that GET the given URL and parse it as JSON
+ * @param url The URL to request
+ * @param params The URL parameters
+ * @param headers The header parameters
+ * @returns The request response text
+ */
+export async function json<T = object>(url: string, params: Record<string, string> = {}, headers: Record<string, string> = {}, timeout = 5000): Promise<T> {
+    return JSON.parse(await new Request(url).params(params).headers(headers).timeout(timeout).get());
 }
 
 /**
@@ -106,6 +115,6 @@ async function get(url: string, params: Record<string, string> = {}, headers: Re
  * @param headers The header parameters
  * @returns The request response text
  */
-async function post(url: string, params: Record<string, string> = {}, headers: Record<string, string> = {}, timeout = 5000): Promise<string> {
+export async function post(url: string, params: Record<string, string> = {}, headers: Record<string, string> = {}, timeout = 5000): Promise<string> {
     return new Request(url).params(params).headers(headers).timeout(timeout).post();
 }

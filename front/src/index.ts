@@ -6,6 +6,7 @@ import { FPSMetter} from './game/prefabs/debugPrefabs';
 import { Assets, sleep, assert, range, forcePickOne, loadLevel } from './utils';
 import { InputManager, MouseAction } from './utils/inputManager';
 import * as BP from './game/prefabs/blockPrefabs';
+import * as LL from './utils/levelsManager'
 import { BlockBehaviour } from './game/components/blockComponents';
 import { GameObject } from './engine/gameObject';
 import { square, wanderer } from './game/prefabs/debugPrefabs';
