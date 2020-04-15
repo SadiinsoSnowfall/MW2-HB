@@ -74,10 +74,9 @@ async function game() {
    }, 250);
    */
 
-    scene.addObject(createGround(675, 800, 1200, 50));
+    //scene.addObject(createGround(675, 800, 1200, 50));
 
     // Polygon collision detection test
-    /*
     const offset = 500;
     const scale = 100;
 
@@ -95,8 +94,8 @@ async function game() {
     function lol(p: any, color: string) {
         test(p, p, true);
         let obj = new GameObject(0, 0);
-        obj.setColliderComponent(new Collider(obj, p.p));
-        obj.setDisplayComponent(new ShapeDisplay(obj, p.p, color));
+        obj.setCollider(new Collider(obj, p.p));
+        obj.setDisplay(new ShapeDisplay(obj, p.p, color));
         scene.addObject(obj);
         return p;
     }
@@ -171,6 +170,5 @@ async function game() {
     test(p03, p06, true);
     test(p04, p06, true);
     test(p05, p06, false);
-    */
 }
 game();

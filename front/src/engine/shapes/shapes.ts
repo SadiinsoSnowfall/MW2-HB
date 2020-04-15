@@ -50,10 +50,14 @@ export interface Shape {
  * @brief Holds useful data on a collision between two shapes.
  */
 export class CollisionData {
-    public point: Vec2;
+    public readonly contact: Vec2;
+    public readonly depth: number;
+    public readonly normal: Vec2;
 
-    constructor(p: Vec2) {
-        this.point = p;
+    constructor(contact: Vec2, depth: number, normal: Vec2) {
+        this.contact = contact;
+        this.depth = depth;
+        this.normal = normal;
     }
 }
 
@@ -73,80 +77,15 @@ export function drawCross(ctx: CanvasRenderingContext2D, dot: Vec2): void {
     ctx.closePath();
 }
 
-/**
- * @brief Returns the collision data between s1 and s2.
- * Returns null if both shapes are not actually intersecting. 
- */
-export function intersection(s1: Shape, s2: Shape): CollisionData | null {
-    /*if (s1 instanceof ConvexPolygon && s2 instanceof ConvexPolygon) {
-        return s1.intersectConvex(s2);
-    } else if (s1 instanceof Circle && s2 instanceof Circle) {
-        return s1.intersectCircle(s2);
-    } else {
-        throw new Error("Shapes.ts: intersection(): unsupported shapes type");
-    }*/
+// Support function of the Minkowski difference of s1 and s2
+function support(s1: Shape, s2: Shape, d: Vec2): Vec2 {
+    return Vec2.sub(s1.support(d), s2.support(Vec2.neg(d))); // s1.support(d) - s2.support(-d)
+}
 
-    /*// https://caseymuratori.com/blog_0003
-    let s = Vec2.sub(s1.pick(), s2.pick());
-    let simplex = [s];
-    let d = Vec2.neg(s);
-    while (true) {
-        let a = Vec2.sub(s1.support(d), s2.support(Vec2.neg(d)));
-        if (a.dot(d) < 0) {
-            // The two shapes are not intersecting
-            return null;
-        }
-
-        // A is not explicity added to the simplex...
-        let contains = false;
-        if (simplex.length == 1) {
-            // ... So this case actually covers lines, and not single points
-            // Isn't A past the origin compared to b ?
-            // Which would mean we need one less condition
-            let ao = Vec2.neg(a);
-            let ab = Vec2.sub(simplex[0], a);
-            if (ab.dot(ao) > 0) {
-                // Closer to some point of the segment of AB that is not A or B
-                simplex.push(a);
-                d = Vec2.tripleProduct(ab, ao, ab);
-            } else {
-                // Closer to A
-                d = ao;
-            }
-            // Can not be closer to B (simplex[0])
-        } else {
-            // https://blog.hamaluik.ca/posts/building-a-collision-engine-part-1-2d-gjk-collision-detection/
-            // The video considers 3D vectir, which is not our case
-            // So I used the above link to complete this case
-            let b = simplex[1];
-            let c = simplex[0];
-            let ab = Vec2.sub(b, a);
-            let ac = Vec2.sub(c, a);
-            let ao = Vec2.neg(a);
-            let abPerp = Vec2.tripleProduct(ac, ab, ab);
-            if (abPerp.dot(ao) > 0) {
-                // Outside ab
-                simplex = [b, a];
-                d = abPerp;
-            } else {
-                let acPerp = Vec2.tripleProduct(ab, ac, ac);
-                if (acPerp.dot(ao) > 0) {
-                    // Outside ac
-                    simplex = [c, a];
-                    d = acPerp;
-                } else {
-                    // Inside both ab and ac: the simplex contains the origin
-                    contains = true;
-                }
-            }
-        }
-
-        if (contains) {
-            return new CollisionData(Vec2.Zero);
-        }
-    }*/
-
-    // https://blog.hamaluik.ca/posts/building-a-collision-engine-part-1-2d-gjk-collision-detection/
+// Implementation of GJK
+// https://blog.hamaluik.ca/posts/building-a-collision-engine-part-1-2d-gjk-collision-detection/
+// Returns a triangle containing the origin if there is a collision, an empty list otherwise
+function gjk(s1: Shape, s2: Shape): Vec2[] {
     let simplex: Vec2[] = [];
     let d = Vec2.Zero;
     while (true) {
@@ -188,8 +127,8 @@ export function intersection(s1: Shape, s2: Shape): CollisionData | null {
                         simplex = [c, a];
                         d = acPerp;
                     } else {
-                        // Outside botj ab and ac => simplex encloses (0, 0)
-                        return new CollisionData(/*TODO*/Vec2.Zero);
+                        // Outside both ab and ac => simplex encloses (0, 0)
+                        return simplex;
                     }
                 }
                 break;
@@ -201,11 +140,75 @@ export function intersection(s1: Shape, s2: Shape): CollisionData | null {
         }
 
         // Add a new support if possible
-        let newVertex = Vec2.sub(s1.support(d), s2.support(Vec2.neg(d))); // s1.support(d) - s2.support(-d)
+        let newVertex = support(s1, s2, d);
         if (d.dot(newVertex) < 0) {
             // The two shapes are not intersecting
-            return null;
+            return [];
         }
         simplex.push(newVertex);
+    }
+}
+
+const epaTolerance = 0.00001;
+
+// Auxiliary class for EPA
+class Edge {
+    public distance: number;
+    public index: number;
+    public normal: Vec2;
+
+    constructor() {
+        this.index = 0;
+        this.normal = Vec2.Zero;
+        this.distance = Number.MAX_VALUE;
+    }
+}
+
+// Auxiliary function for EPA
+function findClosestEdge(simplex: Vec2[]): Edge {
+    let r = new Edge();
+    for (let i = 0; i < simplex.length; i++) {
+        let j = (i + 1 == simplex.length)? 0 : i + 1;
+        let a = simplex[i];
+        let b = simplex[j];
+        let ab = Vec2.sub(b, a);
+        let n = Vec2.normalVector(ab);
+        n.normalize();
+        let d = n.dot(a);
+        if (d < r.distance) {
+            r.distance = d;
+            r.normal = n;
+            r.index = j;
+        }
+    }
+    return r;
+}
+
+// Implementation of EPA
+// http://www.dyn4j.org/2010/05/epa-expanding-polytope-algorithm/
+// Computes the penetration depth and contact point
+function epa(s1: Shape, s2: Shape, simplex: Vec2[]): CollisionData {
+    while (true) {
+        let e = findClosestEdge(simplex);
+        let p = support(s1, s2, e.normal);
+        let dot = p.dot(e.normal);
+        if (dot - e.distance < epaTolerance) {
+            return new CollisionData(Vec2.Zero, dot, e.normal);
+        } else {
+            simplex.splice(e.index, 0, p);
+        }
+    }
+}
+
+/**
+ * @brief Returns the collision data between s1 and s2.
+ * Returns null if both shapes are not actually intersecting. 
+ */
+export function intersection(s1: Shape, s2: Shape): CollisionData | null {
+    let simplex = gjk(s1, s2);
+    if (simplex.length == 0) {
+        return null;
+    } else {
+        return epa(s1, s2, simplex);
     }
 }
