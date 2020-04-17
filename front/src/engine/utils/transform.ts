@@ -144,7 +144,7 @@ export class Transform {
      *********************************************************************************************/
 
     /**
-     * Multiplies this matrix by another one.
+     * @brief Multiplies this matrix by another one.
      * @param m The other matrix.
      */
     public multiplyMatrix(m: Transform): Transform {
@@ -159,13 +159,77 @@ export class Transform {
     }
 
     /**
-     * Returns a vector v' such that this * v = v'.
+     * @brief Returns a vector v' such that this * v = v'.
      */
     public multiplyVector(v: Vec2): Vec2 {
         return new Vec2(
             this.m11 * v.x + this.m21 * v.y + this.m31,
             this.m12 * v.x + this.m22 * v.y + this.m32
         );
+    }
+
+    /**
+     * @brief Returns a vector r such that this * r = v.
+     * This function is the opposite of multiplyVector.
+     * This function might throw exceptions in two cases:
+     * - the determinant is 0. Not much can be done here.
+     * - m11 == m22 == 0. In this case, the object that owns this transform is infinitely small
+     *  anyway, so it should not happen.
+     */
+    public revert(v: Vec2): Vec2 {
+        let det = this.m11 * this.m22 - this.m12 * this.m21;
+        if (det == 0) { // Or Math.abs(det) <= epsilon where epsilon is the tolerance?
+            throw new Error("Transform#revert: irreversible matrix");
+        }
+
+        if (this.m11 != 0) {
+            let y = this.m11 * v.y - this.m12 * (v.x - this.m31) - this.m11 * this.m32;
+            y /= det;
+            return new Vec2((v.x - this.m21 * y - this.m31) / this.m11, y);
+        }
+
+        if (this.m22 != 0) {
+            let x = this.m22 * v.x - this.m21 * (v.y - this.m32) - this.m22 * this.m31;
+            x /= det;
+            return new Vec2(x, (v.y - this.m12 * x - this.m32) / this.m22);
+        }
+
+        throw new Error("Transform#revert: unable to revert the vector (both m11 and m22 are equal to zero)");
+    }
+
+    /**
+     * @brief Reverts vector just like revert does.
+     * This method is slightly more optimized than calling revert for each elements of vectors,
+     * since some computations and tests are done once and for all.
+     */
+    public revertMultiple(vectors: Vec2[]): Vec2[] {
+        let det = this.m11 * this.m22 - this.m12 * this.m21;
+        if (det == 0) {
+            throw new Error("Transform#revertMultiple: irreversible matrix");
+        }
+        let r: Vec2[] = [];
+
+        if (this.m11 != 0) {
+            let af = this.m11 * this.m32;
+            for (let v of vectors) {
+                let y = this.m11 * v.y - this.m12 * (v.x - this.m31) - af;
+                y /= det;
+                r.push(new Vec2((v.x - this.m21 * y - this.m31) / this.m11, y));
+            }
+            return r;
+        }
+
+        if (this.m22 != 0) {
+            let de = this.m22 * this.m31;
+            for (let v of vectors) {
+                let x = this.m22 * v.x - this.m21 * (v.y - this.m32) - de;
+                x /= det;
+                r.push(new Vec2(x, (v.y - this.m12 * x - this.m32) / this.m22));
+            }
+            return r;
+        }
+
+        throw new Error("Transform#revertMultiple: unable to revert the vector (both m11 and m22 are equal to zero)");
     }
 
     /**********************************************************************************************

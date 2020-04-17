@@ -1,6 +1,6 @@
 import { GameObject } from "../../engine/gameObject";
 import { Display, Collider } from "../../engine/components";
-import { Rectangle, ConvexPolygon } from "../../engine/shapes";
+import { Rectangle, ConvexPolygon } from "../../engine/physics";
 import { Vec2 } from "../../engine/utils";
 
 export class GroundDisplay extends Display {

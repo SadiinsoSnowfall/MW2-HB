@@ -1,7 +1,7 @@
 import { GameObject } from '../gameObject';
 import { Collider } from './collider';
 import { Vec2 } from '../utils';
-import { Shape, intersection } from '../shapes';
+import { Shape, intersection } from '../physics';
 import { Scene } from '../scene';
 
 /**

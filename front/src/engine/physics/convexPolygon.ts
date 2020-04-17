@@ -1,5 +1,5 @@
 import { Vec2, Transform } from "../utils";
-import { Shape, drawCross } from './shapes';
+import { Shape, Edge, drawCross } from './shape';
 import { Rectangle } from './rectangle';
 import { assert } from '../../utils';
 
@@ -183,6 +183,32 @@ export class ConvexPolygon implements Shape {
             }
         }
         return max;
+    }
+
+    public feature(d: Vec2): Edge {
+        let index = 0;
+        let max = Vec2.add(this.vertices[index], this.center);
+        let dot = max.dot(d);
+        for (let i = 1; i < this.vertices.length; i++) {
+            const p = Vec2.add(this.vertices[i], this.center);
+            let tmp = p.dot(d);
+            if (tmp > dot) {
+                max = p;
+                index = i;
+                dot = tmp;
+            }
+        }
+
+        let previous = this.vertices[(index == 0)? this.vertices.length - 1 : index - 1];
+        let next = this.vertices[(index == this.vertices.length - 1)? 0 : index + 1];
+        
+        let l = Vec2.sub(max, next).normalize();
+        let r = Vec2.sub(max, previous).normalize();
+        if (r.dot(d) <= l.dot(d)) {
+            return new Edge(max, previous, max);
+        } else {
+            return new Edge(max, max, next);
+        }
     }
 
     public pick(): Vec2 {

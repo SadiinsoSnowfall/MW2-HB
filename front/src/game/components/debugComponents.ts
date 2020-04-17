@@ -3,7 +3,7 @@ import { GameObject } from "../../engine/gameObject";
 import { TextFormat, Alignment, Style, Text } from "../../engine/utils/textFormat";
 import { Spritesheet, Sprite } from "../../engine/utils/spritesheet";
 import { Assets, randomIn, Img } from "../../utils";
-import { ConvexPolygon, Shape } from "../../engine/shapes";
+import { ConvexPolygon, Shape, Collision } from "../../engine/physics";
 import { Vec2 } from "../../engine/utils";
 
 export class WigglyBehaviour extends Behaviour {
@@ -244,5 +244,18 @@ export class ShapeDisplay extends Display {
 
     public draw(ctx: CanvasRenderingContext2D): void {
         this.s.fill(ctx, this.c);
+    }
+}
+
+export class CollisionDisplay extends Display {
+    private c: Collision;
+
+    constructor(o: GameObject, c: Collision) {
+        super(o);
+        this.c = c;
+    }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        this.c.draw(ctx);
     }
 }

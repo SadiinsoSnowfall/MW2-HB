@@ -1,5 +1,5 @@
 import { Vec2, Transform } from "../utils";
-import { Shape, drawCross } from './shapes';
+import { Shape, drawCross } from './shape';
 import { Rectangle } from './rectangle';
 import { assert } from '../../utils';
 
@@ -51,6 +51,10 @@ export class Circle implements Shape {
             r.add(this.center);
             return r;
         }
+    }
+
+    public feature(d: Vec2): Vec2 {
+        return this.support(d);
     }
 
     public pick(): Vec2 {
@@ -166,6 +170,10 @@ export class Ellipse implements Shape {
 
     public support(d: Vec2): Vec2 {
         return Vec2.Zero; // TODO
+    }
+
+    public feature(d: Vec2): Vec2 {
+        return this.support(d);
     }
 
     public pick(): Vec2 {

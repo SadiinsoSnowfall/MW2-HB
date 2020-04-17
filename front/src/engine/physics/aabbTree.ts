@@ -1,4 +1,6 @@
-import { Shape, CollisionData, Rectangle, intersection } from "../shapes"
+import { Shape } from "./shape";
+import { Rectangle } from "./rectangle";
+import { Collision, intersection } from "./collision";
 import { Collider } from '../components';
 import { assert } from "../../utils";
 
@@ -369,14 +371,14 @@ export class AABBTree implements Iterable<Collider> {
      * collider itself is not included.
      * @todo Wrong return type since we need a reference to the colliding object 
      */
-    public query(collider: Collider): CollisionData[] {
+    public query(collider: Collider): Collision[] {
         let shape = shapeFromCollider(collider);
         let bbox = shape.boundingBox();
 
-        let r: CollisionData[] = [];
+        let r: Collision[] = [];
         for (const leaf of this.broadSearch(bbox)) {
             if (leaf.collider != collider) {
-                let collision = intersection(shape, shapeFromCollider(leaf.collider));
+                let collision = intersection(collider, shape, leaf.collider, shapeFromCollider(leaf.collider));
                 if (collision != null) {
                     r.push(collision);
                 }
