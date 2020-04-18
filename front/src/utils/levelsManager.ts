@@ -30,7 +30,6 @@ export async function queryLevelList(): Promise<LevelEntry[]> {
     for (let i = 0; i < levelList.length; ++i) {
         const shash = await get<string>(`${levelList[i].id}.hash`);
         if ((shash !== undefined) && (shash !== levelList[i].hash)) {
-            console.log('invalidating');
             invalidateCache(levelList[i].id);
         }
     }

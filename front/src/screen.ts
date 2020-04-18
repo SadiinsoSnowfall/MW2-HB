@@ -1,5 +1,7 @@
 import { Scene } from "./engine/scene";
 import { InputManager } from "./utils/inputManager";
+import { MenuManager } from "./engine/menu/menumanager";
+import { Img, Assets } from "./utils";
 
 export class CScreen {
     private static readonly AVG_FRAMETIME_COUNT = 15;
@@ -20,6 +22,10 @@ export class CScreen {
     private rft_accumulator: number;
 
     private doUpdate: boolean = true;
+
+    private useCustomCursor: boolean = true;
+    private cursor: HTMLImageElement | null = null;
+    private cursorSize: number = 40;
 
     constructor(canvas: HTMLCanvasElement, height: number, AR: number) {
         this.canvas = canvas;
@@ -75,10 +81,36 @@ export class CScreen {
     private draw(): void {
         if (this.scene) {
             this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            
             this.context.save();
             this.scene?.draw(this.context);
             this.context.restore();
+
+            this.context.save();
+            MenuManager.drawMenus(this.context);
+            this.context.restore();
+            
+            if (this.useCustomCursor && this.cursor) {
+                const pos = InputManager.lastMousePos;
+                const cs2 = this.cursorSize / 2;
+                this.context.drawImage(this.cursor, pos.x - cs2, pos.y - cs2, this.cursorSize, this.cursorSize);
+            }
+
             ++this.frame;
+        }
+    }
+
+    public setCursor(cursor: HTMLImageElement | null, size: number = 40): void {
+        this.cursor = cursor;
+        this.cursorSize = size;
+    }
+
+    public setUseCustomCursor(state: boolean): void {
+        this.useCustomCursor = state;
+        if ( this.useCustomCursor) {
+            canvas.style.cursor = 'none';
+        } else {
+            canvas.style.cursor = 'auto';
         }
     }
 

@@ -1,6 +1,7 @@
 
 import { assert } from "./utils";
 import { Vec2 } from "../engine/utils";
+import { MenuManager } from "../engine/menu/menumanager";
 
 export interface InputListener {
     keys: string[];
@@ -207,12 +208,29 @@ export class InputManager {
         return InputManager.canvas as HTMLCanvasElement;
     }
 
+    // using the same Vec2 for each mouse event to prevent mass-allocation
+    // the event processing is singlethreaded, this should not cause any problem
+    private static eventPos: Vec2 = Vec2.Zero.clone();
+    public static lastMousePos: Vec2 = Vec2.Zero.clone();
+
     private static handleMouseEvent(e: MouseEvent, a: number): void {
-        const pos = new Vec2(e.pageX - InputManager.getCanvas().offsetLeft, e.pageY - InputManager.getCanvas().offsetTop);
-        const listeners = InputManager.mouseListeners.get(a);
-        if (listeners !== undefined) {
-            for (const listener of listeners) {
-                listener(pos);
+        if (document.fullscreen) {
+            this.eventPos.setXY(e.screenX, e.screenY);
+        } else {
+            const canvas = InputManager.getCanvas();
+            this.eventPos.setXY(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop);
+        }
+
+        if (a == MouseAction.MOVE) {
+            InputManager.lastMousePos.set(InputManager.eventPos);
+        }
+
+        if (!MenuManager.captureEvent(e, a, InputManager.eventPos)) { // check menus first
+            const listeners = InputManager.mouseListeners.get(a);
+            if (listeners !== undefined) {
+                for (const listener of listeners) {
+                    listener(InputManager.eventPos);
+                }
             }
         }
     }

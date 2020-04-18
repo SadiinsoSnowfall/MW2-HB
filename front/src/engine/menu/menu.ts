@@ -1,7 +1,9 @@
 import { Button } from "./button";
 import { Vec2 } from "../utils";
 import { Widget } from "./widget";
-import { inRect } from "../../utils";
+import { inRectVec2, inRect } from "../../utils";
+import { screen } from "../../screen";
+import { MouseAction } from "../../utils/inputManager";
 
 export class Menu {
     public zIndex: number; // the menu zIndex, 0 is the game
@@ -12,9 +14,12 @@ export class Menu {
     private background: string;
     private visible: boolean;
 
-    constructor(pos: Vec2, size: Vec2, background: string = "#696969", zIndex: number = 1) {
-        this.pos = pos;
-        this.size = size;
+    // keep track of the widget hovered on
+    private lastHoverWidget: Widget | null = null;
+
+    constructor(zIndex: number = 1, background: string = "#696969") {
+        this.pos = Vec2.Zero.clone();
+        this.size = Vec2.Zero.clone();
         this.zIndex = zIndex;
         this.background = background;
         this.visible = false;
@@ -29,11 +34,35 @@ export class Menu {
         this.visible = visible;
     }
 
+    public setNoBackground(): void {
+        this.background = 'transparent';
+    }
+
+    public getPosition(): Vec2 {
+        return this.pos;
+    }
+
+    public setPosition(pos: Vec2): void {
+        this.pos = pos;
+    }
+
+    public setAlignedMiddle(): void {
+        this.pos.x = screen.width / 2 - this.size.x / 2;
+        this.pos.y = screen.height / 2 - this.size.y / 2;
+    }
+
+    public setSize(size: Vec2): void {
+        this.size = size;
+    }
+
+    public getSize(): Vec2 {
+        return this.size;
+    }
+
     public draw(ctx: CanvasRenderingContext2D): void {
         if (!this.visible) {
             return;
         }
-
 
         ctx.fillStyle = this.background;
         ctx.fillRect(this.pos.x, this.pos.y, this.size.x, this.size.y);
@@ -44,17 +73,56 @@ export class Menu {
         }
     }
 
-    public captureEvent(e: MouseEvent): boolean {
-        if (!this.visible || !inRect(e.clientX, e.clientY, this.pos.x, this.pos.y, this.size.x, this.size.y)) {
+    public captureEvent(e: MouseEvent, type: number, pos: Vec2): boolean {
+        // fast check against menu boundaries
+        if (!this.visible || !inRectVec2(pos, this.pos, this.size)) {
             return false;
         }
 
-        return true;
+        let captured: Widget | null = null;
+
+        for (let i = 0; i < this.widgets.length; ++i) {
+            const w = this.widgets[i];
+            const wp = w.getPosition();
+            const ws = w.getSize();
+
+            const x = this.pos.x + wp.x - ws.x / 2;
+            const y = this.pos.y + wp.y - ws.y / 2;
+
+            if (inRect(pos.x, pos.y, x, y, ws.x, ws.y)) {
+                captured = w;
+                break;
+            }
+        }
+
+        if (type == MouseAction.MOVE) {
+            if (captured) {
+                // in case of switching between two widgets
+                if (this.lastHoverWidget && (this.lastHoverWidget !== captured)) {
+                    this.lastHoverWidget.onHoverLeft();
+                    this.lastHoverWidget = null;
+                }
+
+                if (!this.lastHoverWidget) {
+                    captured.onHoverEnter();
+                    this.lastHoverWidget = captured;
+                }
+            } else {
+                if (this.lastHoverWidget) {
+                    this.lastHoverWidget.onHoverLeft();
+                    this.lastHoverWidget = null;
+                }
+            }
+        } else {
+
+        }
+
+
+        return captured !== null;
     }
 
     public add(widget: Widget): void {
-        widget.setMenu(this);
-        this.widgets.push(widget);
+        this.widgets.push(widget.relativeTo(this));
     }
 
 }

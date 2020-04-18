@@ -3,7 +3,7 @@ import './assets/stylesheets/styles.scss';
 import { screen } from './screen';
 import { Scene } from './engine/scene';
 import { FPSMetter} from './game/prefabs/debugPrefabs';
-import { Assets, sleep, assert, range, forcePickOne, loadLevel } from './utils';
+import { Assets, sleep, assert, range, forcePickOne, loadLevel, Img } from './utils';
 import { InputManager, MouseAction } from './utils/inputManager';
 import * as BP from './game/prefabs/blockPrefabs';
 import * as LL from './utils/levelsManager'
@@ -15,9 +15,15 @@ import { ConvexPolygon, intersection, Circle } from './engine/physics';
 import { Collider } from './engine/components';
 import { ShapeDisplay, CollisionDisplay } from './game/components/debugComponents';
 import { createGround } from './game/prefabs/basePrefabs';
+import * as Menus from './game/ui/basemenus';
 
 async function game() {
-    await Assets.load();
+    await Assets.load();// load assets      
+    //LL.queryLevelList() // load level list (the server need to be running)
+
+    Menus.init();
+    screen.setCursor(Assets.img(Img.CURSOR));
+    screen.setUseCustomCursor(true); // set to true to enable custom cursor support
 
     const ctx = screen.getContext();
     ctx.fillStyle = 'white';
@@ -28,51 +34,8 @@ async function game() {
     scene.instantiate(FPSMetter, 600, 120);
     screen.setScene(scene);
 
-    let objs: GameObject[] = []
+    Menus.main_menu.setVisible(true); // enable main menu
 
-    let index = -1;
-    let particle = [
-        BP.wood_particle,
-        BP.stone_particle,
-        BP.ice_particle,
-    ];
-
-    // await loadLevel(0, scene); // need to spin up the server
-
-    InputManager.subscribeMouse(MouseAction.MIDDLE_CLICK, (p: Vec2) => {
-        for (const x of range(15)) {
-            for (const y of range(8)) {
-                objs.push(scene.instantiate(forcePickOne([
-                    BP.stone_tris_md_2,
-                ]), x * 60 , y * 60 + 200));
-            }
-        }
-    });
-
-    InputManager.subscribeMouse(MouseAction.RIGHT_CLICK, (p: Vec2) => {
-        if (++index >= particle.length) index = 0;
-        scene.addObject(particle[index](p.x, p.y, 1000, 3, 10));
-    });
-
-    InputManager.subscribeMouse(MouseAction.LEFT_CLICK, (p: Vec2) => {
-        objs.push(scene.instantiate(forcePickOne([
-            BP.wooden_cube_hl_2,
-            //BP.stone_cube_hl_2,
-            //BP.ice_cube_hl_2
-        ]), p.x ,p.y));
-
-    });
-
-    // ugly af, only for demonstration purpose
-    /*
-    setInterval(() => {
-        for (const obj of objs) {
-            if (obj.isEnabled()) {
-                (obj.getBehaviour() as BlockBehaviour).applyDamage(10);
-            }
-        }
-   }, 250);
-   */
 
     //scene.addObject(createGround(675, 800, 1200, 50));
 

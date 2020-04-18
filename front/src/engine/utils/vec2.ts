@@ -120,7 +120,16 @@ export class Vec2 {
     }
 
     /**
-     * Set the value of the vector
+     * Set the values of the vector
+     */
+    public set(v: Vec2): Vec2 {
+        this.x = v.x;
+        this.y = v.y;
+        return this;
+    }
+
+    /**
+     * Set the values of the vector
      */
     public setXY(x: number, y: number): Vec2 {
         this.x = x;

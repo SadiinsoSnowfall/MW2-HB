@@ -1,4 +1,5 @@
 import { Assets } from "../../utils";
+import { Vec2 } from "./vec2";
 
 /**
  * @brief Represents a spritesheet.
@@ -83,6 +84,13 @@ export class Sprite {
     private h: number;
 
     /**
+     * @brief Creates a sprite from the entirety of an image.
+     */
+    public static fromSource(image: HTMLImageElement): Sprite {
+        return new Sprite(image, 0, 0, image.width, image.height);
+    }
+
+    /**
      * Not meant to be used outside of this file.
      */
     constructor(image: HTMLImageElement, x: number, y: number, w: number, h: number) {
@@ -94,10 +102,10 @@ export class Sprite {
     }
 
     /**
-     * @brief Creates a sprite from the entirety of an image.
+     * @brief return the size of the sprite
      */
-    public static fromSource(image: HTMLImageElement): Sprite {
-        return new Sprite(image, 0, 0, image.width, image.height);
+    public getSize(): Vec2 {
+        return new Vec2(this.w, this.h);
     }
 
     /**

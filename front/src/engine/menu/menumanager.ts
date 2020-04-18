@@ -1,17 +1,25 @@
 import { Menu } from ".";
+import { Vec2 } from "../utils";
 
 export class MenuManager {
+    private static menus: Menu[] = [];
 
-    private static menus: Menu[];
-
-    public static addMenu(menu: Menu): void {
+    public static addMenu(menu: Menu): Menu {
         MenuManager.menus.push(menu);
         MenuManager.menus.sort((a, b) => b.zIndex - a.zIndex); // sort by zIndex, descending order
+        return menu;
     }
 
-    public static captureEvent(e: MouseEvent): boolean {
+    public static createMenu(): Menu {
+        return MenuManager.addMenu(new Menu());
+    }
+
+    /**
+     * Try capture the event in z-index descending order
+     */
+    public static captureEvent(e: MouseEvent, type: number, pos: Vec2): boolean {
         for (let i = 0; i < MenuManager.menus.length; ++i) {
-            if (MenuManager.menus[i].captureEvent(e)) {
+            if (MenuManager.menus[i].captureEvent(e, type, pos)) {
                 return true;
             }
         }

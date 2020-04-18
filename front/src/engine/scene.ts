@@ -4,6 +4,7 @@ import { Prefab } from "./prefab";
 import { AABBTree } from "./physics";
 import { Vec2 } from "./utils";
 import { Collider } from "./components";
+import { MenuManager } from "./menu/menumanager";
 
 /**
 * @brief Defines any object that can interact with the game loop.
