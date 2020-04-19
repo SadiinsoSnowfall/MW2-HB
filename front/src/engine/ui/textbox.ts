@@ -1,5 +1,5 @@
 import { Widget } from "./widget";
-import { Text, Alignment, Style, TextFormat } from "../../engine/utils/textFormat";
+import { Text, Alignment, Style, TextFormat } from "../utils";
 
 export class TextBox extends Widget {
     private text: Text;

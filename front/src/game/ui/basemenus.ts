@@ -1,8 +1,6 @@
-import { Button, CoverShape, MessageBox } from "../../engine/menu";
-import { Vec2, SSManager, Alignment } from "../../engine/utils";
-import { MenuManager } from "../../engine/menu/menumanager";
-import { Img, Assets, Sound } from "../../utils";
-import { AudioManager } from "../../engine/audioManager";
+import { MenuManager, Button, CoverShape, MessageBox } from "../../engine/ui";
+import { SSManager, Alignment } from "../../engine/utils";
+import { Img, Assets, Sound, AudioManager } from '../../engine/res';
 
 export const main_menu = MenuManager.createMenu();
 export const sett_menu = MenuManager.createMenu();
@@ -86,8 +84,6 @@ export function init() {
     });
 
     sett_menu.add(sm_info);
-
-
 
 }
 

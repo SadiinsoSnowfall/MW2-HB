@@ -1,6 +1,6 @@
 import { Vec2 } from "../utils";
-import { Element, Menu } from './';
-import { assert, EMPTY_FUNCTION } from "../../utils";
+import { Element, Menu } from '.';
+import { assert, EMPTY_FUNCTION } from "../utils";
 
 export abstract class Widget extends Element {
     protected menu: Menu | undefined;

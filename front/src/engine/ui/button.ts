@@ -1,7 +1,7 @@
 import { Sprite, Vec2 } from "../utils";
 import { Widget } from "./widget";
-import { screen } from "../../screen";
-import { Assets, Img } from "../../utils";
+import { screen } from "../screen";
+import { Assets, Img } from "../res";
 
 export class Button extends Widget {
     private sprite: Sprite;

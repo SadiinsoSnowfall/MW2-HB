@@ -1,21 +1,17 @@
 import './assets/stylesheets/styles.scss';
 
-import { screen } from './screen';
+import { screen } from './engine/screen';
 import { Scene } from './engine/scene';
 import { FPSMetter} from './game/prefabs/debugPrefabs';
-import { Assets, sleep, assert, range, forcePickOne, loadLevel, Img } from './utils';
-import { InputManager, MouseAction } from './utils/inputManager';
+import { assert, Vec2 } from './engine/utils';
 import * as BP from './game/prefabs/blockPrefabs';
-import * as LL from './utils/levelsManager'
-import { BlockBehaviour } from './game/components/blockComponents';
 import { GameObject } from './engine/gameObject';
-import { square, wanderer } from './game/prefabs/debugPrefabs';
-import { Vec2 } from './engine/utils';
 import { ConvexPolygon, intersection, Circle } from './engine/physics';
 import { Collider } from './engine/components';
 import { ShapeDisplay, CollisionDisplay } from './game/components/debugComponents';
 import { createGround } from './game/prefabs/basePrefabs';
 import * as Menus from './game/ui/basemenus';
+import { Assets, Img } from './engine/res/assetsManager';
 
 async function game() {
     await Assets.load();// load assets      

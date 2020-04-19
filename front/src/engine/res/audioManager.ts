@@ -1,29 +1,29 @@
 
-export class AudioManager {
-    
-    /**
-     * May reduce replay loading time in expense of having to check if the
-     * track is finished each audio frame
-     */
-    private static readonly alwaysWatchTimeUpdate: boolean = false;
+export namespace AudioManager {
 
-    public static playIfDefined(sound: string | undefined, volume: number = 1.0, from: number = 0, to?: number): HTMLAudioElement | undefined {
-        return sound ? this.play(sound, volume, from, to) : undefined;
+    /**
+    * May reduce replay loading time in expense of having to check if the
+    * track is finished each audio frame
+    */
+    const alwaysWatchTimeUpdate: boolean = false;
+
+    export function playIfDefined(sound: string | undefined, volume: number = 1.0, from: number = 0, to?: number): HTMLAudioElement | undefined {
+        return sound ? play(sound, volume, from, to) : undefined;
     }
 
-    public static play(sound: string, volume: number = 1.0, from: number = 0, to?: number): HTMLAudioElement {
-        const audio = new Audio(AudioManager.buildURI(sound, from, to));
+    export function play(sound: string, volume: number = 1.0, from: number = 0, to?: number): HTMLAudioElement {
+        const audio = new Audio(buildURI(sound, from, to));
         audio.volume = volume;
         audio.play();
         return audio;
     }
 
-    public static loop(sound: string, volume: number = 1.0, from: number = 0, to?: number): HTMLAudioElement {
+    export function loop(sound: string, volume: number = 1.0, from: number = 0, to?: number): HTMLAudioElement {
         const audio = new Audio(sound);
         audio.volume = volume;
-
+        
         if (!to) {
-            if (AudioManager.alwaysWatchTimeUpdate) {
+            if (alwaysWatchTimeUpdate) {
                 audio.currentTime = from;
                 audio.ontimeupdate = () => {
                     if (audio.currentTime >= (audio.duration - 1)) {
@@ -41,7 +41,7 @@ export class AudioManager {
                     };
                 }
             }
-
+            
         } else { // end bound specified
             audio.currentTime = from;
             audio.ontimeupdate = () => {
@@ -50,13 +50,12 @@ export class AudioManager {
                 }
             };
         }
-
+        
         audio.play();
         return audio;
     }
 
-    private static buildURI(sound: string, from: number, to?: number) {
+    function buildURI(sound: string, from: number, to?: number) {
         return ((!from && !to) ? sound : sound + `#t=${from}` + (to ? ',' + to : ''));
-    }
-
+}
 }

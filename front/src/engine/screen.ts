@@ -1,7 +1,6 @@
-import { Scene } from "./engine/scene";
-import { InputManager } from "./utils/inputManager";
-import { MenuManager } from "./engine/menu/menumanager";
-import { Img, Assets } from "./utils";
+import { Scene } from "./scene";
+import { Inputs } from "./res";
+import { MenuManager } from "./ui";
 
 export class CScreen {
     private static readonly AVG_FRAMETIME_COUNT = 15;
@@ -44,10 +43,10 @@ export class CScreen {
         requestAnimationFrame(() => this.update());
 
         // add listener to switch the game in fullscreen mode
-        InputManager.subscribe('Enter', () => this.canvas.requestFullscreen());
+        Inputs.subscribe('Enter', () => this.canvas.requestFullscreen());
 
         // add listener to freeze / unfreeze the scene rendering
-        InputManager.subscribe(['Shift', 'Enter'], () => {
+        Inputs.subscribe(['Shift', 'Enter'], () => {
             if(this.doUpdate = !this.doUpdate) {
                 requestAnimationFrame(() => this.update());
             }
@@ -91,7 +90,7 @@ export class CScreen {
             this.context.restore();
             
             if (this.useCustomCursor && this.cursor) {
-                const pos = InputManager.lastMousePos;
+                const pos = Inputs.getLastMousePos();
                 const cs2 = this.cursorSize / 2;
                 this.context.drawImage(this.cursor, pos.x - cs2, pos.y - cs2, this.cursorSize, this.cursorSize);
             }
@@ -153,6 +152,6 @@ export class CScreen {
 
 }
 
-let canvas = document.getElementsByTagName('canvas')[0];
-InputManager.init(canvas);
+export const canvas = document.getElementsByTagName('canvas')[0];
+Inputs.init();
 export const screen: CScreen = new CScreen(canvas, 1080, 16 / 9);

@@ -1,3 +1,4 @@
+export * from './utils';
 export * from './vec2';
 export * from './transform';
 export * from './textFormat';

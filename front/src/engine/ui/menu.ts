@@ -1,9 +1,7 @@
-import { Vec2 } from "../utils";
-import { Element, Widget } from "./";
-import { inRectVec2, inRect, EMPTY_FUNCTION } from "../../utils";
-import { screen } from "../../screen";
-import { MouseAction } from "../../utils/inputManager";
-import { MenuManager } from "./menumanager";
+import { inRectVec2, inRect, EMPTY_FUNCTION, Vec2 } from "../utils";
+import { MenuManager, Element, Widget } from ".";
+import { screen } from "../screen";
+import { MouseAction } from "../res";
 
 export class Menu extends Element {
     private widgets: Widget[];

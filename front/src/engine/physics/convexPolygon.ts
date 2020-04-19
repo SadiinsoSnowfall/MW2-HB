@@ -1,7 +1,5 @@
-import { Vec2, Transform } from "../utils";
-import { Shape, Edge, drawCross } from './shape';
-import { Rectangle } from './rectangle';
-import { assert } from '../../utils';
+import { Vec2, Transform, assert } from "../utils";
+import { Shape, Edge, drawCross, Rectangle } from '.';
 
 /*
  * Returns the convex hull of a set of points.

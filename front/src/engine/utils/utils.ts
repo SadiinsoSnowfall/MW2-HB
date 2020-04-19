@@ -1,4 +1,4 @@
-import { Vec2 } from "src/engine/utils";
+import { Vec2 } from "./";
 
 /**
  * An empty function

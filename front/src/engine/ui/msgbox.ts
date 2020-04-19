@@ -1,10 +1,6 @@
-import { Menu } from ".";
-import { MenuManager } from "./menumanager";
+import { MenuManager, Menu, TextBox, Button, CoverShape } from ".";
 import { Alignment, Style, SSManager } from "../utils";
-import { TextBox } from "./textbox";
-import { Button } from "./button";
-import { Img } from "../../utils";
-import { CoverShape } from "./covershape";
+import { Img } from "../res";
 
 export class MessageBox {
     private menu: Menu;
@@ -39,7 +35,6 @@ export class MessageBox {
     }
 
     public toggle(): void {
-        console.log("called");
         this.menu.toggle();
     }
 
