@@ -1,17 +1,15 @@
 import { Vec2 } from "../utils";
 import { Element, Menu } from './';
-import { assert } from "../../utils";
+import { assert, EMPTY_FUNCTION } from "../../utils";
 
 export abstract class Widget extends Element {
-    private static emptyFunc: () => void = () => {};
-
     protected menu: Menu | undefined;
     protected clickCallback: () => void;
     protected hoverCallback: () => void;
 
     constructor(zIndex?: number, pos?: Vec2, size?: Vec2) {
         super(zIndex, pos, size);
-        this.clickCallback = this.hoverCallback = Widget.emptyFunc;
+        this.clickCallback = this.hoverCallback = EMPTY_FUNCTION;
     }
 
     public abstract draw(ctx: CanvasRenderingContext2D): void;

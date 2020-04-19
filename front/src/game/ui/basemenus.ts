@@ -1,7 +1,8 @@
 import { Button, CoverShape } from "../../engine/menu";
 import { Vec2, SSManager } from "../../engine/utils";
 import { MenuManager } from "../../engine/menu/menumanager";
-import { Img, Assets } from "../../utils";
+import { Img, Assets, Sound } from "../../utils";
+import { AudioManager } from "../../engine/audioManager";
 
 export const main_menu = MenuManager.createMenu();
 export const sett_menu = MenuManager.createMenu();
@@ -18,10 +19,26 @@ export function init() {
     main_menu.setBackground(Assets.img(Img.SPLASH));
     main_menu.setAlignedMiddle();
 
+    let mainMenuMusic: HTMLAudioElement | null = null;
+
+    main_menu.onDisplay(() => {
+        if (mainMenuMusic == null) {
+            mainMenuMusic = AudioManager.loop(Sound.MAIN_REMIX, 0.1, 50, 70.8);
+        }
+    });
+
+    main_menu.onHide(() => {
+        if (mainMenuMusic != null) {
+            mainMenuMusic.pause();
+            mainMenuMusic = null;
+        }
+    });
+
     const playButton = new Button(mss.getSprite(0, 0)).relativeTo(main_menu);
     playButton.setAlignedMiddle();
     playButton.onClick(() => {
         console.log('clicked play');
+        main_menu.setVisible(false);
     });
 
     main_menu.add(playButton);

@@ -1,5 +1,10 @@
 import { Vec2 } from "src/engine/utils";
 
+/**
+ * An empty function
+ */
+export const EMPTY_FUNCTION: () => void = () => {};
+
 /** 
  * @param n the upper bound (non-inclusive) of the range
  * @returns A python-like range (o to $n-1)

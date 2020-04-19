@@ -1,6 +1,6 @@
 import { Vec2 } from "../utils";
 import { Element, Widget } from "./";
-import { inRectVec2, inRect } from "../../utils";
+import { inRectVec2, inRect, EMPTY_FUNCTION } from "../../utils";
 import { screen } from "../../screen";
 import { MouseAction } from "../../utils/inputManager";
 import { MenuManager } from "./menumanager";
@@ -9,6 +9,9 @@ export class Menu extends Element {
     private widgets: Widget[];
     private background: string | HTMLImageElement;
     private visible: boolean;
+
+    private onDisplayCallback: () => void;
+    private onHideCallback: () => void;
 
     // keep track of the widget hovered on
     private lastHoverWidget: Widget | null = null;
@@ -19,6 +22,7 @@ export class Menu extends Element {
         this.background = 'transparent';
         this.visible = false;
         this.widgets = [];
+        this.onDisplayCallback = this.onHideCallback = EMPTY_FUNCTION;
     }
 
     public isVisible(): boolean {
@@ -26,7 +30,21 @@ export class Menu extends Element {
     }
 
     public setVisible(visible: boolean): void {
+        if (visible && !this.visible) {
+            this.onDisplayCallback();
+        } else if (!visible && this.visible) {
+            this.onHideCallback();
+        }
+
         this.visible = visible;
+    }
+
+    public onDisplay(callback: () => void): void {
+        this.onDisplayCallback = callback;
+    }
+
+    public onHide(callback: () => void): void {
+        this.onHideCallback = callback;
     }
 
     public setBackground(bg: string | HTMLImageElement = 'transparent'): void {
