@@ -4,9 +4,13 @@ import { Vec2 } from "../utils";
 export class MenuManager {
     private static menus: Menu[] = [];
 
+    public static resort(): void {
+        MenuManager.menus.sort((a, b) => b.getZIndex() - a.getZIndex()); // sort by zIndex, descending order
+    }
+
     public static addMenu(menu: Menu): Menu {
         MenuManager.menus.push(menu);
-        MenuManager.menus.sort((a, b) => b.zIndex - a.zIndex); // sort by zIndex, descending order
+        MenuManager.resort(); // sort by zIndex
         return menu;
     }
 

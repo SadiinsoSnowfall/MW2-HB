@@ -1,36 +1,20 @@
 import { Vec2 } from "../utils";
-import { Menu } from './';
+import { Element, Menu } from './';
 import { assert } from "../../utils";
 
-export abstract class Widget {
-    protected menu: Menu | undefined;
-    protected pos: Vec2; // position relative to the menu
-    protected size: Vec2; // size of the widget
-    protected clickCallback: () => void;
+export abstract class Widget extends Element {
+    private static emptyFunc: () => void = () => {};
 
-    constructor(pos: Vec2, size: Vec2) {
-        this.pos = pos;
-        this.size = size;
-        this.clickCallback = () => {};
+    protected menu: Menu | undefined;
+    protected clickCallback: () => void;
+    protected hoverCallback: () => void;
+
+    constructor(zIndex?: number, pos?: Vec2, size?: Vec2) {
+        super(zIndex, pos, size);
+        this.clickCallback = this.hoverCallback = Widget.emptyFunc;
     }
 
     public abstract draw(ctx: CanvasRenderingContext2D): void;
-
-    public getPosition(): Vec2 {
-        return this.pos;
-    }
-
-    public setPosition(pos: Vec2): void {
-        this.pos = pos;
-    }
-
-    public getSize(): Vec2 {
-        return this.size;
-    }
-
-    public setSize(size: Vec2): void {
-        this.size = size;
-    }
 
     public getMenu(): Menu | undefined {
         return this.menu;
@@ -41,6 +25,38 @@ export abstract class Widget {
         return this;
     }
 
+    /**
+     * Set the widget position
+     * if x is negative, it will take the value of menu.width + x (like in python list slices)
+     * same thing for y
+     */
+    public setPositionXY(x: number, y: number): void {
+        const menu = this.menu as Menu; // ensured by he assert
+
+        if (x >= 0) {
+            this.pos.x = x;
+        } else {
+            assert(this.menu !== undefined, "Widget#setPositionXY: negative index: no relative menu");
+            this.pos.x = menu.getSize().x + x;
+        }
+
+        if (y >= 0) {
+            this.pos.y = y;
+        } else {
+            assert(this.menu !== undefined, "Widget#setPositionXY: negative index: no relative menu");
+            this.pos.y = menu.getSize().y + y;
+        }
+    }
+
+    /**
+     * Set the Z-Index of the widget
+     * /!\ will cause a widget resorting in the relative menu
+     */
+    public setZIndex(zIndex: number): void {
+        this.zIndex = zIndex;
+        this.menu?.resort();
+    }
+
     public setAlignedMiddle(): void {
         assert(this.menu !== undefined, "Widget#setAlignedMiddle: no relative menu");
         const menu = this.menu as Menu; // ensured by he assert
@@ -48,11 +64,30 @@ export abstract class Widget {
         this.pos.setXY(msize.x / 2, msize.y / 2);
     }
 
+    /**
+     * Set a function to execute when the widget is hovered
+     * @param callback The function to execute
+     */
+    public onHover(callback: () => void): void {
+        this.hoverCallback = callback;
+    }
+
+    /**
+     * Set a function to execute when the widget is clicked
+     * @param callback The function to execute
+     */
     public onClick(callback: () => void): void {
         this.clickCallback = callback;
     }
 
-    public abstract onHoverEnter(): void;
-    public abstract onHoverLeft(): void;
+    /**
+     * Simulate a click on the widget
+     */
+    public click(): void {
+        this.clickCallback();
+    }
+
+    public abstract hoverEnter(): void;
+    public abstract hoverLeft(): void;
 
 }

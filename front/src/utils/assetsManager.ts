@@ -268,5 +268,6 @@ export const Img = Object.freeze({
     BUTTONS: require('assets/images/menu/buttons.png'),
     CURSOR: require('assets/images/menu/cursor.png'),
     POINTER: require('assets/images/menu/pointer.png'),
+    SPLASH: require('assets/images/menu/splash.jpg'),
      
 });

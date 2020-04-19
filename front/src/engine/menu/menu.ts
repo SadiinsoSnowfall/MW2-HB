@@ -1,27 +1,22 @@
-import { Button } from "./button";
 import { Vec2 } from "../utils";
-import { Widget } from "./widget";
+import { Element, Widget } from "./";
 import { inRectVec2, inRect } from "../../utils";
 import { screen } from "../../screen";
 import { MouseAction } from "../../utils/inputManager";
+import { MenuManager } from "./menumanager";
 
-export class Menu {
-    public zIndex: number; // the menu zIndex, 0 is the game
-
+export class Menu extends Element {
     private widgets: Widget[];
-    private pos: Vec2;
-    private size: Vec2;
-    private background: string;
+    private background: string | HTMLImageElement;
     private visible: boolean;
 
     // keep track of the widget hovered on
     private lastHoverWidget: Widget | null = null;
 
-    constructor(zIndex: number = 1, background: string = "#696969") {
-        this.pos = Vec2.Zero.clone();
-        this.size = Vec2.Zero.clone();
+    constructor(zIndex: number = 1) {
+        super();
         this.zIndex = zIndex;
-        this.background = background;
+        this.background = 'transparent';
         this.visible = false;
         this.widgets = [];
     }
@@ -34,16 +29,8 @@ export class Menu {
         this.visible = visible;
     }
 
-    public setNoBackground(): void {
-        this.background = 'transparent';
-    }
-
-    public getPosition(): Vec2 {
-        return this.pos;
-    }
-
-    public setPosition(pos: Vec2): void {
-        this.pos = pos;
+    public setBackground(bg: string | HTMLImageElement = 'transparent'): void {
+        this.background = bg;
     }
 
     public setAlignedMiddle(): void {
@@ -51,12 +38,8 @@ export class Menu {
         this.pos.y = screen.height / 2 - this.size.y / 2;
     }
 
-    public setSize(size: Vec2): void {
-        this.size = size;
-    }
-
-    public getSize(): Vec2 {
-        return this.size;
+    public setFullScreen(): void {
+        this.size.setXY(screen.width, screen.height);
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
@@ -64,8 +47,14 @@ export class Menu {
             return;
         }
 
-        ctx.fillStyle = this.background;
-        ctx.fillRect(this.pos.x, this.pos.y, this.size.x, this.size.y);
+        if (typeof this.background === 'string') {
+            ctx.fillStyle = this.background;
+            ctx.fillRect(this.pos.x, this.pos.y, this.size.x, this.size.y);
+        } else {
+            ctx.drawImage(this.background, 0 , 0, this.size.x, this.size.y);
+        }
+       
+        
         ctx.setTransform(1, 0, 0, 1, this.pos.x, this.pos.y); // translate to [x, y]
 
         for (let i = 0; i < this.widgets.length; ++i) {
@@ -81,7 +70,7 @@ export class Menu {
 
         let captured: Widget | null = null;
 
-        for (let i = 0; i < this.widgets.length; ++i) {
+        for (let i = this.widgets.length - 1; i >= 0; --i) {
             const w = this.widgets[i];
             const wp = w.getPosition();
             const ws = w.getSize();
@@ -95,34 +84,45 @@ export class Menu {
             }
         }
 
-        if (type == MouseAction.MOVE) {
+        if (type == MouseAction.MOVE) { // handle hover
             if (captured) {
                 // in case of switching between two widgets
                 if (this.lastHoverWidget && (this.lastHoverWidget !== captured)) {
-                    this.lastHoverWidget.onHoverLeft();
+                    this.lastHoverWidget.hoverLeft();
                     this.lastHoverWidget = null;
                 }
 
                 if (!this.lastHoverWidget) {
-                    captured.onHoverEnter();
+                    captured.hoverEnter();
                     this.lastHoverWidget = captured;
                 }
             } else {
                 if (this.lastHoverWidget) {
-                    this.lastHoverWidget.onHoverLeft();
+                    this.lastHoverWidget.hoverLeft();
                     this.lastHoverWidget = null;
                 }
             }
-        } else {
-
+        } else if (type == MouseAction.LEFT_CLICK && captured != null) { // handle click
+            captured.click();
         }
 
 
         return captured !== null;
     }
 
-    public add(widget: Widget): void {
+    public setZIndex(zIndex: number): void {
+        this.zIndex = zIndex;
+        MenuManager.resort();
+    }
+    
+    public resort(): void {
+        this.widgets.sort((a, b) => a.getZIndex() - b.getZIndex()); // sort by zIndex, ascending order
+    }
+
+    public add(widget: Widget): Widget {
         this.widgets.push(widget.relativeTo(this));
+        this.resort(); // sort by zIndex
+        return widget;
     }
 
 }

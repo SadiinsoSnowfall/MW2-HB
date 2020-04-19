@@ -10,7 +10,7 @@ export class Button extends Widget {
     private static hoverScaleFactor = 1.1;
 
     constructor(sprite: Sprite, pos: Vec2 = Vec2.Zero.clone()) {
-        super(pos, sprite.getSize());
+        super(1, pos, sprite.getSize());
         this.sprite = sprite;
     }
 
@@ -26,12 +26,13 @@ export class Button extends Widget {
         }
     }
 
-    public onHoverEnter(): void {
+    public hoverEnter(): void {
+        this.hoverCallback(); // execute callback
         screen.setCursor(Assets.img(Img.POINTER));
         this.scaleFactor *= Button.hoverScaleFactor;
     }
 
-    public onHoverLeft(): void {
+    public hoverLeft(): void {
         screen.setCursor(Assets.img(Img.CURSOR));
         this.scaleFactor /= Button.hoverScaleFactor;
     }
