@@ -62,6 +62,18 @@ export abstract class Widget extends Element {
         this.pos.setXY(msize.x / 2, msize.y / 2);
     }
 
+    public setAlignedMiddleX(): void {
+        assert(this.menu !== undefined, "Widget#setAlignedMiddleX: no relative menu");
+        const menu = this.menu as Menu; // ensured by he assert
+        this.pos.x = menu.getSize().x / 2;
+    }
+
+    public setAlignedMiddleY(): void {
+        assert(this.menu !== undefined, "Widget#setAlignedMiddleY: no relative menu");
+        const menu = this.menu as Menu; // ensured by he assert
+        this.pos.y = menu.getSize().y / 2;
+    }
+
     /**
      * Set a function to execute when the widget is hovered
      * @param callback The function to execute

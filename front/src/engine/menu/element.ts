@@ -32,6 +32,15 @@ export class Element {
         this.setPositionXY(pos.x, pos.y);
     }
 
+    public translateXY(x: number, y: number): void {
+        this.pos.x += x;
+        this.pos.y += y;
+    }
+
+    public translate(factor: Vec2): void {
+        this.pos.add(factor);
+    }
+
     public getSize(): Vec2 {
         return this.size;
     }

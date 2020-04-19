@@ -16,16 +16,16 @@ export const spinnyThingy = new Prefab(obj => {
 });
 
 export const FPSMetter = new Prefab(obj => {
-    obj.setDisplay(new FPSMetterDisplay(obj, Alignment.Left, Style.Fill));
+    obj.setDisplay(new FPSMetterDisplay(obj, Alignment.LEFT, Style.FILL));
 });
 
 export const funnyFPSMetter = new Prefab(obj => {
-    obj.setDisplay(new FPSMetterDisplay(obj, Alignment.Centered, Style.Fill));
+    obj.setDisplay(new FPSMetterDisplay(obj, Alignment.CENTERED, Style.FILL));
     obj.setBehaviour(new WigglyBehaviour(obj, 0.01));
 });
 
 export const hilariousFPSMetter = new Prefab(obj => {
-    obj.setDisplay(new FPSMetterDisplay(obj, Alignment.Right, Style.Stroke));
+    obj.setDisplay(new FPSMetterDisplay(obj, Alignment.RIGHT, Style.STROKE));
     obj.setBehaviour(new SpinnyBehaviour(obj, 0.01));
 });
 

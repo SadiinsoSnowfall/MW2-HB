@@ -265,6 +265,7 @@ export const Img = Object.freeze({
      * MENUS
      */
 
+    PLAYBTN: require('assets/images/menu/playbtn.png'),
     BUTTONS: require('assets/images/menu/buttons.png'),
     CURSOR: require('assets/images/menu/cursor.png'),
     POINTER: require('assets/images/menu/pointer.png'),

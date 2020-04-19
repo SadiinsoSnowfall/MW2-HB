@@ -14,8 +14,8 @@ export class MenuManager {
         return menu;
     }
 
-    public static createMenu(): Menu {
-        return MenuManager.addMenu(new Menu());
+    public static createMenu(zIndex?: number): Menu {
+        return MenuManager.addMenu(new Menu(zIndex));
     }
 
     /**
@@ -36,7 +36,9 @@ export class MenuManager {
      */
     public static drawMenus(ctx: CanvasRenderingContext2D): void {
         for (let i = MenuManager.menus.length - 1; i >= 0; --i) {
+            ctx.save();
             MenuManager.menus[i].draw(ctx);
+            ctx.restore();
         }
     }
 

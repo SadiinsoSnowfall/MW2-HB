@@ -17,19 +17,31 @@ export class Menu extends Element {
     private lastHoverWidget: Widget | null = null;
 
     constructor(zIndex: number = 1) {
-        super();
-        this.zIndex = zIndex;
+        super(zIndex);
         this.background = 'transparent';
         this.visible = false;
         this.widgets = [];
         this.onDisplayCallback = this.onHideCallback = EMPTY_FUNCTION;
     }
 
+    /**
+     * Toggle the menu visibility
+     */
+    public toggle(): Menu {
+        return this.setVisible(!this.visible);
+    }
+
+    /**
+     * Return whether or nut the menu is currently visible
+     */
     public isVisible(): boolean {
         return this.visible;
     }
 
-    public setVisible(visible: boolean): void {
+    /**
+     * Set the menu visibility
+     */
+    public setVisible(visible: boolean): Menu {
         if (visible && !this.visible) {
             this.onDisplayCallback();
         } else if (!visible && this.visible) {
@@ -37,6 +49,28 @@ export class Menu extends Element {
         }
 
         this.visible = visible;
+        return this;
+    }
+
+    /**
+     * Set the widget position
+     * if x is negative, it will take the value of menu.width + x (like in python list slices)
+     * same thing for y
+     */
+    public setPositionXY(x: number, y: number): Menu {
+        if (x >= 0) {
+            this.pos.x = x;
+        } else {
+            this.pos.x = screen.width + x;
+        }
+
+        if (y >= 0) {
+            this.pos.y = y;
+        } else {
+            this.pos.y = screen.height + y;
+        }
+
+        return this;
     }
 
     public onDisplay(callback: () => void): void {
@@ -47,17 +81,21 @@ export class Menu extends Element {
         this.onHideCallback = callback;
     }
 
-    public setBackground(bg: string | HTMLImageElement = 'transparent'): void {
+    public setBackground(bg: string | HTMLImageElement = 'transparent'): Menu {
         this.background = bg;
+        return this;
     }
 
-    public setAlignedMiddle(): void {
+    public setAlignedMiddle(): Menu {
         this.pos.x = screen.width / 2 - this.size.x / 2;
         this.pos.y = screen.height / 2 - this.size.y / 2;
+        return this;
     }
 
-    public setFullScreen(): void {
+    public setFullScreen(): Menu {
+        this.pos.setXY(0, 0);
         this.size.setXY(screen.width, screen.height);
+        return this;
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
@@ -125,7 +163,7 @@ export class Menu extends Element {
         }
 
 
-        return captured !== null;
+        return true;
     }
 
     public setZIndex(zIndex: number): void {

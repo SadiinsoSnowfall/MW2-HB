@@ -262,11 +262,12 @@ class Line {
         this.width = -1;
     }
 
-    public refresh(ctx: CanvasRenderingContext2D, variables: any[]): void {
+    public refresh(ctx: CanvasRenderingContext2D, variables: any[] = []): void {
         let current = this.text[0];
         for (let i = 0; i < this.variables.length; i++) {
             current += variables[this.variables[i]].toString() + this.text[i + 1]; 
         }
+
         if (current != this.current) {
             this.current = current;
             this.width = ctx.measureText(this.current).width;
@@ -331,7 +332,7 @@ export class Text {
      * @param ctx Used for computing text width.
      * @param variables The new values
      */
-    public refresh(ctx: CanvasRenderingContext2D, variables: any[]): void {
+    public refresh(ctx: CanvasRenderingContext2D, variables: any[] = []): void {
         this.format.applyTo(ctx);
         this.width = 0;
         for (let line of this.lines) {

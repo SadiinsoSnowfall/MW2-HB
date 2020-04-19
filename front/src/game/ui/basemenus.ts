@@ -1,5 +1,5 @@
-import { Button, CoverShape } from "../../engine/menu";
-import { Vec2, SSManager } from "../../engine/utils";
+import { Button, CoverShape, MessageBox } from "../../engine/menu";
+import { Vec2, SSManager, Alignment } from "../../engine/utils";
 import { MenuManager } from "../../engine/menu/menumanager";
 import { Img, Assets, Sound } from "../../utils";
 import { AudioManager } from "../../engine/audioManager";
@@ -8,7 +8,8 @@ export const main_menu = MenuManager.createMenu();
 export const sett_menu = MenuManager.createMenu();
 
 export function init() {
-    const mss = SSManager.get(Img.BUTTONS, 3, 3);
+    const mss = SSManager.get(Img.BUTTONS, 5, 3);
+    const playbtnsprite = SSManager.get(Img.PLAYBTN, 1, 1).getSprite(0, 0);
 
     /*
         MAIN MENU
@@ -28,13 +29,14 @@ export function init() {
     });
 
     main_menu.onHide(() => {
+        sett_menu.setVisible(false);
         if (mainMenuMusic != null) {
             mainMenuMusic.pause();
             mainMenuMusic = null;
         }
     });
 
-    const playButton = new Button(mss.getSprite(0, 0)).relativeTo(main_menu);
+    const playButton = new Button(playbtnsprite).relativeTo(main_menu);
     playButton.setAlignedMiddle();
     playButton.onClick(() => {
         console.log('clicked play');
@@ -48,20 +50,43 @@ export function init() {
     playShape.setAlignedMiddle();
     main_menu.add(playShape);
 
-    const settings = new Button(mss.getSprite(2, 2)).relativeTo(main_menu);
+    const settings = new Button(mss.getSprite(1, 2)).relativeTo(main_menu);
     settings.setPositionXY(50, -50);
     settings.onClick(() => {
-        console.log("clicked settings");
+        sett_menu.toggle();
     });
-    main_menu.add(settings);
 
-    console.log(settings.getPosition());
+    main_menu.add(settings);
 
 
     /*
-        QUICK MENU
+        QUICK SETTINGS MENU (on main menu)
     */
-   sett_menu.setSize(new Vec2(50, 50));
+    const info_msgbox = new MessageBox(["Master Weeb 2: Hungry Board", "", "", "(c) 2020 MAO Limited"], 700, 400, Alignment.CENTERED);
+
+    sett_menu.setZIndex(2);
+    sett_menu.setSizeXY(50, 150);
+    sett_menu.setPositionXY(25, -240);
+    sett_menu.setBackground('#696969BB');
+
+    const sm_music = new Button(mss.getSprite(1, 4)).relativeTo(sett_menu);
+    sm_music.setPositionXY(0, -35);
+    sm_music.setAlignedMiddleX();
+    sm_music.onClick(() => {
+        console.log("music clicked");
+    });
+
+    sett_menu.add(sm_music);
+
+    const sm_info = new Button(mss.getSprite(2, 2)).relativeTo(sett_menu);
+    sm_info.setPositionXY(0, 35);
+    sm_info.setAlignedMiddleX();
+    sm_info.onClick(() => {
+        info_msgbox.toggle();
+    });
+
+    sett_menu.add(sm_info);
+
 
 
 }
