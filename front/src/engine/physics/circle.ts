@@ -1,7 +1,5 @@
-import { Vec2, Transform } from "../utils";
-import { Shape, drawCross } from './shape';
-import { Rectangle } from './rectangle';
-import { assert } from '../../utils';
+import { Vec2, Transform, assert } from "../utils";
+import { Shape, drawCross, Rectangle } from '.';
 
 /**
  * @brief A circle.

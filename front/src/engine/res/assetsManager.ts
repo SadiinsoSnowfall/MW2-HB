@@ -1,26 +1,26 @@
-import { assert } from "./";
+import { assert } from "../utils";
 
-export class Assets {
-    private static assetsLoaded: boolean = false;
-    private static imgs = new Map<string, HTMLImageElement>();
+export namespace Assets {
+    let assetsLoaded: boolean = false;
+    let imgs = new Map<string, HTMLImageElement>();
 
-    public static img(img: string): HTMLImageElement {
-        const res = Assets.imgs.get(img);
+    export function img(img: string): HTMLImageElement {
+        const res = imgs.get(img);
         assert(res !== undefined, 'Assets#img undefined ressource');
         return res as HTMLImageElement;
     }
 
-    public static load(): Promise<unknown> {
-        assert(Assets.assetsLoaded == false, "More than one call to Assets#load");
-        Assets.assetsLoaded = true;
-        return Promise.all(Object.values(Img).map(Assets.loadImage));
+    export function load(): Promise<unknown> {
+        assert(assetsLoaded == false, "More than one call to Assets#load");
+        assetsLoaded = true;
+        return Promise.all(Object.values(Img).map(loadImage));
     }
 
-    private static loadImage(url: string): Promise<void> {
+    export function loadImage(url: string): Promise<void> {
         return new Promise(resolve => {
             const img = new Image();
             img.onload = () => {
-                Assets.imgs.set(url, img);
+                imgs.set(url, img);
                 resolve();
             };
             img.src = url;
@@ -265,6 +265,10 @@ export const Img = Object.freeze({
      * MENUS
      */
 
-     BUTTONS: require('assets/images/menu/buttons.png'),
+    PLAYBTN: require('assets/images/menu/playbtn.png'),
+    BUTTONS: require('assets/images/menu/buttons.png'),
+    CURSOR: require('assets/images/menu/cursor.png'),
+    POINTER: require('assets/images/menu/pointer.png'),
+    SPLASH: require('assets/images/menu/splash.jpg'),
      
 });

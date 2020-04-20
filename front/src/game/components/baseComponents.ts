@@ -1,8 +1,7 @@
 import { Behaviour, Display } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
-import { pickOne, clamp } from "../../utils";
-import { AudioManager } from "../../engine/audioManager";
-import { Sprite } from "../../engine/utils";
+import { AudioManager } from "../../engine/res";
+import { pickOne, clamp, Sprite } from "../../engine/utils";
 
 export class SSDisplay extends Display {
     private sprite: Sprite;

@@ -1,6 +1,5 @@
-import { PrefabsManager } from "../../engine/prefabsManager";
+import { PrefabsManager, Img, Sound } from "../../engine/res";
 import { Prefab } from "../../engine/prefab";
-import { Img, Sound } from "../../utils";
 import { SSManager, Vec2 } from "../../engine/utils";
 import { VSBlockDisplay, BlockBehaviour, HSBlockDisplay, ParticleDisplay } from "../components/blockComponents";
 import { ConvexPolygon, Circle } from "../../engine/physics";

@@ -1,3 +1,9 @@
+import { Vec2 } from "./";
+
+/**
+ * An empty function
+ */
+export const EMPTY_FUNCTION: () => void = () => {};
 
 /** 
  * @param n the upper bound (non-inclusive) of the range
@@ -70,6 +76,13 @@ export function randomFloatIn(min: number, max: number): number {
  */
 export function inRect(x: number, y: number, rx: number, ry: number, rw: number, rh: number): boolean {
     return (x >= rx) && (x <= (rx + rw)) && (y >= ry) && (y <= (ry + rh));
+}
+
+/**
+ * @return true if the point [pos] in in the rectangle [rpos, rsize]
+ */
+export function inRectVec2(pos: Vec2, rpos: Vec2, rsize: Vec2) {
+    return (pos.x >= rpos.x) && (pos.x <= (rpos.x + rsize.x)) && (pos.y >= rpos.y) && (pos.y <= (rpos.y + rsize.y));
 }
 
 /**

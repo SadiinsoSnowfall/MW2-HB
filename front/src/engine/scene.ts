@@ -1,5 +1,5 @@
 import { GameObject } from "./gameObject";
-import { CScreen } from "../screen";
+import { CScreen } from "./screen";
 import { Prefab } from "./prefab";
 import { AABBTree } from "./physics";
 import { Vec2 } from "./utils";

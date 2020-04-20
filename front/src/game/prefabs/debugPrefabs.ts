@@ -1,9 +1,8 @@
 import { Prefab } from "../../engine/prefab";
 import { SpinnyDisplay, SpinnyBehaviour, WigglyDisplay, WigglyBehaviour, FPSMetterDisplay, ImageDisplay, SpriteDisplay, YoloSpritesheetDisplay, CircleBehaviour, SquareCollider, WandererBehaviour } from "../components/debugComponents";
-import { Alignment, Style } from "../../engine/utils/textFormat";
+import { Alignment, Style, Spritesheet } from "../../engine/utils";
 import { Scene } from "../../engine/scene";
-import { Assets, Img } from "../../utils";
-import { Spritesheet } from "../../engine/utils/spritesheet";
+import { Assets, Img } from "../../engine/res";
 
 export const wigglyThingy = new Prefab(obj => {
     obj.setDisplay(new WigglyDisplay(obj, "#008000", 100, 55));
@@ -16,16 +15,16 @@ export const spinnyThingy = new Prefab(obj => {
 });
 
 export const FPSMetter = new Prefab(obj => {
-    obj.setDisplay(new FPSMetterDisplay(obj, Alignment.Left, Style.Fill));
+    obj.setDisplay(new FPSMetterDisplay(obj, Alignment.LEFT, Style.FILL));
 });
 
 export const funnyFPSMetter = new Prefab(obj => {
-    obj.setDisplay(new FPSMetterDisplay(obj, Alignment.Centered, Style.Fill));
+    obj.setDisplay(new FPSMetterDisplay(obj, Alignment.CENTERED, Style.FILL));
     obj.setBehaviour(new WigglyBehaviour(obj, 0.01));
 });
 
 export const hilariousFPSMetter = new Prefab(obj => {
-    obj.setDisplay(new FPSMetterDisplay(obj, Alignment.Right, Style.Stroke));
+    obj.setDisplay(new FPSMetterDisplay(obj, Alignment.RIGHT, Style.STROKE));
     obj.setBehaviour(new SpinnyBehaviour(obj, 0.01));
 });
 

@@ -1,4 +1,4 @@
-import { PrefabsManager } from "../../engine/prefabsManager";
+import { PrefabsManager } from "../../engine/res";
 import { Prefab } from "../../engine/prefab";
 
 /**

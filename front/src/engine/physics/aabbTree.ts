@@ -1,8 +1,6 @@
-import { Shape } from "./shape";
-import { Rectangle } from "./rectangle";
-import { Collision, intersection } from "./collision";
+import { Shape, Rectangle, Collision, intersection } from "./";
 import { Collider } from '../components';
-import { assert } from "../../utils";
+import { assert } from "../utils";
 
 function shapeFromCollider(collider: Collider): Shape {
     let transform = collider.object.getTransform();

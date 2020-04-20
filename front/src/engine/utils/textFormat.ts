@@ -1,14 +1,14 @@
 import { Vec2 } from ".";
 
 export enum Alignment {
-    Left,
-    Right,
-    Centered
+    LEFT,
+    RIGHT,
+    CENTERED
 }
 
 export enum Style {
-    Fill,
-    Stroke,
+    FILL,
+    STROKE,
     //FillAndStroke // requires two distinct attributes fill and stroke instead of just color
 }
 
@@ -24,7 +24,7 @@ export class TextFormat {
     private alignment: Alignment;
     private style: Style;
 
-    public static readonly Standard = Object.freeze(new TextFormat("sans", 48, 1, Alignment.Left));
+    public static readonly Standard = Object.freeze(new TextFormat("sans", 48, 1, Alignment.LEFT));
 
     /**
      * @brief Constructs a new TextFormat.
@@ -37,7 +37,7 @@ export class TextFormat {
      * Note: size and interline actually translate to pixels in 1:1 only when the Transform used when drawing
      * has no scale or rotation.
      */
-    constructor(font: string, size: number, interline: number, alignment: Alignment, color: string = "#000000", style: Style = Style.Fill) {
+    constructor(font: string, size: number, interline: number, alignment: Alignment, color: string = "#000000", style: Style = Style.FILL) {
         this.font = font;
         this.size = size;
         this.fontStr = "";
@@ -127,11 +127,11 @@ export class TextFormat {
     public applyTo(ctx: CanvasRenderingContext2D): void {
         ctx.font = this.fontStr;
         switch (this.style) {
-            case Style.Fill:
+            case Style.FILL:
                 ctx.fillStyle = this.color;
                 break;
 
-            case Style.Stroke:
+            case Style.STROKE:
                 ctx.strokeStyle = this.color;
                 break;
 
@@ -194,15 +194,15 @@ function drawText(ctx: CanvasRenderingContext2D, format: TextFormat, lines: any[
     for (const line of lines) {
         let x = 0;
         switch (format.getAlignment()) {
-            case Alignment.Left:
+            case Alignment.LEFT:
                 x = -width / 2;
                 break;
 
-            case Alignment.Right:
+            case Alignment.RIGHT:
                 x = width / 2 - line.width;
                 break;
 
-            case Alignment.Centered:
+            case Alignment.CENTERED:
                 x = -Math.min(line.width, maxLength) / 2;
                 break;
 
@@ -211,7 +211,7 @@ function drawText(ctx: CanvasRenderingContext2D, format: TextFormat, lines: any[
         }
 
         switch (format.getStyle()) {
-            case Style.Fill:
+            case Style.FILL:
                 if (maxLength == Infinity) {
                     ctx.fillText(line.current, x, y);
                 } else {
@@ -219,7 +219,7 @@ function drawText(ctx: CanvasRenderingContext2D, format: TextFormat, lines: any[
                 }
                 break;
             
-            case Style.Stroke:
+            case Style.STROKE:
                 if (maxLength == Infinity) {
                     ctx.strokeText(line.current, x, y);
                 } else {
@@ -262,11 +262,12 @@ class Line {
         this.width = -1;
     }
 
-    public refresh(ctx: CanvasRenderingContext2D, variables: any[]): void {
+    public refresh(ctx: CanvasRenderingContext2D, variables: any[] = []): void {
         let current = this.text[0];
         for (let i = 0; i < this.variables.length; i++) {
             current += variables[this.variables[i]].toString() + this.text[i + 1]; 
         }
+
         if (current != this.current) {
             this.current = current;
             this.width = ctx.measureText(this.current).width;
@@ -331,7 +332,7 @@ export class Text {
      * @param ctx Used for computing text width.
      * @param variables The new values
      */
-    public refresh(ctx: CanvasRenderingContext2D, variables: any[]): void {
+    public refresh(ctx: CanvasRenderingContext2D, variables: any[] = []): void {
         this.format.applyTo(ctx);
         this.width = 0;
         for (let line of this.lines) {
