@@ -314,10 +314,11 @@ function contactPoints(a: Collider, b: Collider, normal: Vec2, penetration: numb
     }
 
     let max = refNormal.dot(ref.getMaxVertex());
+    if (refNormal.dot(cp[1]) - max < 0) {
+        cp.pop(); // Removing the second point
+    }
     if (refNormal.dot(cp[0]) - max < 0) {
         cp.shift(); // Removing the first point
-    } else {
-        cp.splice(1, 1); // Removing the second point
     }
 
     return new Collision(a, b, cp, normal, penetration);

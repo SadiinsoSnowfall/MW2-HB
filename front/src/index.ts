@@ -163,6 +163,7 @@ async function game() {
     let p04 = makeTriangle("p04", "#FFFF77", 1, 2, -1, 0, -2, 2);
     //let p05 = makeTriangle("p05", "#77FFFF", 0.82, 1.29, -0.24, -0.51, 4.26, 1.01);
     let p06 = makeCircle("p06", "#FF7733", 0, 2, 1);
+    //let p07 = makeSquare("p01", "#3377FF", 0, 2, 2);
 
     /*test(p01, p02, false);
     test(p01, p03, true);
@@ -179,6 +180,7 @@ async function game() {
     test(p02, p06, true);
     test(p03, p06, true);
     */test(p04, p06, true);/*
-    test(p05, p06, false);*/
+    test(p05, p06, false);
+    test(p01, p07, true);*/
 }
 game();
