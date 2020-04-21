@@ -59,6 +59,13 @@ export class Collision {
         this.penetration = penetration;
     }
 
+    /**
+     * @brief Returns true if o is objectA.
+     */
+    public isA(o: GameObject): boolean {
+        return o == this.objectA;
+    }
+
     public getObjectA() {
         return this.objectA;
     }
@@ -120,11 +127,11 @@ function support(a: Collider, b: Collider, d: Vec2): Vec2 {
     function supportShape(s: Collider, d2: Vec2): Vec2 {
         let shape = s.getShape();
         let transform = s.object.getTransform();
-        let p = transform.multiplyTransposed(shape.support(d2));
+        let p = shape.support(transform.multiplyTransposed(d2));
         return transform.multiplyVector(p);
     }
 
-    return Vec2.sub(supportShape(a, d), supportShape(b, Vec2.neg(d))); // s1.support(d) - s2.support(-d)
+    return Vec2.sub(supportShape(a, d), supportShape(b, Vec2.neg(d))); // s1.support(d) - s2.support(-d);
 }
 
 // Implementation of GJK
@@ -276,7 +283,6 @@ function clip(a: Vec2, b: Vec2, normal: Vec2, o: number): Vec2[] {
 // Computes a set of contact points and create the Collision object.
 // http://www.dyn4j.org/2011/11/contact-points-using-clipping/
 function contactPoints(a: Collider, b: Collider, normal: Vec2, penetration: number): Collision {
-    a.getShape();
     let e1 = a.getShape().feature(normal); // Must be transformed!
     let e2 = b.getShape().feature(Vec2.neg(normal));
 
@@ -340,8 +346,6 @@ function contactPoints(a: Collider, b: Collider, normal: Vec2, penetration: numb
  * This signature is only temporary. a and b should be the remaining arguments.
  */
 export function intersection(a: Collider, b: Collider): Collision | null {
-    let shapeA = a.getShape();
-    let shapeB = b.getShape();
     let simplex = gjk(a, b);
     if (simplex.length == 0) {
         return null;
