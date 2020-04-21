@@ -1,4 +1,4 @@
-import { Element, Widget } from ".";
+import { Widget } from ".";
 
 export class CoverShape extends Widget {
     private color: string;
@@ -7,7 +7,8 @@ export class CoverShape extends Widget {
     constructor(color: string) {
         super(0);
         this.color = color;
-        this.centered = false;
+        this.centered = true
+        this.doCaptureEvent = false;
     }
 
     public isCentered(): boolean {

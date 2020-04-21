@@ -6,48 +6,14 @@ import { MouseAction } from "../res";
 export class Menu extends Element {
     private widgets: Widget[];
     private background: string | HTMLImageElement;
-    private visible: boolean;
-
-    private onDisplayCallback: () => void;
-    private onHideCallback: () => void;
 
     // keep track of the widget hovered on
     private lastHoverWidget: Widget | null = null;
 
     constructor(zIndex: number = 1) {
-        super(zIndex);
+        super(zIndex, false);
         this.background = 'transparent';
-        this.visible = false;
         this.widgets = [];
-        this.onDisplayCallback = this.onHideCallback = EMPTY_FUNCTION;
-    }
-
-    /**
-     * Toggle the menu visibility
-     */
-    public toggle(): Menu {
-        return this.setVisible(!this.visible);
-    }
-
-    /**
-     * Return whether or nut the menu is currently visible
-     */
-    public isVisible(): boolean {
-        return this.visible;
-    }
-
-    /**
-     * Set the menu visibility
-     */
-    public setVisible(visible: boolean): Menu {
-        if (visible && !this.visible) {
-            this.onDisplayCallback();
-        } else if (!visible && this.visible) {
-            this.onHideCallback();
-        }
-
-        this.visible = visible;
-        return this;
     }
 
     /**
@@ -69,14 +35,6 @@ export class Menu extends Element {
         }
 
         return this;
-    }
-
-    public onDisplay(callback: () => void): void {
-        this.onDisplayCallback = callback;
-    }
-
-    public onHide(callback: () => void): void {
-        this.onHideCallback = callback;
     }
 
     public setBackground(bg: string | HTMLImageElement = 'transparent'): Menu {
@@ -112,7 +70,9 @@ export class Menu extends Element {
         ctx.setTransform(1, 0, 0, 1, this.pos.x, this.pos.y); // translate to [x, y]
 
         for (let i = 0; i < this.widgets.length; ++i) {
-            this.widgets[i].draw(ctx);
+            if (this.widgets[i].isVisible()) {
+                this.widgets[i].draw(ctx);
+            }
         }
     }
 
@@ -132,7 +92,7 @@ export class Menu extends Element {
             const x = this.pos.x + wp.x - ws.x / 2;
             const y = this.pos.y + wp.y - ws.y / 2;
 
-            if (inRect(pos.x, pos.y, x, y, ws.x, ws.y)) {
+            if (w.doCapture() && inRect(pos.x, pos.y, x, y, ws.x, ws.y)) {
                 captured = w;
                 break;
             }
@@ -164,9 +124,17 @@ export class Menu extends Element {
         return true;
     }
 
-    public setZIndex(zIndex: number): void {
+    public hoverLeft() {
+        if (this.lastHoverWidget) {
+            this.lastHoverWidget.hoverLeft();
+            this.lastHoverWidget = null;
+        }
+    }
+
+    public setZIndex(zIndex: number): Menu {
         this.zIndex = zIndex;
         MenuManager.resort();
+        return this;
     }
     
     public resort(): void {

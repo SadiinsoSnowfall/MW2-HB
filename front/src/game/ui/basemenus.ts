@@ -1,6 +1,7 @@
-import { MenuManager, Button, CoverShape, MessageBox } from "../../engine/ui";
+import { MenuManager, Button, CoverShape, CoverImg, MessageBox } from "../../engine/ui";
 import { SSManager, Alignment } from "../../engine/utils";
 import { Img, Assets, Sound, AudioManager } from '../../engine/res';
+import { Settings, DefaultSettings } from "../../engine/res/settingsManager";
 
 export const main_menu = MenuManager.createMenu();
 export const sett_menu = MenuManager.createMenu();
@@ -20,9 +21,9 @@ export function init() {
 
     let mainMenuMusic: HTMLAudioElement | null = null;
 
-    main_menu.onDisplay(() => {
+    main_menu.onDisplay(async () => {
         if (mainMenuMusic == null) {
-            mainMenuMusic = AudioManager.loop(Sound.MAIN_REMIX, 0.1, 50, 70.8);
+            mainMenuMusic = await AudioManager.loop(Sound.MAIN_REMIX, 0.1, 50, 70.8);
         }
     });
 
@@ -70,11 +71,27 @@ export function init() {
     const sm_music = new Button(mss.getSprite(1, 4)).relativeTo(sett_menu);
     sm_music.setPositionXY(0, -35);
     sm_music.setAlignedMiddleX();
-    sm_music.onClick(() => {
-        console.log("music clicked");
+    sm_music.onClick(async () => {
+        const state = await Settings.toggle(DefaultSettings.SOUND_ENABLED, false);
+        if (state) {
+            sm_music_overlay.setVisible(false);
+            if (main_menu.isVisible() && (mainMenuMusic === null)) {
+                mainMenuMusic = await AudioManager.loop(Sound.MAIN_REMIX, 0.1, 50, 70.8);
+            }
+        } else {
+            sm_music_overlay.setVisible(true);
+            if (mainMenuMusic != null) {
+                mainMenuMusic.pause();
+                mainMenuMusic = null;
+            }
+        }
     });
 
     sett_menu.add(sm_music);
+
+    const sm_music_overlay = new CoverImg(mss.getSprite(1, 3));
+    sm_music_overlay.centerOn(sm_music).setZIndex(2).setVisible(false);
+    sett_menu.add(sm_music_overlay);    
 
     const sm_info = new Button(mss.getSprite(2, 2)).relativeTo(sett_menu);
     sm_info.setPositionXY(0, 35);

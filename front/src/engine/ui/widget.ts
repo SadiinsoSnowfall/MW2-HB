@@ -8,7 +8,7 @@ export abstract class Widget extends Element {
     protected hoverCallback: () => void;
 
     constructor(zIndex?: number, pos?: Vec2, size?: Vec2) {
-        super(zIndex, pos, size);
+        super(zIndex, true, pos, size);
         this.clickCallback = this.hoverCallback = EMPTY_FUNCTION;
     }
 
@@ -50,9 +50,10 @@ export abstract class Widget extends Element {
      * Set the Z-Index of the widget
      * /!\ will cause a widget resorting in the relative menu
      */
-    public setZIndex(zIndex: number): void {
+    public setZIndex(zIndex: number): Widget {
         this.zIndex = zIndex;
         this.menu?.resort();
+        return this;
     }
 
     public setAlignedMiddle(): void {
