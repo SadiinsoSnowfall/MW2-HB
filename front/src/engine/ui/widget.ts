@@ -36,14 +36,14 @@ export abstract class Widget extends Element {
     public setPositionXY(x: number, y: number): void {
         const menu = this.menu as Menu; // ensured by he assert
 
-        if (x >= 0) {
+        if (x >= 0 && !Object.is(x, -0)) {
             this.pos.x = x;
         } else {
             assert(this.menu !== undefined, "Widget#setPositionXY: negative index: no relative menu");
             this.pos.x = menu.getSize().x + x;
         }
 
-        if (y >= 0) {
+        if (y >= 0 && !Object.is(y, -0)) {
             this.pos.y = y;
         } else {
             assert(this.menu !== undefined, "Widget#setPositionXY: negative index: no relative menu");

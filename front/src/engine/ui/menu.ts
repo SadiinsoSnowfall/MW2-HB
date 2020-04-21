@@ -22,13 +22,13 @@ export class Menu extends Element {
      * same thing for y
      */
     public setPositionXY(x: number, y: number): Menu {
-        if (x >= 0) {
+        if (x >= 0 && !Object.is(x, -0)) {
             this.pos.x = x;
         } else {
             this.pos.x = screen.width + x;
         }
 
-        if (y >= 0) {
+        if (y >= 0 && !Object.is(y, -0)) {
             this.pos.y = y;
         } else {
             this.pos.y = screen.height + y;
