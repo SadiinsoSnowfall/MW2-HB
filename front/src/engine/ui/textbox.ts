@@ -1,5 +1,6 @@
 import { Widget } from "./widget";
 import { Text, Alignment, Style, TextFormat } from "../utils";
+import { Font, Assets } from "../res";
 
 export class TextBox extends Widget {
     private text: Text;
@@ -7,8 +8,10 @@ export class TextBox extends Widget {
 
     constructor(message: string[], a: Alignment = Alignment.LEFT, s: Style = Style.FILL) {
         super();
-        this.text = new Text(TextFormat.using(a, s), message);
+        const tf = TextFormat.using(a, s).setFont('AngryBirds');
+        this.text = new Text(tf, message);
         this.init = false;
+        this.doCaptureEvent = false;
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {

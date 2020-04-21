@@ -2,7 +2,7 @@ import { Display } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { Spritesheet, Sprite, randomIn, randomFloatIn } from "../../engine/utils";
 import { Damagable } from "./baseComponents";
-import { ParticleCreator } from "../prefabs/blockPrefabs";
+import { ParticleCreator } from "../prefabs/basePrefabs";
 
 export interface BlockDisplay {
     useSprite(id: number): void;

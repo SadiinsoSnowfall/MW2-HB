@@ -1,43 +1,56 @@
 import { Menu } from ".";
 import { Vec2 } from "../utils";
 
-export class MenuManager {
-    private static menus: Menu[] = [];
+export namespace MenuManager {
+    let menus: Menu[] = [];
+    let lastHoverMenu: Menu | undefined = undefined;
 
-    public static resort(): void {
-        MenuManager.menus.sort((a, b) => b.getZIndex() - a.getZIndex()); // sort by zIndex, descending order
+    export function resort(): void {
+        menus.sort((a, b) => b.getZIndex() - a.getZIndex()); // sort by zIndex, descending order
     }
 
-    public static addMenu(menu: Menu): Menu {
-        MenuManager.menus.push(menu);
-        MenuManager.resort(); // sort by zIndex
+    export function addMenu(menu: Menu): Menu {
+        menus.push(menu);
+        resort(); // sort by zIndex
         return menu;
     }
 
-    public static createMenu(zIndex?: number): Menu {
-        return MenuManager.addMenu(new Menu(zIndex));
+    export function createMenu(zIndex?: number): Menu {
+        return addMenu(new Menu(zIndex));
     }
 
     /**
      * Try capture the event in z-index descending order
      */
-    public static captureEvent(e: MouseEvent, type: number, pos: Vec2): boolean {
-        for (let i = 0; i < MenuManager.menus.length; ++i) {
-            if (MenuManager.menus[i].captureEvent(e, type, pos)) {
-                return true;
+    export function captureEvent(e: MouseEvent, type: number, pos: Vec2): boolean {
+        let captured: Menu | undefined = undefined;
+
+        for (let i = 0; i < menus.length; ++i) {
+            if (menus[i].captureEvent(e, type, pos)) {
+                captured = menus[i];
+                break;
             }
         }
 
-        return false;
+        if (lastHoverMenu && (lastHoverMenu !== captured)) {
+            lastHoverMenu.hoverLeft();
+            lastHoverMenu = undefined;
+        }
+
+        if (captured) {
+            lastHoverMenu = captured;
+        }
+
+        return captured !== undefined;
     }
 
     /**
      * Draw the menus in z-index ascending order
      */
-    public static drawMenus(ctx: CanvasRenderingContext2D): void {
-        for (let i = MenuManager.menus.length - 1; i >= 0; --i) {
+    export function drawMenus(ctx: CanvasRenderingContext2D): void {
+        for (let i = menus.length - 1; i >= 0; --i) {
             ctx.save();
-            MenuManager.menus[i].draw(ctx);
+            menus[i].draw(ctx);
             ctx.restore();
         }
     }

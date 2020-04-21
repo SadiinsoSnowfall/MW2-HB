@@ -1,3 +1,4 @@
+import { Settings, DefaultSettings } from "./settingsManager";
 
 export namespace AudioManager {
 
@@ -7,18 +8,28 @@ export namespace AudioManager {
     */
     const alwaysWatchTimeUpdate: boolean = false;
 
-    export function playIfDefined(sound: string | undefined, volume: number = 1.0, from: number = 0, to?: number): HTMLAudioElement | undefined {
-        return sound ? play(sound, volume, from, to) : undefined;
+    export async function playIfDefined(sound: string | undefined, volume: number = 1.0, from: number = 0, to?: number): Promise<HTMLAudioElement | null> {
+        return sound ? await play(sound, volume, from, to) : null;
     }
 
-    export function play(sound: string, volume: number = 1.0, from: number = 0, to?: number): HTMLAudioElement {
-        const audio = new Audio(buildURI(sound, from, to));
-        audio.volume = volume;
-        audio.play();
-        return audio;
+    export async function play(sound: string, volume: number = 1.0, from: number = 0, to?: number): Promise<HTMLAudioElement | null> {
+        const enabled = await Settings.get(DefaultSettings.SOUND_ENABLED, true);
+        if (enabled) {
+            const audio = new Audio(buildURI(sound, from, to));
+            audio.volume = volume;
+            audio.play();
+            return audio;
+        } else {
+            return null;
+        }
     }
 
-    export function loop(sound: string, volume: number = 1.0, from: number = 0, to?: number): HTMLAudioElement {
+    export async function loop(sound: string, volume: number = 1.0, from: number = 0, to?: number): Promise<HTMLAudioElement | null> {
+        const enabled = await Settings.get(DefaultSettings.SOUND_ENABLED, true);
+        if (!enabled) {
+            return null;
+        }
+
         const audio = new Audio(sound);
         audio.volume = volume;
         

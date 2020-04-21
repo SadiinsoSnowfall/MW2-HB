@@ -3,6 +3,8 @@ import { Display, Collider } from "../../engine/components";
 import { Rectangle, ConvexPolygon } from "../../engine/physics";
 import { Vec2 } from "../../engine/utils";
 
+export type ParticleCreator = (x: number, y: number, amount: number, amplitude: number, lifespan?: number) => GameObject;
+
 export class GroundDisplay extends Display {
     private w: number
     private h: number;

@@ -4,5 +4,6 @@ export * from './menu';
 export * from './widget';
 export * from './button';
 export * from './covershape';
+export * from './coverimg';
 export * from './msgbox';
 export * from './textbox';

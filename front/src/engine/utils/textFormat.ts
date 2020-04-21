@@ -69,26 +69,29 @@ export class TextFormat {
         return this.size;
     }
 
-    public setSize(size: number): void {
+    public setSize(size: number): TextFormat {
         this.size = size;
         this.refreshFontStr();
+        return this;
     }
 
     public getFont(): string {
         return this.font;
     }
 
-    public setFont(font: string): void {
+    public setFont(font: string): TextFormat {
         this.font = font;
         this.refreshFontStr();
+        return this;
     }
 
     public getColor(): string {
         return this.color;
     }
 
-    public setColor(color: string): void {
+    public setColor(color: string): TextFormat {
         this.color = color;
+        return this;
     }
 
     public getInterline(): number {
@@ -97,6 +100,7 @@ export class TextFormat {
 
     public setInterline(interline: number) {
         this.interline = interline;
+        return this;
     }
 
     public getAlignment(): Alignment {
@@ -105,14 +109,16 @@ export class TextFormat {
 
     public setAlignment(alignment: Alignment) {
         this.alignment = alignment;
+        return this;
     }
 
     public getStyle(): Style {
         return this.style;
     }
 
-    public setStyle(style: Style): void {
+    public setStyle(style: Style): TextFormat {
         this.style = style;
+        return this;
     }
 
     private refreshFontStr(): void {

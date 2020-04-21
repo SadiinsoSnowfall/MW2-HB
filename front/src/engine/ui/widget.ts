@@ -8,7 +8,7 @@ export abstract class Widget extends Element {
     protected hoverCallback: () => void;
 
     constructor(zIndex?: number, pos?: Vec2, size?: Vec2) {
-        super(zIndex, pos, size);
+        super(zIndex, true, pos, size);
         this.clickCallback = this.hoverCallback = EMPTY_FUNCTION;
     }
 
@@ -23,6 +23,11 @@ export abstract class Widget extends Element {
         return this;
     }
 
+    public centerOn(w: Widget): Widget {
+        this.setPosition(w.getPosition());
+        return this;
+    }
+
     /**
      * Set the widget position
      * if x is negative, it will take the value of menu.width + x (like in python list slices)
@@ -31,14 +36,14 @@ export abstract class Widget extends Element {
     public setPositionXY(x: number, y: number): void {
         const menu = this.menu as Menu; // ensured by he assert
 
-        if (x >= 0) {
+        if (x >= 0 && !Object.is(x, -0)) {
             this.pos.x = x;
         } else {
             assert(this.menu !== undefined, "Widget#setPositionXY: negative index: no relative menu");
             this.pos.x = menu.getSize().x + x;
         }
 
-        if (y >= 0) {
+        if (y >= 0 && !Object.is(y, -0)) {
             this.pos.y = y;
         } else {
             assert(this.menu !== undefined, "Widget#setPositionXY: negative index: no relative menu");
@@ -50,9 +55,10 @@ export abstract class Widget extends Element {
      * Set the Z-Index of the widget
      * /!\ will cause a widget resorting in the relative menu
      */
-    public setZIndex(zIndex: number): void {
+    public setZIndex(zIndex: number): Widget {
         this.zIndex = zIndex;
         this.menu?.resort();
+        return this;
     }
 
     public setAlignedMiddle(): void {
