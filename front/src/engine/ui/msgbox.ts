@@ -8,14 +8,18 @@ export class MessageBox {
     constructor(message: string[], w: number, h: number, a: Alignment = Alignment.LEFT, s: Style = Style.FILL) {
         const mss = SSManager.get(Img.BUTTONS, 5, 3);
         this.menu = MenuManager.createMenu(666);
-        this.menu.setBackground('#FFA500FF');
-        this.menu.setSizeXY(w, h);
+        this.menu.setSizeXY(w + 10, h + 10);
         this.menu.setAlignedMiddle();
 
-        const backshape = new CoverShape('#E3911EFF').setCentered(true).relativeTo(this.menu);
-        backshape.setSizeXY(w - 20, h - 20);
-        backshape.setAlignedMiddle();
-        this.menu.add(backshape);
+        const backshape0 = new CoverShape('#FFFFFFFF').rounded(60).setCentered(true).relativeTo(this.menu);
+        backshape0.setSizeXY(w, h);
+        backshape0.setAlignedMiddle();
+        this.menu.add(backshape0);
+
+        const backshape1 = new CoverShape('#ffbd31FF').rounded(60).setCentered(true).relativeTo(this.menu);
+        backshape1.setSizeXY(w - 10, h - 10);
+        backshape1.setAlignedMiddle();
+        this.menu.add(backshape1);
         
         const text = new TextBox(message, a, s).relativeTo(this.menu);
         text.setAlignedMiddle();
@@ -23,7 +27,7 @@ export class MessageBox {
         this.menu.add(text);
 
         const closebtn = new Button(mss.getSprite(0, 0)).relativeTo(this.menu);
-        closebtn.setPositionXY(-35, 35);
+        closebtn.setPositionXY(-25, 25);
         closebtn.onClick(() => {
             this.menu.setVisible(false);
         });

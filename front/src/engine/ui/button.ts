@@ -14,6 +14,11 @@ export class Button extends Widget {
         this.sprite = sprite;
     }
 
+    public scale(factor: number): Button {
+        this.scaleFactor = factor;
+        return this;
+    }
+
     public draw(ctx: CanvasRenderingContext2D): void {
         if (this.scaleFactor != 1) {
             ctx.save();

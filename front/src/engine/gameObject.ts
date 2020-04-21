@@ -1,5 +1,5 @@
 import { Transform, Vec2 } from './utils';
-import { RigidBody, Display, Collider, Behaviour } from './components';
+import { Display, Collider, Behaviour } from './components';
 import { Scene } from './scene';
 
 export class GameObject {

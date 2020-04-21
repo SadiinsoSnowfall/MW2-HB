@@ -4,6 +4,7 @@ import { Prefab } from "./prefab";
 import { AABBTree } from "./physics";
 import { Vec2 } from "./utils";
 import { Collider } from "./components";
+import { PhysicsEngine } from "./physics/physicsengine";
 
 /**
 * @brief Defines any object that can interact with the game loop.
@@ -13,9 +14,11 @@ export class Scene {
     protected foreground: GameObject[] = [];
     protected background: GameObject[] = [];
     protected tree: AABBTree;
+    protected physics: PhysicsEngine;
     
     constructor() {
         this.tree = new AABBTree();
+        this.physics = new PhysicsEngine(this);
     }
     
     /**
@@ -185,6 +188,7 @@ export class Scene {
         
         // update colliders
         this.tree.update();
+        this.physics.update();
 
         return this;
     }

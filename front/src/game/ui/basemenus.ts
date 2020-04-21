@@ -51,8 +51,8 @@ export async function init(scene: Scene) {
 
     main_menu.add(playButton);
 
-    const playShape = new CoverShape("#FFA500D0").setCentered(true).relativeTo(main_menu);
-    playShape.setSizeXY(250, 150);
+    const playShape = new CoverImg(SSManager.get(Img.PLAY_BSHAPE, 1, 1).getSprite(0, 0)).setCentered(true).scale(1.2).relativeTo(main_menu);
+    //playShape.setSizeXY(250, 150);
     playShape.setAlignedMiddle();
     main_menu.add(playShape);
 
@@ -69,7 +69,7 @@ export async function init(scene: Scene) {
         QUICK SETTINGS MENU (on main menu)
     */
 
-    const info_msgbox = new MessageBox(["Master Weeb 2: Hungry Board", "", "", "(c) 2020 MAO Limited"], 700, 400, Alignment.CENTERED);
+    const info_msgbox = new MessageBox(["Master Weeb 2:", "Hungry Board", "", "(c) 2020 MAO Limited"], 700, 400, Alignment.CENTERED);
 
     sett_menu.setZIndex(2);
     sett_menu.setSizeXY(50, 150);
@@ -117,10 +117,15 @@ export async function init(scene: Scene) {
     lvl_menu.setFullScreen();
     lvl_menu.setBackground(Assets.img(Img.SPLASH));
 
-    const lvl_back = new CoverShape("#A0A0A0DD").relativeTo(lvl_menu);
-    lvl_back.setSizeXY(800, 800);
+    const lvl_back = new CoverShape("#FFFFFFFF").rounded(30).relativeTo(lvl_menu);
+    lvl_back.setSizeXY(810, 810);
     lvl_back.setAlignedMiddle();
     lvl_menu.add(lvl_back);
+
+    const lvl_front = new CoverShape("#ffbd31FF").rounded(30).relativeTo(lvl_menu);
+    lvl_front.setSizeXY(800, 800);
+    lvl_front.setAlignedMiddle();
+    lvl_menu.add(lvl_front);
 
     const lvl_title = new TextBox(["Sélection des niveaux"]).relativeTo(lvl_menu);
     lvl_title.setPositionXY(0, 250);
@@ -144,7 +149,7 @@ export async function init(scene: Scene) {
         let cy = 0;
 
         for (const level of levels) {
-            const nbtn = new Button(levelIcons.getSprite(0, 0));
+            const nbtn = new Button(levelIcons.getSprite(0, 1));
             nbtn.setPositionXY(cx + baseX, cy + baseY);
             nbtn.onClick(async () => {
                 currentLevel = level.id;

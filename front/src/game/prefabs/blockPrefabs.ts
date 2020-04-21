@@ -3,7 +3,7 @@ import { Prefab } from "../../engine/prefab";
 import { SSManager, Vec2 } from "../../engine/utils";
 import { VSBlockDisplay, BlockBehaviour, HSBlockDisplay, ParticleDisplay } from "../components/blockComponents";
 import { ConvexPolygon, Circle } from "../../engine/physics";
-import { RigidBody } from "../../engine/components";
+import { RigidBody } from "../../engine/components/rigidBody";
 import { GameObject } from "../../engine/gameObject";
 
 /**

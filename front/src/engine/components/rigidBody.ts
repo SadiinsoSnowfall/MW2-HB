@@ -2,7 +2,6 @@ import { GameObject } from '../gameObject';
 import { Collider } from './collider';
 import { Vec2 } from '../utils';
 import { Shape, intersection } from '../physics';
-import { Scene } from '../scene';
 
 /**
  * ObjectComponent for physics simulation
@@ -14,8 +13,11 @@ export class RigidBody extends Collider {
 
     protected velocity: Vec2;
     protected force: Vec2;
-    protected angularVelocity: number;
     protected prevPos: Vec2;
+
+    protected angularVelocity: number;
+    protected angle: number;
+    protected prevAngle: number;
 
     protected airFriction: number;
     protected mass: number;
@@ -30,8 +32,10 @@ export class RigidBody extends Collider {
         this.roughness = roughness;
 
         this.prevPos = object.getPosition();
-        this.velocity = new Vec2(0, 0);
-        this.force = new Vec2(0, 0);
+        this.velocity = Vec2.Zero.clone();
+        this.force = Vec2.Zero.clone();
+        this.angle = 0;
+        this.prevAngle = -5;
         this.angularVelocity = 0;
     }
 
@@ -40,24 +44,35 @@ export class RigidBody extends Collider {
     }
 
     public update(): boolean {
-        const scene = this.object.getScene();
-        let collisions = scene.getTree().query(this);
-        if (collisions.length > 0) {
-            this.force.mul(-1.01);
-            this.prevPos = this.object.getPosition();
-        }
-
         // add gravity
         this.applyForce(Vec2.mul(RigidBody.gravity, this.mass));
 
+        // check for collisions
+        const scene = this.object.getScene();
+        const collisions = scene.getTree().query(this);
+        if (collisions.length > 0) {
+            this.force.setXY(0, 0);
+            this.prevPos = this.object.getPosition();
+        }
+
         const curPos = this.object.getPosition();
 
+        // update velocity
         const acceleration = Vec2.div(this.force, this.mass).mul(RigidBody.deltaTimeSquared);
         this.velocity = Vec2.sub(curPos, this.prevPos).mul(this.airFriction).add(acceleration);
-
         this.prevPos = curPos;
 
-        this.object.translate(this.velocity.x, this.velocity.y);
+        // update angular velocity
+        this.angularVelocity = (this.angle - this.prevAngle) * this.airFriction;
+        this.prevAngle = this.angle;
+        this.angle += this.angularVelocity;
+
+        // update position & rotation
+        this.object.move(this.velocity.x, this.velocity.y);
+        if (this.angularVelocity !== 0) {
+            this.object.rotateDegrees(this.angularVelocity);
+        }
+
         return true;
     }
 

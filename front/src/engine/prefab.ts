@@ -1,4 +1,3 @@
-import { Display, RigidBody, Collider, Behaviour } from "./components";
 import { GameObject } from "./gameObject";
 
 export class Prefab {
