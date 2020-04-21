@@ -60,6 +60,15 @@ export class Scene {
     public getTree(): AABBTree {
         return this.tree;
     }
+
+    /**
+     * Reset the scene
+     */
+    public clear(): void {
+        this.background = [];
+        this.foreground = [];
+        this.tree = new AABBTree();
+    }
     
     /**
     * @brief Instantiates an Object using a Prefab

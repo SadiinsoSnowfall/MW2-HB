@@ -8,8 +8,10 @@ import { del } from "idb-keyval";
 export const main_menu = MenuManager.createMenu();
 export const sett_menu = MenuManager.createMenu();
 export const lvl_menu = MenuManager.createMenu();
+export const ig_menu = MenuManager.createMenu();
 
 let lvlQueryPromise: Promise<any> | undefined = undefined;
+let currentLevel: number = 0;
 
 export async function init(scene: Scene) {
     const mss = SSManager.get(Img.BUTTONS, 5, 3);
@@ -109,7 +111,7 @@ export async function init(scene: Scene) {
     sett_menu.add(sm_info);
 
     /*
-        QUICK SETTINGS MENU (on main menu)
+        Level selection
     */
 
     lvl_menu.setFullScreen();
@@ -145,8 +147,10 @@ export async function init(scene: Scene) {
             const nbtn = new Button(levelIcons.getSprite(0, 0));
             nbtn.setPositionXY(cx + baseX, cy + baseY);
             nbtn.onClick(async () => {
+                currentLevel = level.id;
                 await Levels.loadLevel(level.id, scene);
                 lvl_menu.setVisible(false);
+                ig_menu.setVisible(true);
             });
 
             lvl_menu.add(nbtn);
@@ -164,9 +168,37 @@ export async function init(scene: Scene) {
         }
     });
 
-    lvl_menu.onDisplay(() => {
+    /*
+        In game menu
+    */
 
+    ig_menu.setPositionXY(0, -80);
+    ig_menu.setSizeXY(300, 80);
+
+    const ig_settings = new Button(mss.getSprite(1, 2)).relativeTo(ig_menu);
+    ig_settings.setPositionXY(50, -50);
+    ig_settings.onClick(() => {
+        sett_menu.toggle();
     });
+    ig_menu.add(ig_settings);
+
+    const ig_back = new Button(mss.getSprite(0, 2)).relativeTo(ig_menu);
+    ig_back.setPositionXY(120, -50);
+    ig_back.onClick(() => {
+        scene.clear();
+        sett_menu.setVisible(false);
+        ig_menu.setVisible(false);
+        lvl_menu.setVisible(true);
+    });
+    ig_menu.add(ig_back);
+
+    const ig_reload = new Button(mss.getSprite(2, 0)).relativeTo(ig_menu);
+    ig_reload.setPositionXY(190, -50);
+    ig_reload.onClick(() => {
+        scene.clear();
+        Levels.loadLevel(currentLevel, scene);
+    });
+    ig_menu.add(ig_reload);
 
 }
 
