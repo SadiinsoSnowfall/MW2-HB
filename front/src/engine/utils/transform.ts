@@ -232,6 +232,18 @@ export class Transform {
         throw new Error("Transform#revertMultiple: unable to revert the vector (both m11 and m22 are equal to zero)");
     }
 
+    /**
+     * @brief Multiplies a vector by the transposed version of this matrix.
+     * This matrix is here considered as 2D since otherwise we would have to return a Vec3.
+     * In other words, m31 and m32 are not used in this method.
+     */
+    public multiplyTransposed(v: Vec2): Vec2 {
+        return new Vec2(
+            this.m11 * v.x + this.m12 * v.y,
+            this.m21 * v.x + this.m22 * v.y
+        );
+    }
+
     /**********************************************************************************************
      * 
      * Transformations

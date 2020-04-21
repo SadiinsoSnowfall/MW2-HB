@@ -114,15 +114,25 @@ export class Collision {
     }
 }
 
-// Support function of the Minkowski difference of s1 and s2
-function support(s1: Shape, s2: Shape, d: Vec2): Vec2 {
-    return Vec2.sub(s1.support(d), s2.support(Vec2.neg(d))); // s1.support(d) - s2.support(-d)
+// Support function of the Minkowski difference of a and b's shapes
+// http://www.dtecta.com/papers/gdc2001depth.pdf (page 5)
+function support(a: Collider, b: Collider, d: Vec2): Vec2 {
+    function supportShape(s: Collider, d2: Vec2): Vec2 {
+        let shape = s.getShape();
+        let transform = s.object.getTransform();
+        let p = transform.multiplyTransposed(shape.support(d2));
+        return transform.multiplyVector(p);
+    }
+
+    return Vec2.sub(supportShape(a, d), supportShape(b, Vec2.neg(d))); // s1.support(d) - s2.support(-d)
 }
 
 // Implementation of GJK
 // https://blog.hamaluik.ca/posts/building-a-collision-engine-part-1-2d-gjk-collision-detection/
 // Returns a triangle containing the origin if there is a collision, an empty list otherwise
-function gjk(s1: Shape, s2: Shape): Vec2[] {
+function gjk(a: Collider, b: Collider): Vec2[] {
+    let s1 = a.getShape();
+    let s2 = b.getShape();
     let simplex: Vec2[] = [];
     let d = Vec2.Zero;
     while (true) {
@@ -177,7 +187,7 @@ function gjk(s1: Shape, s2: Shape): Vec2[] {
         }
 
         // Add a new support if possible
-        let newVertex = support(s1, s2, d);
+        let newVertex = support(a, b, d);
         if (d.dot(newVertex) < 0) {
             // The two shapes are not intersecting
             return [];
@@ -225,10 +235,10 @@ function findClosestEdge(simplex: Vec2[]): EPAEdge {
 // http://www.dyn4j.org/2010/05/epa-expanding-polytope-algorithm/
 // Computes the penetration vector and contact points
 // Returns []
-function epa(a: Collider, shapeA: Shape, b: Collider, shapeB: Shape, simplex: Vec2[]): [Vec2, number] {
+function epa(a: Collider, b: Collider, simplex: Vec2[]): [Vec2, number] {
     while (true) {
         let e = findClosestEdge(simplex);
-        let p = support(shapeA, shapeB, e.normal);
+        let p = support(a, b, e.normal);
         let dot = p.dot(e.normal);
         if (dot - e.distance < epaTolerance) {
             return [e.normal, dot]; // Is it really dot? It's not an actual distance, it doesn't make sense
@@ -329,13 +339,15 @@ function contactPoints(a: Collider, b: Collider, normal: Vec2, penetration: numb
  * Returns null if both shapes are not actually intersecting. 
  * This signature is only temporary. a and b should be the remaining arguments.
  */
-export function intersection(a: Collider, shapeA: Shape, b: Collider, shapeB: Shape): Collision | null {
-    let simplex = gjk(shapeA, shapeB);
+export function intersection(a: Collider, b: Collider): Collision | null {
+    let shapeA = a.getShape();
+    let shapeB = b.getShape();
+    let simplex = gjk(a, b);
     if (simplex.length == 0) {
         return null;
     } else {
         // Dealing with length == 1 or 2 : http://www.dtecta.com/papers/gdc2001depth.pdf (page 15)
-        let np = epa(a, shapeA, b, shapeB, simplex);
+        let np = epa(a, b, simplex);
         return contactPoints(a, b, np[0], np[1]);
     }
 }

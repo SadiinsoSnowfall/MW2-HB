@@ -1,14 +1,24 @@
 import { Shape, Rectangle, Collision, intersection } from "./";
 import { Collider } from '../components';
-import { assert } from "../utils";
+import { assert, Vec2 } from "../utils";
 
-function shapeFromCollider(collider: Collider): Shape {
+/*function shapeFromCollider(collider: Collider): Shape {
     let transform = collider.object.getTransform();
     return collider.getShape().transform(transform);
-}
+}*/
 
 function bboxFromCollider(collider: Collider): Rectangle {
-    return shapeFromCollider(collider).boundingBox();
+    let b = collider.getShape().boundingBox();
+    let t = collider.object.getTransform();
+
+    let points = [
+        t.multiplyVector(b.position),
+        t.multiplyVector(new Vec2(b.position.x + b.width, b.position.y)),
+        t.multiplyVector(new Vec2(b.position.x, b.position.y + b.height)),
+        t.multiplyVector(new Vec2(b.position.x + b.width, b.position.y + b.height))
+    ];
+    return Rectangle.bound(points);
+    //return shapeFromCollider(collider).boundingBox();
 }
 
 let lastId = 0;
@@ -97,14 +107,6 @@ class NodeData {
         this.right.draw(ctx);
         this.bbox.draw(ctx);
     }
-
-    public lol(): void {
-        console.log("node " + this.id);
-        assert(this.left.parent == this, "left is completely drunk man (node " + this.left.id + ")");
-        this.left.lol();
-        assert(this.right.parent == this, "wow actually right is even more so (node " + this.right.id + ")");
-        this.right.lol();
-    }
 }
 
 class LeafData {
@@ -145,11 +147,6 @@ class LeafData {
     public draw(ctx: CanvasRenderingContext2D): void {
         this.bbox.draw(ctx);
     }
-
-    public lol(): void {
-        console.log("leaf " + this.id);
-        console.log(this.bbox);
-    }
 }
 
 class InsertInfo {
@@ -184,14 +181,6 @@ export class AABBTree implements Iterable<Collider> {
         this.fatFactor = fatFactor;
         this.root = null;
         this.colliders = new Map<Collider, LeafData>();
-    }
-
-    public lol(): void {
-        if (this.root == null) {
-            console.log("empty");
-        } else {
-            this.root.lol();
-        }
     }
 
     /**********************************************************************************************
@@ -364,26 +353,41 @@ export class AABBTree implements Iterable<Collider> {
         return r;
     }
 
-    /**
-     * @brief Returns a list of all colliders that are colliding with the one provided.
-     * collider itself is not included.
-     * @todo Wrong return type since we need a reference to the colliding object 
-     */
-    public query(collider: Collider): Collision[] {
-        let shape = shapeFromCollider(collider);
-        let bbox = shape.boundingBox();
+    // Private, internal method for querying
+    private _query(collider: Collider, r: Collision[]): void {
+        //let shape = shapeFromCollider(collider);
+        let bbox = bboxFromCollider(collider);
 
-        let r: Collision[] = [];
         for (const leaf of this.broadSearch(bbox)) {
             if (leaf.collider != collider) {
-                let collision = intersection(collider, shape, leaf.collider, shapeFromCollider(leaf.collider));
+                let collision = intersection(collider, leaf.collider);
                 if (collision != null) {
                     r.push(collision);
                 }
             }
         }
+    }
+
+    /**
+     * @brief Returns a list of all colliders that are colliding with the one provided.
+     * collider itself is not included.
+     */
+    public query(collider: Collider): Collision[] {
+        let r: Collision[] = [];
+        this._query(collider, r);
         return r;
-    } 
+    }
+
+    /**
+     * @brief Returns a list of all pairs of colliders that are colliding.
+     */
+    public queryAll(): Collision[] {
+        let r: Collision[] = [];
+        for (let collider of this) {
+            this._query(collider, r);
+        }
+        return r;
+    }
 
     /**********************************************************************************************
      * 

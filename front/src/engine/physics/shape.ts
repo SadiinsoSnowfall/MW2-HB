@@ -70,11 +70,6 @@ export interface Shape {
     boundingBox(): Rectangle;
 
     /**
-     * @brief Performs the transformation of a shape.
-     */
-    transform(t: Transform): Shape;
-
-    /**
      * @brief Returns the point that has the highest dot product with d.
      * Geometrically, such a point is the farthest in the direction of d.
      */

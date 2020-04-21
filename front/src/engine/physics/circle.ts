@@ -35,13 +35,6 @@ export class Circle implements Shape {
         );
     }
 
-    public transform(t: Transform): Circle {
-        // Wrong, of course: this.radius should be affected by the scale
-        // (and because the scale might affect differently the radius depending on the direction,
-        // it should return an ellipse rather than a circle)
-        return new Circle(t.multiplyVector(this.center), this.radius);
-    }
-
     public support(d: Vec2): Vec2 {
         if (d.eq(Vec2.Zero)) {
             // Vec2.Zero or this.center? Not sure
