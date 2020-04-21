@@ -66,7 +66,6 @@ export class Menu extends Element {
             ctx.drawImage(this.background, 0 , 0, this.size.x, this.size.y);
         }
        
-        
         ctx.setTransform(1, 0, 0, 1, this.pos.x, this.pos.y); // translate to [x, y]
 
         for (let i = 0; i < this.widgets.length; ++i) {

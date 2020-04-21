@@ -74,7 +74,13 @@ export async function init(scene: Scene) {
     sett_menu.setZIndex(2);
     sett_menu.setSizeXY(50, 150);
     sett_menu.setPositionXY(25, -240);
-    sett_menu.setBackground('#696969BB');
+    //sett_menu.setBackground('#696969BB');
+
+    const sett_back = new CoverShape("#696969BB").rounded(30).relativeTo(sett_menu);
+    sett_back.setSizeXY(50, 150);
+    sett_back.setPositionXY(0, 76);
+    sett_back.setAlignedMiddleX();
+    sett_menu.add(sett_back);
 
     const sm_music = new Button(mss.getSprite(1, 4)).relativeTo(sett_menu);
     sm_music.setPositionXY(0, -35);
