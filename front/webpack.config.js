@@ -63,6 +63,15 @@ module.exports = {
                     esModule: false,
                 },
             },
+            {
+                test: /\.(ttf|woff|woff2)$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 1,
+                    name: 'assets/[md5:hash:base64]',
+                    esModule: false,
+                },
+            },
         ],
     },
     resolve: {

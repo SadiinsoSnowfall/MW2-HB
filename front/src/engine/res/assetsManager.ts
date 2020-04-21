@@ -1,8 +1,17 @@
 import { assert } from "../utils";
 
+interface FontDef {
+    name: string,
+    ttf?: string,
+    woff?: string,
+    woff2?: string,
+    use: number
+}
+
 export namespace Assets {
     let assetsLoaded: boolean = false;
     let imgs = new Map<string, HTMLImageElement>();
+    let fonts = new Map<number, FontFace>();
 
     export function img(img: string): HTMLImageElement {
         const res = imgs.get(img);
@@ -10,10 +19,45 @@ export namespace Assets {
         return res as HTMLImageElement;
     }
 
+    /*
+    export function font(font: number): FontFace {
+        const res = fonts.get(font);
+        assert(res !== undefined, 'Assets#img undefined ressource');
+        return res as FontFace;
+    }
+    */
+
     export function load(): Promise<unknown> {
         assert(assetsLoaded == false, "More than one call to Assets#load");
         assetsLoaded = true;
-        return Promise.all(Object.values(Img).map(loadImage));
+
+        return Promise.all([
+            //Promise.all(Object.values(Font).map(loadFont)),
+            Promise.all(Object.values(Img).map(loadImage)),
+        ]);
+    }
+
+    export function loadFont(def: FontDef): Promise<void> {
+        return new Promise(resolve => {
+            let src: string[] = [];
+            if (def.ttf) {
+                src.push(`url('${def.ttf}') format('truetype')`);
+            }
+
+            if (def.woff) {
+                src.push(`url('${def.woff}') format('woff')`);
+            }
+
+            if (def.woff2) {
+                src.push(`url('${def.woff2}') format('woff2')`);
+            }
+
+            console.log(def.name + " " + src.join(','));
+            new FontFace(def.name, src.join(',')).load().then(ff => {
+                fonts.set(def.use, ff);
+                resolve();
+            });  
+        });
     }
 
     export function loadImage(url: string): Promise<void> {
@@ -28,6 +72,14 @@ export namespace Assets {
     }
 
 }
+
+export const Font = Object.freeze({
+    ANGRY_BIRD: {
+        name: "AngryBirds",
+        ttf: require('assets/fonts/AngryBirdsText-Regular.ttf'),
+        use: 0
+    },
+});
 
 export const Sound = Object.freeze({
     MAIN: require('assets/music/title_theme.ogg'),

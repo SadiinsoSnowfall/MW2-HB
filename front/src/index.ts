@@ -32,7 +32,6 @@ async function game() {
 
     Menus.main_menu.setVisible(true); // enable main menu
 
-
     //scene.addObject(createGround(675, 800, 1200, 50));
 
     // Polygon collision detection test
