@@ -17,7 +17,7 @@ async function game() {
     await Assets.load();// load assets      
     //LL.queryLevelList() // load level list (the server need to be running)
 
-    Menus.init();
+    await Menus.init();
     screen.setCursor(Assets.img(Img.CURSOR));
     screen.setUseCustomCursor(true); // set to true to enable custom cursor support
 

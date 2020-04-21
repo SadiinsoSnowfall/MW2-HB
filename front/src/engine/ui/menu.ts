@@ -78,7 +78,7 @@ export class Menu extends Element {
 
     public captureEvent(e: MouseEvent, type: number, pos: Vec2): boolean {
         // fast check against menu boundaries
-        if (!this.visible || !inRectVec2(pos, this.pos, this.size)) {
+        if (!this.visible || !this.doCaptureEvent || !inRectVec2(pos, this.pos, this.size)) {
             return false;
         }
 

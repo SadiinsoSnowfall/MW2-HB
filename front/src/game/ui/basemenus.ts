@@ -6,7 +6,7 @@ import { Settings, DefaultSettings } from "../../engine/res/settingsManager";
 export const main_menu = MenuManager.createMenu();
 export const sett_menu = MenuManager.createMenu();
 
-export function init() {
+export async function init() {
     const mss = SSManager.get(Img.BUTTONS, 5, 3);
     const playbtnsprite = SSManager.get(Img.PLAYBTN, 1, 1).getSprite(0, 0);
 
@@ -90,7 +90,7 @@ export function init() {
     sett_menu.add(sm_music);
 
     const sm_music_overlay = new CoverImg(mss.getSprite(1, 3));
-    sm_music_overlay.centerOn(sm_music).setZIndex(2).setVisible(false);
+    sm_music_overlay.centerOn(sm_music).setZIndex(2).setVisible(!(await Settings.get(DefaultSettings.SOUND_ENABLED, true)));
     sett_menu.add(sm_music_overlay);    
 
     const sm_info = new Button(mss.getSprite(2, 2)).relativeTo(sett_menu);
