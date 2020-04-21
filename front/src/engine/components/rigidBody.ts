@@ -1,7 +1,7 @@
 import { GameObject } from '../gameObject';
 import { Collider } from './collider';
 import { Vec2 } from '../utils';
-import { Shape, intersection } from '../physics';
+import { Shape } from '../physics';
 
 /**
  * ObjectComponent for physics simulation
@@ -24,6 +24,9 @@ export class RigidBody extends Collider {
     protected bounciness: number; 
     protected roughness: number; // used when calculating friction between two rigidbodies
 
+    protected impulse: Vec2;
+    protected static: boolean;
+
     constructor(object: GameObject, shape: Shape, mass: number, airFriction: number = 0.98, bounciness: number = 0, roughness: number = 1) {
         super(object, shape);
         this.mass = mass;
@@ -34,26 +37,52 @@ export class RigidBody extends Collider {
         this.prevPos = object.getPosition();
         this.velocity = Vec2.Zero.clone();
         this.force = Vec2.Zero.clone();
+
         this.angle = 0;
         this.prevAngle = -5;
         this.angularVelocity = 0;
+        this.static = false;
+
+        this.impulse = Vec2.Zero.clone();
+    }
+
+    public addImpulseXY(x: number, y: number): void {
+        this.impulse.x += x;
+        this.impulse.y += y;
+    }
+
+    public setStatic(state: boolean): void {
+        this.static = state;
+    }
+
+    public isStatic(): boolean {
+        return this.static;
     }
 
     public applyForce(force: Vec2): void {
         this.force.add(force);
     }
 
+    public applyImpulse(): void {
+        if (!this.impulse.isNull()) {
+            const tmp = this.object.getPosition();
+            this.object.move(this.impulse.x, this.impulse.y);
+            this.prevPos = tmp;
+            this.impulse.setXY(0, 0);
+        }
+    }
+
     public update(): boolean {
+        if (this.static) {
+            return false;
+        }
+
+        this.applyImpulse();
+
         // add gravity
         this.applyForce(Vec2.mul(RigidBody.gravity, this.mass));
 
         // check for collisions
-        const scene = this.object.getScene();
-        const collisions = scene.getTree().query(this);
-        if (collisions.length > 0) {
-            this.force.setXY(0, 0);
-            this.prevPos = this.object.getPosition();
-        }
 
         const curPos = this.object.getPosition();
 

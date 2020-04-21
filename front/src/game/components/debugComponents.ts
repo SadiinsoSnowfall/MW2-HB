@@ -201,6 +201,7 @@ export class CircleBehaviour extends Display {
     }
 }
 
+/*
 export class SquareCollider extends Collider {
     constructor(o: GameObject) {
         let square = new ConvexPolygon(
@@ -213,6 +214,7 @@ export class SquareCollider extends Collider {
         super(o, square);
     }
 }
+*/
 
 export class WandererBehaviour extends SpinnyBehaviour {
     private x: number;

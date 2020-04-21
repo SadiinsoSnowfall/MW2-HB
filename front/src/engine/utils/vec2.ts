@@ -120,6 +120,13 @@ export class Vec2 {
     }
 
     /**
+     * Returns true if the magnitude of the vector is 0
+     */
+    public isNull(): boolean {
+        return ((this.x == 0) && (this.y == 0));
+    }
+
+    /**
      * Set the values of the vector
      */
     public set(v: Vec2): Vec2 {

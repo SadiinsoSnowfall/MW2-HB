@@ -18,7 +18,7 @@ export class Scene {
     
     constructor() {
         this.tree = new AABBTree();
-        this.physics = new PhysicsEngine(this);
+        this.physics = new PhysicsEngine(this.tree);
     }
     
     /**

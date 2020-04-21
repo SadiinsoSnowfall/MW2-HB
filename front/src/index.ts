@@ -11,7 +11,7 @@ import { ShapeDisplay, CollisionDisplay } from './game/components/debugComponent
 import { createGround } from './game/prefabs/basePrefabs';
 import * as Menus from './game/ui/basemenus';
 import { Assets, Img } from './engine/res/assetsManager';
-import { Levels } from './engine/res';
+import { Levels, Inputs, MouseAction } from './engine/res';
 import { BlockPrefabs } from './game/prefabs/blockPrefabs';
 
 async function game() {
@@ -31,10 +31,15 @@ async function game() {
     scene.instantiate(FPSMetter, 600, 120);
     screen.setScene(scene);
 
-    Menus.main_menu.setVisible(true); // enable main menu
-    //Menus.lvl_menu.setVisible(true);
+    //Menus.main_menu.setVisible(true); // enable main menu
 
-    //scene.addObject(createGround(675, 800, 1200, 50));
+    Inputs.subscribeMouse(MouseAction.LEFT_CLICK, p => {
+        scene.instantiate(BlockPrefabs.wooden_cube_hl_2, p.x, p.y);
+    });
+
+    scene.addObject(createGround(675, 700, 1200, 50));
+
+    /*
 
     // Polygon collision detection test
     const offset = 500;
@@ -140,5 +145,6 @@ async function game() {
     test(p03, p06, true);
     test(p04, p06, true);
     test(p05, p06, false);
+    */
 }
 game();

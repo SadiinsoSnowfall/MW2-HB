@@ -1,6 +1,7 @@
 import { GameObject } from "../../engine/gameObject";
-import { Display, Collider } from "../../engine/components";
-import { Rectangle, ConvexPolygon } from "../../engine/physics";
+import { Display } from "../../engine/components";
+import { Collider } from '../../engine/components/collider';
+import { ConvexPolygon } from "../../engine/physics";
 import { Vec2 } from "../../engine/utils";
 
 export type ParticleCreator = (x: number, y: number, amount: number, amplitude: number, lifespan?: number) => GameObject;
@@ -37,5 +38,6 @@ export function createGround(x: number, y: number, w: number, h: number): GameOb
             new Vec2(w, -h)
         ]
     )));
+
     return obj;
 }

@@ -1,5 +1,5 @@
 import { Prefab } from "../../engine/prefab";
-import { SpinnyDisplay, SpinnyBehaviour, WigglyDisplay, WigglyBehaviour, FPSMetterDisplay, ImageDisplay, SpriteDisplay, YoloSpritesheetDisplay, CircleBehaviour, SquareCollider, WandererBehaviour } from "../components/debugComponents";
+import { SpinnyDisplay, SpinnyBehaviour, WigglyDisplay, WigglyBehaviour, FPSMetterDisplay, ImageDisplay, SpriteDisplay, YoloSpritesheetDisplay, CircleBehaviour, WandererBehaviour } from "../components/debugComponents";
 import { Alignment, Style, Spritesheet } from "../../engine/utils";
 import { Scene } from "../../engine/scene";
 import { Assets, Img } from "../../engine/res";
@@ -49,6 +49,7 @@ export const dicedice = new Prefab(obj => {
     obj.setBehaviour(new CircleBehaviour(obj, 1));
 });
 
+/*
 export const square = new Prefab(obj => {
     obj.setDisplay(new SpinnyDisplay(obj, "#77FF77", 50));
     obj.setCollider(new SquareCollider(obj));
@@ -60,6 +61,7 @@ export const wanderer = new Prefab(obj => {
     obj.setCollider(new SquareCollider(obj));
     obj.setBehaviour(new WandererBehaviour(obj, 0.01));
 });
+*/
 
 /*
  oui c'est dégeulasse, j'ai pas trouvé de moyen de mettre des paramètres aux prefab
