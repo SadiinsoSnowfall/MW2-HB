@@ -11,6 +11,7 @@ export class TextBox extends Widget {
         const tf = TextFormat.using(a, s).setFont('AngryBirds');
         this.text = new Text(tf, message);
         this.init = false;
+        this.doCaptureEvent = false;
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {

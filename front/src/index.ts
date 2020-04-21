@@ -4,7 +4,6 @@ import { screen } from './engine/screen';
 import { Scene } from './engine/scene';
 import { FPSMetter} from './game/prefabs/debugPrefabs';
 import { assert, Vec2 } from './engine/utils';
-import * as BP from './game/prefabs/blockPrefabs';
 import { GameObject } from './engine/gameObject';
 import { ConvexPolygon, intersection, Circle } from './engine/physics';
 import { Collider } from './engine/components';
@@ -12,14 +11,12 @@ import { ShapeDisplay, CollisionDisplay } from './game/components/debugComponent
 import { createGround } from './game/prefabs/basePrefabs';
 import * as Menus from './game/ui/basemenus';
 import { Assets, Img } from './engine/res/assetsManager';
+import { Levels } from './engine/res';
+import { BlockPrefabs } from './game/prefabs/blockPrefabs';
 
 async function game() {
-    await Assets.load();// load assets      
-    //LL.queryLevelList() // load level list (the server need to be running)
-
-    await Menus.init();
-    screen.setCursor(Assets.img(Img.CURSOR));
-    screen.setUseCustomCursor(true); // set to true to enable custom cursor support
+    await Assets.load();// load assets
+    BlockPrefabs.init();
 
     const ctx = screen.getContext();
     ctx.fillStyle = 'white';
@@ -27,10 +24,15 @@ async function game() {
 
     const scene = new Scene();
 
+    await Menus.init(scene);
+    screen.setCursor(Assets.img(Img.CURSOR));
+    screen.setUseCustomCursor(true); // set to true to enable custom cursor support
+
     scene.instantiate(FPSMetter, 600, 120);
     screen.setScene(scene);
 
     Menus.main_menu.setVisible(true); // enable main menu
+    //Menus.lvl_menu.setVisible(true);
 
     //scene.addObject(createGround(675, 800, 1200, 50));
 

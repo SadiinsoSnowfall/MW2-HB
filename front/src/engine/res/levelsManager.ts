@@ -21,9 +21,12 @@ export namespace Levels {
         hash: string
     }
 
+    let lvlQueryCalled: boolean = false;
     let levelList: LevelEntry[] = [];
 
     export async function queryLevelList(): Promise<LevelEntry[]> {
+        lvlQueryCalled = true;
+        
         // query list
         levelList = await http.json<LevelEntry[]>(serverURL + '/levels');
         
@@ -36,6 +39,18 @@ export namespace Levels {
         }
 
         return levelList;
+    }
+
+    export function querylvlCalled(): boolean {
+        return lvlQueryCalled;
+    }
+
+    export async function getOrQueryLevelList(): Promise<LevelEntry[]> {
+        if (lvlQueryCalled) {
+            return levelList;
+        } else {
+            return await queryLevelList();
+        }
     }
 
     export function getLevelList(): LevelEntry[] {

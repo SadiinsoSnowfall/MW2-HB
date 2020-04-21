@@ -250,8 +250,6 @@ export const Sound = Object.freeze({
 });
 
 export const Img = Object.freeze({
-    LEVELS_ICON: require('assets/images/blocks/levels_icon.png'),
-
     /**
      * BIRDS
      */
@@ -322,5 +320,6 @@ export const Img = Object.freeze({
     CURSOR: require('assets/images/menu/cursor.png'),
     POINTER: require('assets/images/menu/pointer.png'),
     SPLASH: require('assets/images/menu/splash.jpg'),
+    LEVELS_ICON: require('assets/images/menu/levels_icon.png'),
      
 });

@@ -23,6 +23,11 @@ export abstract class Widget extends Element {
         return this;
     }
 
+    public centerOn(w: Widget): Widget {
+        this.setPosition(w.getPosition());
+        return this;
+    }
+
     /**
      * Set the widget position
      * if x is negative, it will take the value of menu.width + x (like in python list slices)
