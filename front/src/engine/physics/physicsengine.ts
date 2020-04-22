@@ -66,13 +66,13 @@ export class PhysicsEngine {
 
             if (!oa_static) {
                 const rb = oa.getCollider() as RigidBody;
-                const ci = 0.9// / rb.contacts;
+                const ci = 0.9 / rb.contacts;
                 rb.addImpulseXY(impulse.x * ci, impulse.y * ci);
             }
 
             if (!ob_static) {
                 const rb = ob.getCollider() as RigidBody;
-                const ci = 0.9// / rb.contacts;
+                const ci = 0.9 / rb.contacts;
                 rb.addImpulseXY(-impulse.x * ci, -impulse.y * ci);
             }
         }
