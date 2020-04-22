@@ -387,6 +387,7 @@ export class AABBTree implements Iterable<Collider> {
             if (collider.object.hasMoved()) {
                 this._query(collider, r, set);
             }
+            collider.object.resetMoved();
         }
         return r;
     }
