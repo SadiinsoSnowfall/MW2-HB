@@ -2,11 +2,6 @@ import { Shape, Rectangle, Collision, intersection } from "./";
 import { Collider } from '../components';
 import { assert, Vec2 } from "../utils";
 
-/*function shapeFromCollider(collider: Collider): Shape {
-    let transform = collider.object.getTransform();
-    return collider.getShape().transform(transform);
-}*/
-
 function bboxFromCollider(collider: Collider): Rectangle {
     let b = collider.getShape().boundingBox();
     let t = collider.object.getTransform();
@@ -142,7 +137,7 @@ class LeafData {
     }
 
     public broadSearch(rect: Rectangle, r: LeafData[]): void {
-        if (this.bbox.intersects(rect)) {
+        if (this.collider.object.isEnabled() && this.bbox.intersects(rect)) {
             r.push(this);
         }
     }
@@ -282,10 +277,6 @@ export class AABBTree implements Iterable<Collider> {
         } else {
             // Looking for the best sibling to pair leaf with
             let r = new InsertInfo(this.root, leaf);
-            /*let e: [Node, number] | undefined;
-            while ((e = r.queue.shift()) != undefined) {
-                e[0].pickBest(r, e[1]);
-            }*/
             if (this.root != null) {
                 this.root.pickBest(r, 0);
             }
@@ -361,12 +352,10 @@ export class AABBTree implements Iterable<Collider> {
     }
 
     // Private, internal method for querying
-    private _query(collider: Collider, r: Collision[]): void {
-        //let shape = shapeFromCollider(collider);
+    private _query(collider: Collider, r: Collision[], set: Set<Collider>): void {
         let bbox = bboxFromCollider(collider);
-
         for (const leaf of this.broadSearch(bbox)) {
-            if (leaf.collider != collider) {
+            if (!set.has(leaf.collider)) {
                 let collision = intersection(collider, leaf.collider);
                 if (collision != null) {
                     r.push(collision);
@@ -381,7 +370,9 @@ export class AABBTree implements Iterable<Collider> {
      */
     public query(collider: Collider): Collision[] {
         let r: Collision[] = [];
-        this._query(collider, r);
+        let set = new Set<Collider>();
+        set.add(collider);
+        this._query(collider, r, set);
         return r;
     }
 
@@ -390,8 +381,12 @@ export class AABBTree implements Iterable<Collider> {
      */
     public queryAll(): Collision[] {
         let r: Collision[] = [];
+        let set = new Set<Collider>();
         for (let collider of this) {
-            this._query(collider, r);
+            set.add(collider);
+            if (collider.object.hasMoved()) {
+                this._query(collider, r, set);
+            }
         }
         return r;
     }
@@ -413,9 +408,7 @@ export class AABBTree implements Iterable<Collider> {
      * @brief Updates all contained objects and adapts the tree.
      */
     public update(): void {
-        for (const o of this.colliders) {
-            let collider: Collider = o[0];
-            let leaf: LeafData = o[1];
+        this.colliders.forEach((leaf, collider, map) => {
             if (collider.object.update()) {
                 // The object has moved
                 let bbox = bboxFromCollider(collider);
@@ -427,8 +420,12 @@ export class AABBTree implements Iterable<Collider> {
                     // We could also test if the leaf's bbox is too large
                     // (leading to poor performance)
                 }
+            } else if (collider.object.isEnabled()) {
+                // If the object has been disabled, it must be removed
+                // Seems safe: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/forEach#Description
+                this.remove(collider);
             }
-        }
+        });
     }
 
     /**

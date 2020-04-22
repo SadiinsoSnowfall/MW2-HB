@@ -84,9 +84,9 @@ export class RigidBody extends Collider {
         }
     }
 
-    public update(): boolean {
+    public update(): void {
         if (this.static) {
-            return false;
+            return;
         }
 
         // add gravity
@@ -111,8 +111,6 @@ export class RigidBody extends Collider {
         if (this.angularVelocity !== 0) {
             this.object.rotateDegrees(this.angularVelocity);
         }
-
-        return true;
     }
 
     public getMass(): number {

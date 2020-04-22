@@ -116,19 +116,11 @@ export class Scene {
         for (let i = 0; i < this.background.length; ++i) {
             this.background[i].draw(ctx);
         }
-        
-        let toRem: Collider[] = [];
 
         for (const c of this.tree) {
             if (c.object.isEnabled()) {
                 c.object.draw(ctx);               
-            } else {
-                toRem.push(c);
             }
-        }
-
-        for (const tr of toRem) {
-            this.tree.remove(tr);
         }
         
         for (let i = 0; i < this.foreground.length; ++i) {

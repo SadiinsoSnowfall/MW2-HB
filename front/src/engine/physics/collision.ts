@@ -5,14 +5,14 @@ import { Shape, Edge, drawCross } from ".";
 
 export class Collision {
     /**
-     * @brief One of the objects involved in the collision.
+     * @brief One of the colliders involved in the collision.
      */
-    private objectA: GameObject;
+    private colliderA: Collider;
 
     /**
-     * @brief The other object involved in the collision.
+     * @brief The other collider involved in the collision.
      */
-    private objectB: GameObject;
+    private colliderB: Collider;
 
     /**
      * @brief The points of contact on objectA, expressed in its coordinate system.
@@ -47,16 +47,16 @@ export class Collision {
      * @param penetration Penetration depth
      */
     constructor(colliderA: Collider, colliderB: Collider, contacts: Vec2[], normal: Vec2, penetration: number) {
-        this.objectA = colliderA.object;
-        this.objectB = colliderB.object;
+        this.colliderA = colliderA;
+        this.colliderB = colliderB;
 
         /*this.contactsA = this.objectA.getTransform().revertMultiple(contacts);
         this.contactsB = this.objectB.getTransform().revertMultiple(contacts);*/
 
         this.contactsA = [];
         this.contactsB = [];
-        let ta = this.objectA.getTransform();
-        let tb = this.objectB.getTransform();
+        let ta = colliderA.object.getTransform();
+        let tb = colliderB.object.getTransform();
         for (let p of contacts) {
             this.contactsA.push(ta.multiplyVector(p));
             this.contactsB.push(tb.multiplyVector(p));
@@ -70,22 +70,30 @@ export class Collision {
      * @brief Returns true if o is objectA.
      */
     public isA(o: GameObject): boolean {
-        return o == this.objectA;
+        return o == this.colliderA.object;
     }
 
-    public getObjectA() {
-        return this.objectA;
+    public getColliderA(): Collider {
+        return this.colliderA;
     }
 
-    public getObjectB() {
-        return this.objectB;
+    public getObjectA(): GameObject {
+        return this.colliderA.object;
     }
 
-    public getContactsOnA() {
+    public getColliderB(): Collider {
+        return this.colliderB;
+    }
+
+    public getObjectB(): GameObject {
+        return this.colliderB.object;
+    }
+
+    public getContactsOnA(): Vec2[] {
         return this.contactsA;
     }
 
-    public getContactsOnB() {
+    public getContactsOnB(): Vec2[] {
         return this.contactsB;
     }
 
@@ -94,14 +102,14 @@ export class Collision {
      * @param obj Assumed to be either objectA or objectB.
      */
     public getContacts(obj: GameObject): Vec2[] {
-        return (obj == this.objectA)? this.contactsA : this.contactsB;
+        return (obj == this.colliderA.object)? this.contactsA : this.contactsB;
     }
 
-    public getNormal() {
+    public getNormal(): Vec2 {
         return this.normal;
     }
 
-    public getPenetrationDepth() {
+    public getPenetrationDepth(): number {
         return this.penetration;
     }
 
@@ -110,7 +118,7 @@ export class Collision {
      * To be called only once.
      */
     public separate(): void {
-        this.objectA.move(this.normal.x * this.penetration, this.normal.y * this.penetration);
+        this.colliderA.object.move(this.normal.x * this.penetration, this.normal.y * this.penetration);
     }
 
     /**
