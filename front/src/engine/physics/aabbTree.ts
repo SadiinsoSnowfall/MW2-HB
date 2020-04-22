@@ -2,11 +2,6 @@ import { Shape, Rectangle, Collision, intersection } from "./";
 import { Collider } from '../components';
 import { assert, Vec2 } from "../utils";
 
-/*function shapeFromCollider(collider: Collider): Shape {
-    let transform = collider.object.getTransform();
-    return collider.getShape().transform(transform);
-}*/
-
 function bboxFromCollider(collider: Collider): Rectangle {
     let b = collider.getShape().boundingBox();
     let t = collider.object.getTransform();
@@ -357,12 +352,10 @@ export class AABBTree implements Iterable<Collider> {
     }
 
     // Private, internal method for querying
-    private _query(collider: Collider, r: Collision[]): void {
-        //let shape = shapeFromCollider(collider);
+    private _query(collider: Collider, r: Collision[], set: Set<Collider>): void {
         let bbox = bboxFromCollider(collider);
-
         for (const leaf of this.broadSearch(bbox)) {
-            if (leaf.collider != collider) {
+            if (!set.has(leaf.collider)) {
                 let collision = intersection(collider, leaf.collider);
                 if (collision != null) {
                     r.push(collision);
@@ -377,7 +370,9 @@ export class AABBTree implements Iterable<Collider> {
      */
     public query(collider: Collider): Collision[] {
         let r: Collision[] = [];
-        this._query(collider, r);
+        let set = new Set<Collider>();
+        set.add(collider);
+        this._query(collider, r, set);
         return r;
     }
 
@@ -386,9 +381,11 @@ export class AABBTree implements Iterable<Collider> {
      */
     public queryAll(): Collision[] {
         let r: Collision[] = [];
+        let set = new Set<Collider>();
         for (let collider of this) {
+            set.add(collider);
             if (collider.object.hasMoved()) {
-                this._query(collider, r);
+                this._query(collider, r, set);
             }
         }
         return r;
