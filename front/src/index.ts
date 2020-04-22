@@ -4,7 +4,7 @@ import { Collider, Display } from './engine/components';
 import { screen } from './engine/screen';
 import { Scene } from './engine/scene';
 import { FPSMetter} from './game/prefabs/debugPrefabs';
-import { assert, Vec2 } from './engine/utils';
+import { assert, Vec2, range } from './engine/utils';
 import { GameObject } from './engine/gameObject';
 import { ConvexPolygon, intersection, Circle, drawCross } from './engine/physics';
 import { createGround } from './game/prefabs/basePrefabs';
@@ -36,6 +36,16 @@ async function game() {
     Inputs.subscribeMouse(MouseAction.LEFT_CLICK, p => {
         scene.instantiate(BlockPrefabs.wooden_cube_hl_2, p.x, p.y);
     });
+
+
+    Inputs.subscribeMouse(MouseAction.RIGHT_CLICK, p => {
+        for (let x of range(5)) {
+            for (let y of range(4)) {
+                scene.instantiate(BlockPrefabs.wooden_cube_hl_2, x * 120 + 600, y * 120 + 200);
+            }
+        }
+    });
+
     Inputs.subscribe("a", () => {
         let tree = scene.getTree();
         console.log("A pressed");
