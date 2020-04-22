@@ -18,7 +18,6 @@ function bboxFromCollider(collider: Collider): Rectangle {
         t.multiplyVector(new Vec2(b.position.x + b.width, b.position.y + b.height))
     ];
     return Rectangle.bound(points);
-    //return shapeFromCollider(collider).boundingBox();
 }
 
 let lastId = 0;
@@ -107,6 +106,10 @@ class NodeData {
         this.right.draw(ctx);
         this.bbox.draw(ctx);
     }
+
+    public count(): number {
+        return this.left.count() + this.right.count();
+    }
 }
 
 class LeafData {
@@ -146,6 +149,10 @@ class LeafData {
 
     public draw(ctx: CanvasRenderingContext2D): void {
         this.bbox.draw(ctx);
+    }
+
+    public count(): number {
+        return 1;
     }
 }
 
@@ -432,5 +439,12 @@ export class AABBTree implements Iterable<Collider> {
         if (this.root != null) {
             this.root.draw(ctx);
         }
+    }
+
+    /**
+     * @brief Returns the number of leaves and nodes in the tree.
+     */
+    private count(): number {
+        return (this.root == null)? 0 : this.root.count();
     }
 }

@@ -248,32 +248,16 @@ export class ConvexPolygon implements Shape {
         ctx.fill();
     }
 
-    /*
+    
     // Unused
-    private minkowskiDifference(o: ConvexPolygon): ConvexPolygon {
+    public minkowskiDifference(o: ConvexPolygon): ConvexPolygon {
         let vertices: Vec2[] = [];
         for (const tp of this.vertices) {
             for (const op of o.vertices) {
-                let sub = Vec2.sub(tp, op);
+                let sub = Vec2.sub(Vec2.add(tp, this.center), Vec2.add(op, o.center));
                 vertices.push(sub);
             }
         }
         return quickHull(vertices);
     }
-
-    // Unused
-    private intersectConvex(o: ConvexPolygon): CollisionData | null {
-        let minkowski = this.minkowskiDifference(o);
-        // Since the minimum distance between minkowski and (0, 0) is the distance between the two polygons,
-        // we could change the condition to consider close enough polygons to be intersecting.
-        if (minkowski.pointIn(Vec2.Zero)) {
-            // The two polygons intersect
-            let inter = new Vec2(0, 0); //TODO give intersection point
-            return new CollisionData(inter);
-        } else {
-            // No intersection
-            return null;
-        }
-    }
-    */
 }

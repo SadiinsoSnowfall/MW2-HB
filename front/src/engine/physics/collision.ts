@@ -49,12 +49,19 @@ export class Collision {
     constructor(colliderA: Collider, colliderB: Collider, contacts: Vec2[], normal: Vec2, penetration: number) {
         this.objectA = colliderA.object;
         this.objectB = colliderB.object;
-        // No way this works
-        // There are systems: world, A, B, and A-B
-        // The points are given in A-B, and revert translates from either A or B to world
-        // So it can't work this way
-        this.contactsA = this.objectA.getTransform().revertMultiple(contacts);
-        this.contactsB = this.objectB.getTransform().revertMultiple(contacts);
+
+        /*this.contactsA = this.objectA.getTransform().revertMultiple(contacts);
+        this.contactsB = this.objectB.getTransform().revertMultiple(contacts);*/
+
+        this.contactsA = [];
+        this.contactsB = [];
+        let ta = this.objectA.getTransform();
+        let tb = this.objectB.getTransform();
+        for (let p of contacts) {
+            this.contactsA.push(ta.multiplyVector(p));
+            this.contactsB.push(tb.multiplyVector(p));
+        }
+
         this.normal = normal;
         this.penetration = penetration;
     }
@@ -121,31 +128,38 @@ export class Collision {
     }
 }
 
-// Support function of the Minkowski difference of a and b's shapes
 // http://www.dtecta.com/papers/gdc2001depth.pdf (page 5)
-function support(a: Collider, b: Collider, d: Vec2): Vec2 {
-    function supportShape(s: Collider, d2: Vec2): Vec2 {
-        let shape = s.getShape();
-        let transform = s.object.getTransform();
-        let p = shape.support(transform.multiplyTransposed(d2));
-        return transform.multiplyVector(p);
-    }
-
-    return Vec2.sub(supportShape(a, d), supportShape(b, Vec2.neg(d))); // s1.support(d) - s2.support(-d);
+function supportShape(s: Collider, d: Vec2): Vec2 {
+    let shape = s.getShape();
+    let transform = s.object.getTransform();
+    let p = shape.support(transform.multiplyTransposed(d));
+    return transform.multiplyVector(p);
 }
+
+// Support function of the Minkowski difference of a and b's shapes
+function support(a: Collider, b: Collider, d: Vec2): Vec2 {
+    return Vec2.sub(supportShape(a, d), supportShape(b, Vec2.neg(d))); // s1.support(d) - s2.support(-d)
+}
+
+function pick(c: Collider): Vec2 {
+    let transform = c.object.getTransform();
+    let p = c.getShape().pick();
+    return transform.multiplyVector(p);
+}
+
+let gjkTolerance = 0.00001;
 
 // Implementation of GJK
 // https://blog.hamaluik.ca/posts/building-a-collision-engine-part-1-2d-gjk-collision-detection/
 // Returns a triangle containing the origin if there is a collision, an empty list otherwise
 function gjk(a: Collider, b: Collider): Vec2[] {
-    let s1 = a.getShape();
-    let s2 = b.getShape();
     let simplex: Vec2[] = [];
     let d = Vec2.Zero;
     while (true) {
         switch (simplex.length) {
             case 0: {
-                d = Vec2.sub(s1.pick(), s2.pick());
+                //d = support(a, b, new Vec2(1, 0));
+                d = Vec2.sub(pick(a), pick(b));
                 break;
             }
 
@@ -195,10 +209,11 @@ function gjk(a: Collider, b: Collider): Vec2[] {
 
         // Add a new support if possible
         let newVertex = support(a, b, d);
-        if (d.dot(newVertex) < 0) {
+        if (d.dot(newVertex) <= 0) {
             // The two shapes are not intersecting
             return [];
         }
+        //if (Vec2.sub(newVertex, d), )
         simplex.push(newVertex);
     }
 }
