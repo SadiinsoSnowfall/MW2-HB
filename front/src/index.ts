@@ -41,7 +41,7 @@ async function game() {
     Inputs.subscribeMouse(MouseAction.RIGHT_CLICK, p => {
         for (let x of range(5)) {
             for (let y of range(4)) {
-                scene.instantiate(BlockPrefabs.wooden_cube_hl_2, x * 120 + 600, y * 120 + 200);
+                scene.instantiate(BlockPrefabs.wooden_ball_md_2, x * 120 + 600, y * 120 + 200);
             }
         }
     });
