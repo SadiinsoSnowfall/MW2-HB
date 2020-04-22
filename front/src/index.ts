@@ -41,41 +41,7 @@ async function game() {
     Inputs.subscribeMouse(MouseAction.RIGHT_CLICK, p => {
         for (let x of range(5)) {
             for (let y of range(4)) {
-                scene.instantiate(BlockPrefabs.wooden_cube_hl_2, x * 120 + 600, y * 120 + 200);
-            }
-        }
-    });
-
-    Inputs.subscribe("a", () => {
-        let tree = scene.getTree();
-        console.log("A pressed");
-        for (let c of tree) {
-            console.log("Position: " + c.object.getPosition());
-
-            for (let c2 of tree) {
-                if (c != c2) {
-                    let collision = intersection(c, c2);
-                    if (collision != null) {
-                        let o = new GameObject(0, 0);
-                        o.setDisplay(new CollisionDisplay(o, collision));
-                        scene.addObject(o);
-
-                        let o2 = new GameObject(0, 0);
-                        let shape1 = (c.getShape() as ConvexPolygon).transform(c.object.getTransform());
-                        let shape2 = (c2.getShape() as ConvexPolygon).transform(c2.object.getTransform());
-                        let shape = shape1.minkowskiDifference(shape2);
-                        o2.setDisplay(new ShapeDisplay(o2, shape, "#000000"));
-                        scene.addObject(o2);
-
-                        let o3 = new GameObject(0, 0);
-                        o3.setDisplay(new ShapeDisplay(o3, shape1, "#FF7777"));
-                        scene.addObject(o3);
-
-                        let o4 = new GameObject(0, 0);
-                        o4.setDisplay(new ShapeDisplay(o4, shape2, "#7777FF"));
-                        scene.addObject(o4);
-                    }
-                }
+                scene.instantiate(BlockPrefabs.wooden_ball_md_2, x * 120 + 600, y * 120 + 200);
             }
         }
     });
