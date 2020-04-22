@@ -7,6 +7,7 @@ export class GameObject {
 
     public readonly id: number;
     private enabled: boolean;
+    private moved: boolean;
 
     private transform: Transform;
 
@@ -26,6 +27,7 @@ export class GameObject {
         this.transform = Transform.Identity.center(x, y);
         this.enabled = true;
         this.id = GameObject.currentId++;
+        this.moved = false;
     }
 
     /**********************************************************************************************
@@ -34,12 +36,36 @@ export class GameObject {
      * 
      *********************************************************************************************/
 
+    /**
+     * @brief Returns whether or not the object is enabled.
+     */
     public isEnabled(): boolean {
         return this.enabled;
     }
 
     public setEnabled(enabled: boolean): void {
+        if (enabled && !this.enabled) {
+            this.moved = true;
+        }
         this.enabled = enabled;
+    }
+
+    /**
+     * @brief Returns whether or not the object has moved since the last frame.
+     * Objects that should not be tested for collision will never return true
+     * (disabled objects and objects without collider for example).
+     */
+    public hasMoved(): boolean {
+        return this.enabled && this.collider != null && this.moved;
+    }
+
+    /**
+     * @brief Makes hasMoved return false until the object is moved again.
+     * This method is meant to be called by the physics engine at the end of a frame.
+     * @see hasMoved
+     */
+    public resetMoved(): void {
+        this.moved = false;
     }
 
     public getScene(): Scene {
@@ -64,6 +90,7 @@ export class GameObject {
 
     public setCollider(collider?: Collider): void {
         this.collider = collider;
+        this.moved = true;
     }
 
     public getBehaviour(): Behaviour | undefined {
@@ -74,8 +101,15 @@ export class GameObject {
         this.behaviour = behaviour;
     }
 
+    /**
+     * @brief Updates the object and all of its components.
+     * The returned value is that of hasMoved.
+     */
     public update(): boolean {
-        return (this.behaviour?.update() || this.collider?.update() || this.display?.update()) || false;
+        this.behaviour?.update();
+        this.collider?.update();
+        this.display?.update();
+        return this.hasMoved();
     }
 
     public draw(ctx: CanvasRenderingContext2D) {
@@ -127,6 +161,7 @@ export class GameObject {
      */
     public move(x: number, y: number): void {
         this.transform = this.transform.move(x, y);
+        this.moved = true;
     }
 
     /**
@@ -136,6 +171,7 @@ export class GameObject {
      */
     public translate(x: number, y: number): void {
         this.transform = this.transform.translate(x, y);
+        this.moved = true;
     }
 
     /**
@@ -145,6 +181,7 @@ export class GameObject {
      */
     public scale(x: number, y: number): void {
         this.transform = this.transform.scale(x, y);
+        this.moved = true;
     }
 
     /**
@@ -154,6 +191,7 @@ export class GameObject {
      */
     public rotateRadians(angle: number): void {
         this.transform = this.transform.rotateRadians(angle);
+        this.moved = true;
     }
 
     /**
@@ -163,6 +201,7 @@ export class GameObject {
      */
     public rotateDegrees(angle: number): void {
         this.transform = this.transform.rotateDegrees(angle);
+        this.moved = true;
     }
 
     /**
@@ -170,5 +209,6 @@ export class GameObject {
      */
     public shear(x: number, y: number): void {
         this.transform = this.transform.shear(x, y);
+        this.moved = true;
     }
 }

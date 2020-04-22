@@ -133,7 +133,7 @@ export class ParticleDisplay extends Display {
         }
     }
 
-    public update(): boolean {
+    public update(): void {
         // update positions
         for (let i = 0; i < this.data.length; ++i) {
             this.data[i] += this.delta[i];
@@ -150,8 +150,6 @@ export class ParticleDisplay extends Display {
         if (finished) {
             this.object.setEnabled(false);
         }
-
-        return false;
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {

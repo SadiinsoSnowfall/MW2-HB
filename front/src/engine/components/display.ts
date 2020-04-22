@@ -10,9 +10,7 @@ export class Display extends ObjectComponent {
         super(object);
     }
 
-    public update(): boolean {
-        return false;
-    }
+    public update(): void {}
 
     public draw(ctx: CanvasRenderingContext2D): void {}
 }

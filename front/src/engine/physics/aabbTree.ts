@@ -142,7 +142,7 @@ class LeafData {
     }
 
     public broadSearch(rect: Rectangle, r: LeafData[]): void {
-        if (this.bbox.intersects(rect)) {
+        if (this.collider.object.isEnabled() && this.bbox.intersects(rect)) {
             r.push(this);
         }
     }
@@ -282,10 +282,6 @@ export class AABBTree implements Iterable<Collider> {
         } else {
             // Looking for the best sibling to pair leaf with
             let r = new InsertInfo(this.root, leaf);
-            /*let e: [Node, number] | undefined;
-            while ((e = r.queue.shift()) != undefined) {
-                e[0].pickBest(r, e[1]);
-            }*/
             if (this.root != null) {
                 this.root.pickBest(r, 0);
             }
@@ -391,7 +387,9 @@ export class AABBTree implements Iterable<Collider> {
     public queryAll(): Collision[] {
         let r: Collision[] = [];
         for (let collider of this) {
-            this._query(collider, r);
+            if (collider.object.hasMoved()) {
+                this._query(collider, r);
+            }
         }
         return r;
     }
@@ -413,9 +411,7 @@ export class AABBTree implements Iterable<Collider> {
      * @brief Updates all contained objects and adapts the tree.
      */
     public update(): void {
-        for (const o of this.colliders) {
-            let collider: Collider = o[0];
-            let leaf: LeafData = o[1];
+        this.colliders.forEach((leaf, collider, map) => {
             if (collider.object.update()) {
                 // The object has moved
                 let bbox = bboxFromCollider(collider);
@@ -427,8 +423,12 @@ export class AABBTree implements Iterable<Collider> {
                     // We could also test if the leaf's bbox is too large
                     // (leading to poor performance)
                 }
+            } else if (collider.object.isEnabled()) {
+                // If the object has been disabled, it must be removed
+                // Seems safe: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/forEach#Description
+                this.remove(collider);
             }
-        }
+        });
     }
 
     /**

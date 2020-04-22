@@ -18,9 +18,7 @@ export class Collider extends ObjectComponent {
         this.shape = shape;
     }
 
-    public update(): boolean {
-        return false;
-    }
+    public update(): void {}
 
     /**
      * @brief Returns the hitbox of this collider.

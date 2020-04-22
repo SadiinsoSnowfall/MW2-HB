@@ -20,14 +20,13 @@ export class WigglyBehaviour extends Behaviour {
         this.last = 1;
     }
 
-    public update(): boolean {
+    public update(): void {
         this.object.scale(1 / this.last, 1/* / this.last*/);
         this.object.rotateRadians(this.rotation);
         let factor = (Math.cos(this.updates / WigglyBehaviour.smooth)) / WigglyBehaviour.variance + 1;
         this.object.scale(factor, /*factor*/1);
         this.last = factor;
         this.updates++;
-        return true;
     }
 }
 
@@ -65,9 +64,8 @@ export class SpinnyBehaviour extends Behaviour {
         o.scale(2, 0.5);
     }
 
-    public update(): boolean {
+    public update(): void {
         this.object.rotateRadians(this.rotation);
-        return true;
     }
 }
 
@@ -226,10 +224,9 @@ export class WandererBehaviour extends SpinnyBehaviour {
         this.y = (Math.random() - 0.5) * 20;
     }
 
-    public update(): boolean {
+    public update(): void {
         super.update();
         this.object.translate(this.x, this.y);
-        return true;
     }
 }
 
