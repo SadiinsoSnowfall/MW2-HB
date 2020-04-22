@@ -152,6 +152,10 @@ export class Vec2 {
         return new Vec2(this.x, this.y);
     }
 
+    public sum(): number {
+        return this.x + this.y;
+    }
+
     /*
         STATIC FUNCTIONS
     */
@@ -303,5 +307,12 @@ export class Vec2 {
     public static tripleProduct(a: Vec2, b: Vec2, c: Vec2): Vec2 {
         let f = a.x * b.y - a.y * b.x;
         return new Vec2(-f * c.y, f * c.x);
+    }
+
+    /**
+     * Return the dot product of the two vectors
+     */
+    public static dot(a: Vec2, b: Vec2): number {
+        return a.x * b.x + a.y * b.y;
     }
 }

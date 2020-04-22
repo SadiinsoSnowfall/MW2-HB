@@ -19,17 +19,20 @@ export class RigidBody extends Collider {
     protected angle: number;
     protected prevAngle: number;
 
-    protected airFriction: number;
-    protected mass: number;
-    protected bounciness: number; 
-    protected roughness: number; // used when calculating friction between two rigidbodies
+    public airFriction: number;
+    public mass: number;
+    public inverseMass: number;
+    public bounciness: number; 
+    public roughness: number; // used when calculating friction between two rigidbodies
 
-    protected impulse: Vec2;
+    public impulse: Vec2;
     protected static: boolean;
+    public contacts: number;
 
     constructor(object: GameObject, shape: Shape, mass: number, airFriction: number = 0.98, bounciness: number = 0, roughness: number = 1) {
         super(object, shape);
         this.mass = mass;
+        this.inverseMass = 1/ mass;
         this.airFriction = airFriction;
         this.bounciness = bounciness;
         this.roughness = roughness;
@@ -44,6 +47,7 @@ export class RigidBody extends Collider {
         this.static = false;
 
         this.impulse = Vec2.Zero.clone();
+        this.contacts = 0;
     }
 
     public addImpulseXY(x: number, y: number): void {
@@ -63,12 +67,20 @@ export class RigidBody extends Collider {
         this.force.add(force);
     }
 
+    public clearForce(): void {
+        this.force.setXY(0, 0);
+    }
+
     public applyImpulse(): void {
         if (!this.impulse.isNull()) {
-            const tmp = this.object.getPosition();
             this.object.move(this.impulse.x, this.impulse.y);
-            this.prevPos = tmp;
-            this.impulse.setXY(0, 0);
+            this.prevPos.add(this.impulse);
+
+            if (Vec2.dot(this.impulse, this.velocity) < 0) {
+                this.impulse.setXY(0, 0);
+            } else {
+                this.impulse.mul(0.8);
+            }
         }
     }
 
@@ -76,8 +88,6 @@ export class RigidBody extends Collider {
         if (this.static) {
             return false;
         }
-
-        this.applyImpulse();
 
         // add gravity
         this.applyForce(Vec2.mul(RigidBody.gravity, this.mass));
