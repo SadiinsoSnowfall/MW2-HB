@@ -26,7 +26,6 @@ export class RigidBody extends Collider {
     public roughness: number; // used when calculating friction between two rigidbodies
 
     public impulse: Vec2;
-    protected static: boolean;
     public contacts: number;
 
     constructor(object: GameObject, shape: Shape, mass: number, airFriction: number = 0.98, bounciness: number = 0, roughness: number = 1) {
@@ -44,7 +43,6 @@ export class RigidBody extends Collider {
         this.angle = 0;
         this.prevAngle = 0;
         this.angularVelocity = 0;
-        this.static = false;
 
         this.impulse = Vec2.Zero.clone();
         this.contacts = 0;
@@ -53,14 +51,6 @@ export class RigidBody extends Collider {
     public addImpulseXY(x: number, y: number): void {
         this.impulse.x += x;
         this.impulse.y += y;
-    }
-
-    public setStatic(state: boolean): void {
-        this.static = state;
-    }
-
-    public isStatic(): boolean {
-        return this.static;
     }
 
     public applyForce(force: Vec2): void {
