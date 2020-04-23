@@ -46,6 +46,13 @@ async function game() {
         }
     });
 
+    Inputs.subscribe("a", () => {
+        console.log("A pressed");
+        for (let c of scene.getTree()) {
+            console.log(c.object.id);
+        }
+    });
+
     scene.addObject(createGround(675, 700, 1200, 50));
 
     // Polygon collision detection test

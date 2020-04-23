@@ -383,11 +383,11 @@ export class AABBTree implements Iterable<Collider> {
         let r: Collision[] = [];
         let set = new Set<Collider>();
         for (let collider of this) {
-            set.add(collider);
             if (collider.object.hasMoved()) {
+                set.add(collider);
                 this._query(collider, r, set);
+                collider.object.resetMoved();
             }
-            collider.object.resetMoved();
         }
         return r;
     }
@@ -421,7 +421,7 @@ export class AABBTree implements Iterable<Collider> {
                     // We could also test if the leaf's bbox is too large
                     // (leading to poor performance)
                 }
-            } else if (collider.object.isEnabled()) {
+            } else if (!collider.object.isEnabled()) {
                 // If the object has been disabled, it must be removed
                 // Seems safe: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/forEach#Description
                 this.remove(collider);
