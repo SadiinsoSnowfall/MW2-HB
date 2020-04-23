@@ -82,8 +82,7 @@ export class Scene {
     public instantiate(prefab: Prefab, x: number, y: number): GameObject {
         let obj = new GameObject(x, y);
         prefab.applyTo(obj);
-        this.addObject(obj);
-        return obj;
+        return this.addObject(obj);
     }
     
     /**
@@ -98,7 +97,7 @@ export class Scene {
     /**
     * @brief Adds an object to this scene
     */
-    public addObject(obj: GameObject) {
+    public addObject(obj: GameObject): GameObject {
         obj.setScene(this);
         const collider = obj.getCollider();
         if (collider == undefined) {
@@ -106,6 +105,8 @@ export class Scene {
         } else {
             this.tree.insert(collider);
         }
+
+        return obj;
     }
 
     /**

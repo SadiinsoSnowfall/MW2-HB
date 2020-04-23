@@ -3,7 +3,7 @@ import './assets/stylesheets/styles.scss';
 import { Collider, Display } from './engine/components';
 import { screen } from './engine/screen';
 import { Scene } from './engine/scene';
-import { FPSMetter} from './game/prefabs/debugPrefabs';
+import { FPSMetter, yoloSprite} from './game/prefabs/debugPrefabs';
 import { assert, Vec2, range } from './engine/utils';
 import { GameObject } from './engine/gameObject';
 import { ConvexPolygon, intersection, Circle, drawCross } from './engine/physics';
@@ -33,9 +33,22 @@ async function game() {
 
     //Menus.main_menu.setVisible(true); // enable main menu
 
+    let obj: GameObject;
+
     Inputs.subscribeMouse(MouseAction.LEFT_CLICK, p => {
-        scene.instantiate(BlockPrefabs.wooden_cube_hl_2, p.x, p.y);
+        //obj = scene.instantiate(BlockPrefabs.wooden_cube_hl_2, p.x, p.y);
+        //obj = scene.instantiate(yoloSprite, p.x, p.y);
     });
+
+    let speed = 1;
+
+    setInterval(() => {
+        if (obj) {
+            obj.move(0, speed);
+            //console.log(obj.getPosition().x + " " + obj.getPosition().y);
+            speed *= 1.01;
+        }
+    }, 10);
 
 
     Inputs.subscribeMouse(MouseAction.RIGHT_CLICK, p => {
@@ -54,6 +67,9 @@ async function game() {
     });
 
     scene.addObject(createGround(675, 700, 1200, 50));
+
+    //obj = createGround(675, 300, 1200, 50);
+    //scene.addObject(obj);
 
     // Polygon collision detection test
     const offset = 500;

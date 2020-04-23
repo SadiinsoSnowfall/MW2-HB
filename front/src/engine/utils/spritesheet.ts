@@ -62,7 +62,6 @@ export class Spritesheet {
      * @param index The sprite index
      */
     public getSpriteAbsolute(index: number): Sprite {
-        console.log(this.divh + " " + this.divv);
         return this.getSprite(index % this.divh, Math.floor(index / this.divh));
     }
 
