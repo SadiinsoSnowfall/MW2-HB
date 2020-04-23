@@ -1,6 +1,7 @@
 import { Shape, Rectangle, Collision, intersection } from "./";
 import { Collider } from '../components';
 import { assert, Vec2 } from "../utils";
+import PriorityQueue from "../utils/priorityQueue";
 
 function bboxFromCollider(collider: Collider): Rectangle {
     let b = collider.getShape().boundingBox();
@@ -37,25 +38,6 @@ class NodeData {
 
     public isLeaf(): boolean {
         return false;
-    }
-
-    public pickBest(r: InsertInfo, inheritedCost: number): void {
-        let mergedArea = this.bbox.mergedArea(r.newNode.bbox);
-        let cost = mergedArea + inheritedCost;
-        if (cost <= r.bestCost) {
-            r.bestCost = cost;
-            r.bestSibling = this;
-        }
-
-        // Not sure if this piece of code belongs here or inside the condition
-        let newInheritedCost = mergedArea - this.bbox.area() + inheritedCost;
-        let lowerBound = r.newNode.bbox.area() + newInheritedCost;
-        if (lowerBound < r.bestCost) {
-            /*r.queue.push([this.left, newInheritedCost]);
-            r.queue.push([this.right, newInheritedCost]);*/
-            this.left.pickBest(r, newInheritedCost);
-            this.right.pickBest(r, newInheritedCost);
-        }
     }
 
     public broadSearch(rect: Rectangle, r: LeafData[]): void {
@@ -101,10 +83,6 @@ class NodeData {
         this.right.draw(ctx);
         this.bbox.draw(ctx);
     }
-
-    public count(): number {
-        return this.left.count() + this.right.count();
-    }
 }
 
 class LeafData {
@@ -121,19 +99,14 @@ class LeafData {
             this.parent = parent;
         }
         this.collider = collider;
-        this.bbox = bboxFromCollider(collider).fatten(fatFactor);
+        this.bbox = bboxFromCollider(collider);
+        if (!collider.isStatic()) {
+            this.bbox = this.bbox.fatten(fatFactor);
+        }
     }
 
     public isLeaf(): boolean {
         return true;
-    }
-
-    public pickBest(r: InsertInfo, inheritedCost: number): void {
-        let cost = this.bbox.mergedArea(r.newNode.bbox) + inheritedCost;
-        if (cost <= r.bestCost) {
-            r.bestCost = cost;
-            r.bestSibling = this;
-        }
     }
 
     public broadSearch(rect: Rectangle, r: LeafData[]): void {
@@ -145,27 +118,33 @@ class LeafData {
     public draw(ctx: CanvasRenderingContext2D): void {
         this.bbox.draw(ctx);
     }
+}
 
-    public count(): number {
-        return 1;
+type Node = LeafData | NodeData;
+
+class Sibling {
+    public readonly sibling: Node;
+    public readonly cost: number;
+
+    constructor(sibling: Node, cost: number) {
+        this.sibling = sibling;
+        this.cost = cost;
+    }
+
+    public static compare(s1: Sibling, s2: Sibling): number {
+        return s1.cost - s2.cost;
     }
 }
 
 class InsertInfo {
     readonly newNode: Node;
-    public bestSibling: Node;
-    public bestCost: number;
-    public queue: [Node, number][];
+    public best: Sibling;
 
     constructor(root: Node, newNode: Node) {
         this.newNode = newNode;
-        this.bestSibling = root;
-        this.bestCost = root.bbox.mergedArea(newNode.bbox);
-        this.queue = [[root, 0]];
+        this.best = new Sibling(root, root.bbox.mergedArea(newNode.bbox));
     }
 }
-
-type Node = LeafData | NodeData;
 
 /**
  * @brief Performs both broad and narrow phase of collision detection between colliders.
@@ -270,25 +249,65 @@ export class AABBTree implements Iterable<Collider> {
      * 
      *********************************************************************************************/
 
+    private pickBest(leaf: LeafData): InsertInfo {
+        // This method is only called by insertLeaf ; we already know that root != null
+        let root = this.root as Node;
+        let r = new InsertInfo(root, leaf);
+
+        // Sibling#cost has a dual meaning:
+        // r.best.cost is the actual cost of the best sibling, while on any other Sibling,
+        // it is the inheritedCost. These two values are different for the same node.
+        // https://box2d.org/files/ErinCatto_DynamicBVH_GDC2019.pdf slide 46
+        let queue = new PriorityQueue<Sibling>({comparator: Sibling.compare});
+
+        // This is not r.best because of the dual meaning of Sibling#cost
+        // The inherited cost of the root is obviously 0
+        queue.queue(new Sibling(root, 0));
+        while (queue.length != 0) {
+            let s = queue.dequeue();
+            let node = s.sibling;
+            if (node instanceof LeafData) {
+                // node is a leaf
+                let cost = node.bbox.mergedArea(r.newNode.bbox) + s.cost;
+                if (cost <= r.best.cost) {
+                    r.best = new Sibling(node, cost);
+                }
+            } else {
+                // node is a node
+                let mergedArea = node.bbox.mergedArea(r.newNode.bbox);
+                let cost = mergedArea + s.cost;
+                if (cost <= r.best.cost) {
+                    r.best = new Sibling(node, cost);
+                }
+
+                let newInheritedCost = mergedArea - node.bbox.area() + s.cost;
+                let lowerBound = r.newNode.bbox.area() + newInheritedCost;
+                if (lowerBound < r.best.cost) {
+                    queue.queue(new Sibling(node.left, newInheritedCost));
+                    queue.queue(new Sibling(node.right, newInheritedCost));
+                }
+            }
+        }
+
+        return r;
+    }
+
     private insertLeaf(leaf: LeafData) {
         // https://box2d.org/files/ErinCatto_DynamicBVH_GDC2019.pdf
         if (this.root == null) {
             this.root = leaf;
         } else {
             // Looking for the best sibling to pair leaf with
-            let r = new InsertInfo(this.root, leaf);
-            if (this.root != null) {
-                this.root.pickBest(r, 0);
-            }
+            let r = this.pickBest(leaf);
 
             // Adding the leaf
-            let parent = r.bestSibling.parent;
-            let node = new NodeData(parent, leaf, r.bestSibling);
+            let parent = r.best.sibling.parent;
+            let node = new NodeData(parent, leaf, r.best.sibling);
 
             if (parent == null) {
                 this.root = node;
             } else {
-                parent.setNode(r.bestSibling, node);
+                parent.setNode(r.best.sibling, node);
                 this.refit(parent);
             }
         }
@@ -437,12 +456,5 @@ export class AABBTree implements Iterable<Collider> {
         if (this.root != null) {
             this.root.draw(ctx);
         }
-    }
-
-    /**
-     * @brief Returns the number of leaves and nodes in the tree.
-     */
-    private count(): number {
-        return (this.root == null)? 0 : this.root.count();
     }
 }

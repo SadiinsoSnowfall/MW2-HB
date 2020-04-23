@@ -7,6 +7,7 @@ import { Shape } from '../physics';
  */
 export class Collider extends ObjectComponent {
     protected shape: Shape;
+    protected static: boolean;
 
     /**
      * @brief Constructor for colliders.
@@ -16,6 +17,15 @@ export class Collider extends ObjectComponent {
     constructor(object: GameObject, shape: Shape) {
         super(object);
         this.shape = shape;
+        this.static = false;
+    }
+
+    public setStatic(state: boolean): void {
+        this.static = state;
+    }
+
+    public isStatic(): boolean {
+        return this.static;
     }
 
     public update(): void {}

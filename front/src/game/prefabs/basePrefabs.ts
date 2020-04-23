@@ -29,7 +29,7 @@ export function createGround(x: number, y: number, w: number, h: number): GameOb
     let obj = new GameObject(x, y);
 
     obj.setDisplay(new GroundDisplay(obj, w, h));
-    obj.setCollider(new Collider(obj, new ConvexPolygon(
+    let collider = new Collider(obj, new ConvexPolygon(
         Vec2.Zero,
         [
             new Vec2(-w, -h),
@@ -37,7 +37,9 @@ export function createGround(x: number, y: number, w: number, h: number): GameOb
             new Vec2(w, h),
             new Vec2(w, -h)
         ]
-    )));
+    ));
+    collider.setStatic(true);
+    obj.setCollider(collider);
 
     return obj;
 }

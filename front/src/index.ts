@@ -36,11 +36,11 @@ async function game() {
     let obj: GameObject;
 
     Inputs.subscribeMouse(MouseAction.LEFT_CLICK, p => {
-        //obj = scene.instantiate(BlockPrefabs.wooden_cube_hl_2, p.x, p.y);
+        obj = scene.instantiate(BlockPrefabs.wooden_cube_hl_2, p.x, p.y);
         //obj = scene.instantiate(yoloSprite, p.x, p.y);
     });
 
-    let speed = 1;
+    /*let speed = 1;
 
     setInterval(() => {
         if (obj) {
@@ -48,7 +48,7 @@ async function game() {
             //console.log(obj.getPosition().x + " " + obj.getPosition().y);
             speed *= 1.01;
         }
-    }, 10);
+    }, 10);*/
 
 
     Inputs.subscribeMouse(MouseAction.RIGHT_CLICK, p => {
