@@ -25,8 +25,8 @@ export class Spritesheet {
         this.image = image;
         this.divh = horizontalDivisions;
         this.divv = verticalDivisions;
-        this.sH = this.image.height / this.divh;
-        this.sW = this.image.width / this.divv;
+        this.sH = this.image.height / this.divv;
+        this.sW = this.image.width / this.divh;
     }
 
     /**
@@ -62,6 +62,7 @@ export class Spritesheet {
      * @param index The sprite index
      */
     public getSpriteAbsolute(index: number): Sprite {
+        console.log(this.divh + " " + this.divv);
         return this.getSprite(index % this.divh, Math.floor(index / this.divh));
     }
 

@@ -14,8 +14,8 @@ let lvlQueryPromise: Promise<any> | undefined = undefined;
 let currentLevel: number = 0;
 
 export async function init(scene: Scene) {
-    const mss = SSManager.get(Img.BUTTONS, 5, 3);
-    const levelIcons = SSManager.get(Img.LEVELS_ICON, 3, 4);
+    const mss = SSManager.get(Img.BUTTONS, 3, 5);
+    const levelIcons = SSManager.get(Img.LEVELS_ICON, 4, 3);
     const playbtnsprite = SSManager.get(Img.PLAYBTN, 1, 1).getSprite(0, 0);
 
     /*

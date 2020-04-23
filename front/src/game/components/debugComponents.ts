@@ -157,7 +157,7 @@ export class YoloSpritesheetDisplay extends Display {
         this.sheet = sheet;
         this.from = from;
         this.to = to;
-        this.index = randomIn(from, to);
+        this.index = 0;//randomIn(from, to);
         this.sprite = this.sheet.getSpriteAbsolute(this.index);
     }
 
