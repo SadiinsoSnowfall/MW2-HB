@@ -4,16 +4,9 @@ import { assert, Vec2 } from "../utils";
 import PriorityQueue from "../utils/priorityQueue";
 
 function bboxFromCollider(collider: Collider): Rectangle {
-    let b = collider.getShape().boundingBox();
     let t = collider.object.getTransform();
-
-    let points = [
-        t.multiplyVector(b.position),
-        t.multiplyVector(new Vec2(b.position.x + b.width, b.position.y)),
-        t.multiplyVector(new Vec2(b.position.x, b.position.y + b.height)),
-        t.multiplyVector(new Vec2(b.position.x + b.width, b.position.y + b.height))
-    ];
-    return Rectangle.bound(points);
+    let b = collider.getShape().boundingBox(t);
+    return b;
 }
 
 let lastId = 0;
@@ -24,6 +17,7 @@ class NodeData {
     public left: Node;
     public right: Node;
     public bbox: Rectangle;
+    public area: number; // area of bbox, for optimization purpose
 
     // Child -> parent is done but not parent -> child !
     constructor(parent: NodeData | null, left: Node, right: Node) {
@@ -32,6 +26,7 @@ class NodeData {
         this.left = left;
         this.right = right;
         this.bbox = left.bbox.merge(right.bbox);
+        this.area = this.bbox.area();
         left.parent = this;
         right.parent = this;
     }
@@ -83,6 +78,18 @@ class NodeData {
         this.right.draw(ctx);
         this.bbox.draw(ctx);
     }
+
+    public refit() {
+        this.bbox = this.left.bbox.merge(this.right.bbox);
+        this.area = this.bbox.area();
+    }
+
+    public checkEncloses(): void {
+        this.left.checkEncloses();
+        this.right.checkEncloses();
+        let expected = this.left.bbox.merge(this.right.bbox);
+        assert(this.bbox.encloses(expected), "Node " + this.id + " violates enclosure");
+    }
 }
 
 class LeafData {
@@ -90,6 +97,7 @@ class LeafData {
     public parent: NodeData | null;
     public collider: Collider;
     public bbox: Rectangle;
+    public area: number;
 
     constructor(collider: Collider, fatFactor: number, parent?: NodeData) {
         this.id = lastId++;
@@ -103,6 +111,7 @@ class LeafData {
         if (!collider.isStatic()) {
             this.bbox = this.bbox.fatten(fatFactor);
         }
+        this.area = this.bbox.area();
     }
 
     public isLeaf(): boolean {
@@ -117,6 +126,10 @@ class LeafData {
 
     public draw(ctx: CanvasRenderingContext2D): void {
         this.bbox.draw(ctx);
+    }
+
+    public checkEncloses(): void {
+        assert(this.bbox.encloses(bboxFromCollider(this.collider)), "Leaf " + this.id + " violates enclosure");
     }
 }
 
@@ -173,7 +186,7 @@ export class AABBTree implements Iterable<Collider> {
     private swapLoss(parent: NodeData, child: Node, grandchild: Node): number {
         // Will never be null since it has two grandchildren
         let otherChild = (grandchild.parent as NodeData);
-        let currentCost = otherChild.bbox.area();
+        let currentCost = otherChild.area;
         let swapCost = child.bbox.mergedArea(otherChild.getSibling(grandchild).bbox);
         return swapCost - currentCost;
     }
@@ -228,7 +241,7 @@ export class AABBTree implements Iterable<Collider> {
     // Goes up the tree from node, recomputing bounding boxes and performing rotations if advantageous
     private refit(node: NodeData | null): void {
         while (node != null) {
-            node.bbox = node.right.bbox.merge(node.left.bbox);
+            node.refit();
             this.rotate(node);
             node = node.parent;
         }
@@ -237,7 +250,7 @@ export class AABBTree implements Iterable<Collider> {
     // Recomputes bounding boxes from node to the root but does not perform rotations.
     private refitNoRotation(node: NodeData | null): void {
         while (node != null) {
-            node.bbox = node.right.bbox.merge(node.left.bbox);
+            node.refit();
             node = node.parent;
         }
     }
@@ -266,12 +279,14 @@ export class AABBTree implements Iterable<Collider> {
         while (queue.length != 0) {
             let s = queue.dequeue();
             let node = s.sibling;
+
             if (node instanceof LeafData) {
                 // node is a leaf
                 let cost = node.bbox.mergedArea(r.newNode.bbox) + s.cost;
                 if (cost <= r.best.cost) {
                     r.best = new Sibling(node, cost);
                 }
+
             } else {
                 // node is a node
                 let mergedArea = node.bbox.mergedArea(r.newNode.bbox);
@@ -280,8 +295,8 @@ export class AABBTree implements Iterable<Collider> {
                     r.best = new Sibling(node, cost);
                 }
 
-                let newInheritedCost = mergedArea - node.bbox.area() + s.cost;
-                let lowerBound = r.newNode.bbox.area() + newInheritedCost;
+                let newInheritedCost = mergedArea - node.area + s.cost;
+                let lowerBound = r.newNode.area + newInheritedCost;
                 if (lowerBound < r.best.cost) {
                     queue.queue(new Sibling(node.left, newInheritedCost));
                     queue.queue(new Sibling(node.right, newInheritedCost));
@@ -408,6 +423,9 @@ export class AABBTree implements Iterable<Collider> {
                 collider.object.resetMoved();
             }
         }
+
+        this.root?.checkEncloses();
+
         return r;
     }
 

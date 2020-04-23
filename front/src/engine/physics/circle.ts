@@ -1,5 +1,6 @@
 import { Vec2, Transform, assert } from "../utils";
 import { Shape, drawCross, Rectangle } from '.';
+import { defaultBoundingBox } from "./shape";
 
 /**
  * @brief A circle.
@@ -26,13 +27,14 @@ export class Circle implements Shape {
         return this.radius * this.radius >= x * x + y * y;
     }
 
-    public boundingBox(): Rectangle {
-        let doubleRadius = this.radius * 2;
+    public boundingBox(transform: Transform): Rectangle {
+        /*let diameter = this.radius * 2;
         return new Rectangle(
             new Vec2(this.center.x - this.radius, this.center.y - this.radius),
-            doubleRadius,
-            doubleRadius
-        );
+            diameter,
+            diameter
+        );*/
+        return defaultBoundingBox(this, transform);
     }
 
     public support(d: Vec2): Vec2 {

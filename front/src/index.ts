@@ -36,7 +36,7 @@ async function game() {
     let obj: GameObject;
 
     Inputs.subscribeMouse(MouseAction.LEFT_CLICK, p => {
-        obj = scene.instantiate(BlockPrefabs.wooden_cube_hl_2, p.x, p.y);
+        obj = scene.instantiate(BlockPrefabs.wooden_tris_md_2, p.x, p.y);
         //obj = scene.instantiate(yoloSprite, p.x, p.y);
     });
 

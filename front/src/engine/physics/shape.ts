@@ -65,9 +65,9 @@ export interface Shape {
     pointIn(point: Vec2): boolean;
 
     /**
-     * @brief Returns the smallest AABB that contains the entire shape.
+     * @brief Returns the smallest AABB that contains the entire shape transformed with transform.
      */
-    boundingBox(): Rectangle;
+    boundingBox(transform: Transform): Rectangle;
 
     /**
      * @brief Returns the point that has the highest dot product with d.
@@ -101,6 +101,35 @@ export interface Shape {
      * @param color The color to be used
      */
     fill(ctx: CanvasRenderingContext2D, color: string): void;
+}
+
+/**
+ * @brief Support function for any shape with affine transformations.
+ */
+export function affineSupport(shape: Shape, transform: Transform, d: Vec2): Vec2 {
+    // http://www.dtecta.com/papers/gdc2001depth.pdf (page 5)
+    let p = shape.support(transform.multiplyTransposed(d));
+    return transform.multiplyVector(p);
+}
+
+/**
+ * @brief Shortcut for affineSupport.
+ */
+export function affineSupportXY(shape: Shape, transform: Transform, x: number, y: number): Vec2 {
+    return affineSupport(shape, transform, new Vec2(x, y));
+}
+
+/**
+ * @brief Can be used as a default implementation of Shape#boundingBox.
+ * Works for any convex shape, but there might be better solutions depending on the shape.
+ */
+export function defaultBoundingBox(shape: Shape, transform: Transform): Rectangle {
+    return Rectangle.bound([
+        affineSupportXY(shape, transform, 0, 1),
+        affineSupportXY(shape, transform, 1, 0),
+        affineSupportXY(shape, transform, 0, -1),
+        affineSupportXY(shape, transform, -1, 0)
+    ]);
 }
 
 /**

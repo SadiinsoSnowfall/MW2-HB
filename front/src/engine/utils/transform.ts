@@ -162,9 +162,16 @@ export class Transform {
      * @brief Returns a vector v' such that this * v = v'.
      */
     public multiplyVector(v: Vec2): Vec2 {
+        return this.multiplyVectorXY(v.x, v.y);
+    }
+
+    /**
+     * @brief Shortcut for multiplyVector. 
+     */
+    public multiplyVectorXY(x: number, y: number): Vec2 {
         return new Vec2(
-            this.m11 * v.x + this.m21 * v.y + this.m31,
-            this.m12 * v.x + this.m22 * v.y + this.m32
+            this.m11 * x + this.m21 * y + this.m31,
+            this.m12 * x + this.m22 * y + this.m32
         );
     }
 

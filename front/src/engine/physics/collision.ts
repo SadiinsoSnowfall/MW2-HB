@@ -1,7 +1,7 @@
 import { GameObject } from "../gameObject";
 import { Vec2 } from "../utils";
 import { Collider } from "../components";
-import { Shape, Edge, drawCross } from ".";
+import { Shape, Edge, drawCross, affineSupport } from ".";
 
 export class Collision {
     /**
@@ -136,17 +136,13 @@ export class Collision {
     }
 }
 
-// http://www.dtecta.com/papers/gdc2001depth.pdf (page 5)
-function supportShape(s: Collider, d: Vec2): Vec2 {
-    let shape = s.getShape();
-    let transform = s.object.getTransform();
-    let p = shape.support(transform.multiplyTransposed(d));
-    return transform.multiplyVector(p);
-}
-
 // Support function of the Minkowski difference of a and b's shapes
 function support(a: Collider, b: Collider, d: Vec2): Vec2 {
-    return Vec2.sub(supportShape(a, d), supportShape(b, Vec2.neg(d))); // s1.support(d) - s2.support(-d)
+    let s1 = a.getShape();
+    let t1 = a.object.getTransform();
+    let s2 = b.getShape();
+    let t2 = b.object.getTransform();
+    return Vec2.sub(affineSupport(s1, t1, d), affineSupport(s2, t2, Vec2.neg(d))); // s1.support(d) - s2.support(-d)
 }
 
 function pick(c: Collider): Vec2 {

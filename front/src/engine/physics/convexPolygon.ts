@@ -137,27 +137,33 @@ export class ConvexPolygon implements Shape {
     /**
      * @brief Returns the smallest AABB that contains the entire polygon.
      */
-    public boundingBox(): Rectangle {
-        let xmax = this.vertices[0].x;
-        let xmin = xmax;
-        let ymax = this.vertices[0].y;
-        let ymin = ymax;
+    public boundingBox(transform: Transform): Rectangle {
+        let xmax = Number.MIN_VALUE;
+        let xmin = Number.MAX_VALUE;
+        let ymax = Number.MIN_VALUE;
+        let ymin = Number.MAX_VALUE;
 
+        let center = transform.multiplyVector(this.center);
+        let t2 = transform.place(0, 0);
         for (let v of this.vertices) {
-            if (v.x > xmax) {
-                xmax = v.x;
-            } else if (v.x < xmin) {
-                xmin = v.x;
+            let v2 = t2.multiplyVector(v);
+
+            if (v2.x > xmax) {
+                xmax = v2.x;
+            }
+            if (v2.x < xmin) {
+                xmin = v2.x;
             }
 
-            if (v.y > ymax) {
-                ymax = v.y;
-            } else if (v.y < ymin) {
-                ymin = v.y;
+            if (v2.y > ymax) {
+                ymax = v2.y;
+            } 
+            if (v2.y < ymin) {
+                ymin = v2.y;
             }
         }
 
-        return new Rectangle(new Vec2(this.center.x + xmin, this.center.y + ymin), xmax - xmin, ymax - ymin);
+        return new Rectangle(new Vec2(center.x + xmin, center.y + ymin), xmax - xmin, ymax - ymin);
     }
 
     public transform(t: Transform): ConvexPolygon {

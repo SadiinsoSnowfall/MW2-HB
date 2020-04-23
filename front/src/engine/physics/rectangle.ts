@@ -74,7 +74,7 @@ export class Rectangle {
     }
 
     /**
-     * @brief Returns true if rect is completely enclosed inside this.
+     * @brief Returns true if rect is completely enclosed inside this rectangle.
      */
     public encloses(rect: Rectangle): boolean {
         return (this.position.x <= rect.position.x && this.position.x + this.width  >= rect.position.x + rect.width)

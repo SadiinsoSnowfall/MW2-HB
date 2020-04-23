@@ -31,7 +31,7 @@ export class RigidBody extends Collider {
     constructor(object: GameObject, shape: Shape, mass: number, airFriction: number = 0.98, bounciness: number = 0, roughness: number = 1) {
         super(object, shape);
         this.mass = mass;
-        this.inverseMass = 1/ mass;
+        this.inverseMass = 1 / mass;
         this.airFriction = airFriction;
         this.bounciness = bounciness;
         this.roughness = roughness;
