@@ -6,7 +6,11 @@ import { assert } from "../utils";
 * 
 * the prefabs IDs are assigned as follow:
 * 
-* 0-99: [reserved]
+* 0-9: [reserved]
+*
+* 10: slingshot
+*
+* 10-99: [reserved]
 * 
 * 100-109: balls_md
 * 110-119: balls_sm
@@ -35,6 +39,14 @@ import { assert } from "../utils";
 * 503: pig_lg
 * 504: pig_md
 * 505: pig_sm
+*
+* 600: bird_red
+* 601: bird_yellow
+* 602: bird_blue
+* 603: bird_black
+* 604: bird_white
+* 605: bird_green
+* 607: bird_big
 * 
 */
 

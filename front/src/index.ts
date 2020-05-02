@@ -14,10 +14,12 @@ import { BlockPrefabs } from './game/prefabs/blockPrefabs';
 import { ShapeDisplay, CollisionDisplay } from './game/components/debugComponents';
 import { Prefab } from './engine/prefab';
 import { slingshot } from './game/prefabs/miscPrefabs';
+import { BirdPrefabs } from './game/prefabs/birdPrefabs';
 
 async function game() {
     await Assets.load();// load assets
     BlockPrefabs.init();
+    BirdPrefabs.init();
 
     const ctx = screen.getContext();
     ctx.fillStyle = 'white';
@@ -34,11 +36,9 @@ async function game() {
 
     //Menus.main_menu.setVisible(true); // enable main menu
 
-    let obj: GameObject;
-
     Inputs.subscribeMouse(MouseAction.LEFT_CLICK, p => {
-        obj = scene.instantiate(BlockPrefabs.wooden_tris_md_2, p.x, p.y);
-        //obj = scene.instantiate(yoloSprite, p.x, p.y);
+        //scene.instantiate(BlockPrefabs.wooden_tris_md_2, p.x, p.y);
+        scene.instantiate(BirdPrefabs.BIRD_BIG, p.x, p.y);
     });
 
     Inputs.subscribeMouse(MouseAction.RIGHT_CLICK, p => {

@@ -26,9 +26,6 @@ export class SlingshotDisplay extends Display {
             const px = dx - x;
             const py = dy - y;
 
-            // draw first part
-            this.s_base.draw(ctx, 30, 0);
-
             // draw stuff
             ctx.strokeStyle = ctx.fillStyle = "#54270F";
             ctx.fillRect(px - 10, py - 10, 20, 20);
@@ -37,22 +34,23 @@ export class SlingshotDisplay extends Display {
             // first line
             ctx.strokeStyle = ctx.fillStyle = "#301608";
             ctx.beginPath();
-            ctx.moveTo(35, -70);
+            ctx.moveTo(25, -65);
             ctx.lineTo(px, py);
             ctx.stroke();
+
+            this.s_neutral.draw(ctx, -2, 1);
 
             // second line
             ctx.strokeStyle = ctx.fillStyle = "#54270F";
             ctx.beginPath();
             ctx.moveTo(px, py);
-            ctx.lineTo(-5, -75);
+            ctx.lineTo(-10, -60);
             ctx.stroke();
-
+        } else {
+            // draw first part
+            this.s_base.draw(ctx, 30, 0);
             // draw second part
             this.s_arm.draw(ctx, 3, -42);
-
-        } else {
-            this.s_neutral.draw(ctx);
         }
     }
 

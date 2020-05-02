@@ -1,8 +1,9 @@
 import { Prefab } from "../../engine/prefab";
 import { SlingshotDisplay, SlingshotBehaviour } from "../components/miscComponents";
+import { PrefabsManager } from "../../engine/res";
 
 
-export const slingshot = new Prefab(obj => {
+export const slingshot = PrefabsManager.register(new Prefab(obj => {
     obj.setDisplay(new SlingshotDisplay(obj));
     obj.setBehaviour(new SlingshotBehaviour(obj));
-});
+}), 10);
