@@ -12,12 +12,12 @@ export * from "./vec2";
 export class Transform {
     public static readonly Identity = new Transform(1, 0, 0, 1, 0, 0);
 
-    private readonly m11: number;
-    private readonly m12: number;
-    private readonly m21: number;
-    private readonly m22: number;
-    private readonly m31: number;
-    private readonly m32: number;
+    private m11: number;
+    private m12: number;
+    private m21: number;
+    private m22: number;
+    private m31: number;
+    private m32: number;
 
     /**
      * @brief Constructor.
@@ -286,6 +286,15 @@ export class Transform {
     }
 
     /**
+     * @brief Places the matrix at the given place.
+     */
+    public placeInPlace(x: number, y: number): Transform {
+        this.m31 = x;
+        this.m32 = y;
+        return this;
+    }
+
+    /**
      * @brief Moves the matrix alongside the vector (x, y), without regards for the current rotation and scale.
      * @see translate
      */
@@ -295,6 +304,16 @@ export class Transform {
             this.m21, this.m22,
             this.m31 + x, this.m32 + y
         );
+    }
+
+    /**
+     * @brief Moves the matrix alongside the vector (x, y), without regards for the current rotation and scale.
+     * @see translate
+     */
+    public moveInPlace(x: number, y: number): Transform {
+        this.m31 += x;
+        this.m32 += y;
+        return this;
     }
 
     /**
@@ -314,10 +333,34 @@ export class Transform {
     }
 
     /**
+     * @brief Moves the matrix alongside the vector (x, y).
+     * Unlike move(), this method takes into consideration the current rotation.
+     * @see move
+     */
+    public translateInPlace(x: number, y: number): Transform {
+        this.m31 = this.m11 * x + this.m21 * y + this.m31;
+        this.m32 = this.m12 * x + this.m22 * y + this.m32
+        return this;
+    }
+
+    /**
      * @brief Centers the matrix around (x, y) relative to the current state.
      */
     public center(x: number, y: number): Transform {
         return this.translate(x, y);
+    }
+
+    /**
+     * @brief Centers the matrix around (x, y) relative to the current state.
+     */
+    public centerInPlace(x: number, y: number): Transform {
+        return this.translateInPlace(x, y);
+    }
+
+    public reset(): Transform {
+        this.m21 = 0;
+        this.m22 = 0;
+        return this;
     }
 
     /**
@@ -334,6 +377,19 @@ export class Transform {
             this.m31,
             this.m32
         );
+    }
+
+    /**
+     * @brief Scales the matrix.
+     * @param x Factor alongside the x axis
+     * @param y Factor alongside the y axis
+     */
+    public scaleInPlace(x: number, y: number): Transform {
+        this.m11 *= x;
+        this.m12 *= x;
+        this.m21 *= y;
+        this.m22 *= y;
+        return this;
     }
 
     /**
@@ -354,6 +410,21 @@ export class Transform {
         );
     }
 
+    /**
+     * Rotates the matrix.
+     * @param angle The angle in radians
+     * @see rotateDegrees, radiansToDegrees
+     */
+    public rotateRadiansInPlace(angle: number): Transform {
+        let cosa = Math.cos(angle);
+        let sina = Math.sin(angle);
+        this.m11 = this.m11 * cosa - this.m21 * sina;
+        this.m12 = this.m12 * cosa - this.m22 * sina;
+        this.m21 = this.m11 * sina + this.m21 * cosa;
+        this.m22 = this.m12 * sina + this.m22 * cosa;
+        return this;
+    }
+
     /** 
      * Rotates the matrix.
      * @param angle The angle, in degrees
@@ -361,6 +432,15 @@ export class Transform {
      */
     public rotateDegrees(angle: number): Transform {
         return this.rotateRadians(Transform.degreesToRadians(angle));
+    }
+
+    /** 
+     * Rotates the matrix.
+     * @param angle The angle, in degrees
+     * @see rotateRadians, degreesToRadians
+     */
+    public rotateDegreesInPlace(angle: number): Transform {
+        return this.rotateRadiansInPlace(Transform.degreesToRadians(angle));
     }
 
     /**
@@ -376,4 +456,16 @@ export class Transform {
             this.m32
         );
     }
+
+    /**
+     * Slants the matrix alongside the x or y axis.
+     */
+    public shearInPlace(x: number, y: number) {
+        this.m11 = this.m11 + this.m21 * y;
+        this.m12 = this.m12 + this.m22 * y;
+        this.m21 = this.m11 * x + this.m21;
+        this.m22 = this.m12 * x + this.m22;
+        return this;
+    }
+
 }

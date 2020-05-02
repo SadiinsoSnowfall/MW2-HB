@@ -4,8 +4,14 @@ import { BirdDisplay } from "../components/birdComponents";
 import { SSManager, Vec2 } from "../../engine/utils";
 import { Collider } from "../../engine/components";
 import { Circle, ConvexPolygon } from "../../engine/physics";
+import { RigidBody } from "../../engine/components/rigidBody";
+import { GameObject } from "src/engine/gameObject";
 
 export namespace BirdPrefabs {
+
+    export function isBird(obj: GameObject) {
+        return ((obj.prefabID >= 600) && (obj.prefabID <= 606));
+    }
 
     export function init() {
         /**
@@ -51,7 +57,7 @@ export namespace BirdPrefabs {
 
     export const BIRD_RED = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new BirdDisplay(obj, SSManager.get(Img.BIRD_RED, 5, 1)));
-        obj.setCollider(new Collider(obj, RED_SHAPE));
+        obj.setCollider(new RigidBody(obj, RED_SHAPE, BirdWeight.RED));
     }), 600);
 
     export const BIRD_YELLOW = PrefabsManager.register(new Prefab(obj => {

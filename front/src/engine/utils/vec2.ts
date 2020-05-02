@@ -279,12 +279,35 @@ export class Vec2 {
     }
 
     /**
+     * Return the squared distance between two vectors
+     */
+    public static sqrDistance(a: Vec2, b: Vec2): number {
+        const x = b.x - a.x;
+        const y = b.y - a.y;
+        return x * x + y * y;
+    }
+
+    /**
      * Return the distance between two vectors
      */
     public static distance(a: Vec2, b: Vec2): number {
-        let x = b.x - a.x;
-        let y = b.y - a.y;
-        return Math.sqrt(x * x + y * y);
+        return Math.sqrt(Vec2.distance(a, b));
+    }
+
+    /**
+     * Return the squared distance between two vectors
+     */
+    public static sqrDistanceXY(x1: number, y1: number, x2: number, y2: number): number {
+        const x = x2 - x1;
+        const y = y2 - y1;
+        return x * x + y * y;
+    }
+
+    /**
+     * Return the distance between two vectors
+     */
+    public static distanceXY(x1: number, y1: number, x2: number, y2: number): number {
+        return Math.sqrt(Vec2.distanceXY(x1,y1, x2, y2));
     }
 
     /**

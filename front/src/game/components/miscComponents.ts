@@ -1,7 +1,11 @@
-import { Display, Behaviour } from "../../engine/components";
+import { Display, Behaviour, Collider } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { SSManager, Sprite, Vec2, inRect } from "../../engine/utils";
 import { Img, Inputs, MouseAction } from "../../engine/res";
+import { Scene, MOBYDICK } from "../../engine/scene";
+import { BirdPrefabs } from "../prefabs/birdPrefabs";
+import { RigidBody } from "src/engine/components/rigidBody";
+import { BirdDisplay } from "./birdComponents";
 
 
 export class SlingshotDisplay extends Display {
@@ -49,6 +53,7 @@ export class SlingshotDisplay extends Display {
         } else {
             // draw first part
             this.s_base.draw(ctx, 30, 0);
+
             // draw second part
             this.s_arm.draw(ctx, 3, -42);
         }
@@ -63,6 +68,7 @@ export class SlingshotDisplay extends Display {
 export class SlingshotBehaviour extends Behaviour {
     private sd: SlingshotDisplay;
     private clickBegin: Vec2 | null = null;
+    private bird: RigidBody | undefined = undefined;
 
     constructor(o: GameObject) {
         super(o);
@@ -71,7 +77,43 @@ export class SlingshotBehaviour extends Behaviour {
     }
 
     public update(): void {
+        if (this.bird === undefined) {
+            const scene = this.object.getScene() as Scene;
+            const birdObject = scene.query({
+                from: MOBYDICK,
+                where: obj => BirdPrefabs.isBird(obj)
+            });
 
+            if (birdObject) {
+                this.bird = birdObject.getCollider() as RigidBody;
+                this.bird.setStatic(true);
+            }
+        } else if (this.clickBegin === null) {
+            let [x, y] = this.object.getPositionXY();
+
+            // apply correction
+            x += 15;
+            y -= 55;
+
+            const [bx, by] = this.bird.object.getPositionXY();
+            const dx = x - bx;
+            const dy = y - by;
+
+            let tx = 0;
+            let ty = 0;
+
+            if (dx != 0) {
+                tx = dx / 10;
+            }
+
+            if (dy != 0) {
+                ty = dy / 10;
+            }
+
+            if (tx != 0 && ty != 0) {
+                this.bird.object.translate(tx, ty);
+            }
+        }
     }
 
     public isInside(p: Vec2): boolean {
@@ -81,7 +123,11 @@ export class SlingshotBehaviour extends Behaviour {
 
     public onMouseMove(p: Vec2): void {
         if (this.clickBegin) {
-            this.sd.setDragPoint(p.XY());
+            const dp = p.XY();
+            this.sd.setDragPoint(dp);
+            if (this.bird) {
+                this.bird.object.place(dp[0], dp[1]);
+            }
         }
     }
 

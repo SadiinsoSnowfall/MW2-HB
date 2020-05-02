@@ -80,6 +80,7 @@ export namespace PrefabsManager {
     */
     export function register(prefab: Prefab, id: number): Prefab {
         assert(!prefabs.has(id), `PrefabsManager#register: prefab ID ${id} already used`);
+        prefab.setID(id);
         prefabs.set(id, prefab);
         return prefab;
     }

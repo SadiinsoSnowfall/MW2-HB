@@ -6,6 +6,7 @@ export class GameObject {
     private static currentId: number = 0;
 
     public readonly id: number;
+    public readonly prefabID: number;
     private enabled: boolean;
     private moved: boolean;
 
@@ -23,10 +24,11 @@ export class GameObject {
      * @param x Horizontal center of the object
      * @param y Vertical center
      */
-    constructor(x: number, y: number) {
+    constructor(x: number, y: number, prefabID: number = -1) {
         this.transform = Transform.Identity.center(x, y);
         this.enabled = true;
         this.id = GameObject.currentId++;
+        this.prefabID = prefabID;
         this.moved = false;
     }
 
@@ -159,8 +161,7 @@ export class GameObject {
      * @brief Cancels all scales and rotations on the object, only preserving its position.
      */
     public resetTransform(): void {
-        let v = this.transform.getTranslation();
-        this.transform = Transform.Identity.center(v.x, v.y);
+        this.transform.reset();
     }
 
     /**
@@ -168,7 +169,7 @@ export class GameObject {
      * @see translate
      */
     public move(x: number, y: number): void {
-        this.transform = this.transform.move(x, y);
+        this.transform.moveInPlace(x, y);
         this.moved = true;
     }
 
@@ -178,7 +179,12 @@ export class GameObject {
      * will make it run in circle, while with move, it would move straight.
      */
     public translate(x: number, y: number): void {
-        this.transform = this.transform.translate(x, y);
+        this.transform.translateInPlace(x, y);
+        this.moved = true;
+    }
+
+    public place(x: number, y: number): void {
+        this.transform.placeInPlace(x, y);
         this.moved = true;
     }
 
@@ -188,7 +194,7 @@ export class GameObject {
      * Negative values will flip the object in the corresponding axis.
      */
     public scale(x: number, y: number): void {
-        this.transform = this.transform.scale(x, y);
+        this.transform.scaleInPlace(x, y);
         this.moved = true;
     }
 
@@ -198,7 +204,7 @@ export class GameObject {
      * @see rotateDegrees
      */
     public rotateRadians(angle: number): void {
-        this.transform = this.transform.rotateRadians(angle);
+        this.transform.rotateRadiansInPlace(angle);
         this.moved = true;
     }
 
@@ -208,7 +214,7 @@ export class GameObject {
      * @see rotateRadians
      */
     public rotateDegrees(angle: number): void {
-        this.transform = this.transform.rotateDegrees(angle);
+        this.transform.rotateDegreesInPlace(angle);
         this.moved = true;
     }
 
@@ -216,7 +222,7 @@ export class GameObject {
      * @brief Slants the object.
      */
     public shear(x: number, y: number): void {
-        this.transform = this.transform.shear(x, y);
+        this.transform.shearInPlace(x, y);
         this.moved = true;
     }
 }

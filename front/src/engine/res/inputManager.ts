@@ -23,6 +23,8 @@ export enum MouseAction {
     LEFT_CLICK = 0,
     MIDDLE_CLICK = 1,
     RIGHT_CLICK = 2,
+    BACKWARD = 3,
+    FORWARD = 4,
 }
 
 export namespace Inputs {

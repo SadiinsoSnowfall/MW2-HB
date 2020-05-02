@@ -6,19 +6,60 @@ import { Vec2, inRect } from "./utils";
 import { Collider, Behaviour } from "./components";
 import { PhysicsEngine } from "./physics/physicsengine";
 
+export const BACKGROUND:    number = 0;
+export const MOBYDICK:      number = 1;
+export const FOREGROUND:    number = 2;
+
+export interface ObjectQuery {
+    from: number,
+    where: (o: GameObject) => boolean
+}
+
 /**
 * @brief Defines any object that can interact with the game loop.
 */
 export class Scene {
     protected _screen?: CScreen;
+    protected clickables: Behaviour[] = [];
     protected foreground: GameObject[] = [];
     protected background: GameObject[] = [];
     protected tree: AABBTree;
     protected physics: PhysicsEngine;
+    static MOBYDICK: number;
     
     constructor() {
         this.tree = new AABBTree(this);
         this.physics = new PhysicsEngine(this.tree);
+    }
+
+    public query(arg: ObjectQuery): GameObject | undefined {
+        if (arg.from === MOBYDICK) {
+            for (const collider of this.tree) {
+                if (arg.where(collider.object)) {
+                    return collider.object;
+                }
+            }
+            return undefined;
+        } else {
+            const container = arg.from === BACKGROUND ? this.background : this.foreground;
+            return container.find(arg.where);
+        }
+    }
+
+    public queryAll(arg: ObjectQuery): GameObject[] {
+        if (arg.from === MOBYDICK) {
+            const found: GameObject[] = [];
+            for (const collider of this.tree) {
+                if (arg.where(collider.object)) {
+                    found.push(collider.object);
+                }
+            }
+
+            return found;
+        } else {
+            const container = arg.from === BACKGROUND ? this.background : this.foreground;
+            return container.filter(arg.where);
+        }
     }
     
     /**
@@ -70,6 +111,7 @@ export class Scene {
     public clear(): void {
         this.background = [];
         this.foreground = [];
+        this.clickables = [];
         this.tree = new AABBTree(this);
     }
     
@@ -80,7 +122,7 @@ export class Scene {
     * @param y The y position of the object
     */
     public instantiate(prefab: Prefab, x: number, y: number): GameObject {
-        let obj = new GameObject(x, y);
+        let obj = new GameObject(x, y, prefab.id);
         prefab.applyTo(obj);
         return this.addObject(obj);
     }
@@ -193,8 +235,6 @@ export class Scene {
 
         return this;
     }
-
-    private clickables: Behaviour[] = [];
 
     public removeClickable(obj: GameObject) {
         const b = obj.getBehaviour();
