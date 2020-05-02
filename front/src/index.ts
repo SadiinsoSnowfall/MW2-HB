@@ -37,8 +37,8 @@ async function game() {
     //Menus.main_menu.setVisible(true); // enable main menu
 
     Inputs.subscribeMouse(MouseAction.LEFT_CLICK, p => {
-        //scene.instantiate(BlockPrefabs.wooden_tris_md_2, p.x, p.y);
-        scene.instantiate(BirdPrefabs.BIRD_BIG, p.x, p.y);
+        scene.instantiate(BlockPrefabs.wooden_tris_md_2, p.x, p.y);
+        //scene.instantiate(BirdPrefabs.BIRD_BIG, p.x, p.y);
     });
 
     Inputs.subscribeMouse(MouseAction.RIGHT_CLICK, p => {
