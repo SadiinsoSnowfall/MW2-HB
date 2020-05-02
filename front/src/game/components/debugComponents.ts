@@ -171,7 +171,7 @@ export class YoloSpritesheetDisplay extends Display {
     }
 }
 
-export class CircleBehaviour extends Display {
+export class CircleBehaviour extends Behaviour {
     private radius: number;
     private shearFactor: number;
 
@@ -197,6 +197,7 @@ export class CircleBehaviour extends Display {
         this.object.shear(this.shearFactor, this.shearFactor);
         return true;
     }
+    
 }
 
 /*

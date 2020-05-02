@@ -41,7 +41,7 @@ export class RigidBody extends Collider {
         this.force = Vec2.Zero.clone();
 
         this.angle = 0;
-        this.prevAngle = 0;
+        this.prevAngle = 0.0001;
         this.angularVelocity = 0;
 
         this.impulse = Vec2.Zero.clone();

@@ -2,8 +2,8 @@ import { GameObject } from "./gameObject";
 import { CScreen } from "./screen";
 import { Prefab } from "./prefab";
 import { AABBTree } from "./physics";
-import { Vec2 } from "./utils";
-import { Collider } from "./components";
+import { Vec2, inRect } from "./utils";
+import { Collider, Behaviour } from "./components";
 import { PhysicsEngine } from "./physics/physicsengine";
 
 /**
@@ -17,7 +17,7 @@ export class Scene {
     protected physics: PhysicsEngine;
     
     constructor() {
-        this.tree = new AABBTree();
+        this.tree = new AABBTree(this);
         this.physics = new PhysicsEngine(this.tree);
     }
     
@@ -70,7 +70,7 @@ export class Scene {
     public clear(): void {
         this.background = [];
         this.foreground = [];
-        this.tree = new AABBTree();
+        this.tree = new AABBTree(this);
     }
     
     /**
@@ -100,6 +100,12 @@ export class Scene {
     public addObject(obj: GameObject): GameObject {
         obj.setScene(this);
         const collider = obj.getCollider();
+
+        const behaviour = obj.getBehaviour();
+        if (behaviour && behaviour.isClickable) {
+            this.clickables.push(behaviour);
+        }
+
         if (collider == undefined) {
             this.foreground.push(obj);
         } else {
@@ -157,6 +163,7 @@ export class Scene {
             const obj = this.background[i];
             obj.update();
             if (!obj.isEnabled()) {
+                this.removeClickable(obj);
                 ++count;
             }
         }
@@ -171,6 +178,7 @@ export class Scene {
             const obj = this.foreground[i];
             obj.update();
             if (!obj.isEnabled()) {
+                this.removeClickable(obj);
                 ++count;
             }
         }
@@ -185,4 +193,50 @@ export class Scene {
 
         return this;
     }
+
+    private clickables: Behaviour[] = [];
+
+    public removeClickable(obj: GameObject) {
+        const b = obj.getBehaviour();
+        if (b && b.isClickable) {
+            this.clickables = this.clickables.filter(b => b.object.id != obj.id);
+        }
+    }
+
+    public handleMouseDownEvent(pos: Vec2): boolean {
+        for (let i = 0; i < this.clickables.length; ++i) {
+            const clk = this.clickables[i];
+            if (clk.isInside(pos)) {
+                clk.onMouseDown(pos);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public handleMouseUpEvent(pos: Vec2): boolean {
+        // notify everyone that the mouse was released
+        for (let i = 0; i < this.clickables.length; ++i) {
+            this.clickables[i].onMouseUp(pos);
+        }
+
+        // notify only the clicked GO that it was clicked
+        for (let i = 0; i < this.clickables.length; ++i) {
+            const clk = this.clickables[i];
+            if (clk.isInside(pos)) {
+                clk.onClick(pos);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public handleMouseMove(pos: Vec2): void {
+        for (let i = 0; i < this.clickables.length; ++i) {
+            this.clickables[i].onMouseMove(pos);
+        }
+    }
+
 }

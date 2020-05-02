@@ -13,6 +13,7 @@ import { Levels, Assets, Img, Inputs, MouseAction } from './engine/res';
 import { BlockPrefabs } from './game/prefabs/blockPrefabs';
 import { ShapeDisplay, CollisionDisplay } from './game/components/debugComponents';
 import { Prefab } from './engine/prefab';
+import { slingshot } from './game/prefabs/miscPrefabs';
 
 async function game() {
     await Assets.load();// load assets
@@ -40,21 +41,10 @@ async function game() {
         //obj = scene.instantiate(yoloSprite, p.x, p.y);
     });
 
-    /*let speed = 1;
-
-    setInterval(() => {
-        if (obj) {
-            obj.move(0, speed);
-            //console.log(obj.getPosition().x + " " + obj.getPosition().y);
-            speed *= 1.01;
-        }
-    }, 10);*/
-
-
     Inputs.subscribeMouse(MouseAction.RIGHT_CLICK, p => {
         for (let x of range(5)) {
             for (let y of range(4)) {
-                scene.instantiate(BlockPrefabs.wooden_ball_md_2, x * 120 + 600, y * 120 + 200);
+                scene.instantiate(BlockPrefabs.wooden_cube_hl_2, x * 120 + 600, y * 120 + 200);
             }
         }
     });
@@ -66,6 +56,7 @@ async function game() {
         }
     });
 
+    scene.instantiate(slingshot, 300, 575);
     scene.addObject(createGround(675, 700, 1200, 50));
 
     //obj = createGround(675, 300, 1200, 50);

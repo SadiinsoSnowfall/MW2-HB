@@ -2,6 +2,7 @@ import { Shape, Rectangle, Collision, intersection } from "./";
 import { Collider } from '../components';
 import { assert, Vec2 } from "../utils";
 import PriorityQueue from "../utils/priorityQueue";
+import { Scene } from "../scene";
 
 function bboxFromCollider(collider: Collider): Rectangle {
     let t = collider.object.getTransform();
@@ -166,12 +167,14 @@ export class AABBTree implements Iterable<Collider> {
     private fatFactor: number;
     private root: Node | null;
     private colliders: Map<Collider, LeafData>;
+    private scene: Scene;
 
     /**
      * @brief Constructs a new, empty AABB tree.
      * @param fatFactor Factor used to fatten bounding boxes
      */
-    constructor(fatFactor: number = 1.1) {
+    constructor(scene: Scene, fatFactor: number = 1.1) {
+        this.scene = scene;
         this.fatFactor = fatFactor;
         this.root = null;
         this.colliders = new Map<Collider, LeafData>();
@@ -461,6 +464,8 @@ export class AABBTree implements Iterable<Collider> {
             } else if (!collider.object.isEnabled()) {
                 // If the object has been disabled, it must be removed
                 // Seems safe: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/forEach#Description
+                
+                this.scene.removeClickable(collider.object);
                 this.remove(collider);
             }
         });

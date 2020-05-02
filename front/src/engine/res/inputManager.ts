@@ -13,8 +13,13 @@ export interface InputListener {
 * List of generic mouse actions
 */
 export enum MouseAction {
+    RIGHT_DOWN = -5,
+    MIDDLE_DOWN = -4,
+    LEFT_DOWN = -3,
+
     MOVE = -2,
     DOUBLE_CLICK = -1, // Double left click
+
     LEFT_CLICK = 0,
     MIDDLE_CLICK = 1,
     RIGHT_CLICK = 2,
@@ -238,12 +243,14 @@ export namespace Inputs {
     function onMouseButtonDown(e: MouseEvent): void {
         e.preventDefault(); // prevent browser actions
         buttonsState.set(e.button, true);
+        handleMouseEvent(e, -e.button - 3); // handle event
     }
 
     /**
     * Called on button release
     */
     function onMouseButtonUp(e: MouseEvent): void {
+        e.preventDefault();// prevent browser actions
         buttonsState.set(e.button, false);
         handleMouseEvent(e, e.button); // handle event on release
     }
@@ -260,6 +267,6 @@ export namespace Inputs {
     */
     function onMouseMove(e: MouseEvent): void {
         handleMouseEvent(e, MouseAction.MOVE);
-}
+    }
 
 }

@@ -1,5 +1,5 @@
 import { Scene } from "./scene";
-import { Inputs } from "./res";
+import { Inputs, MouseAction } from "./res";
 import { MenuManager } from "./ui";
 
 export class CScreen {
@@ -49,6 +49,24 @@ export class CScreen {
         Inputs.subscribe(['Shift', 'Enter'], () => {
             if(this.doUpdate = !this.doUpdate) {
                 requestAnimationFrame(() => this.update());
+            }
+        });
+
+        Inputs.subscribeMouse(MouseAction.LEFT_CLICK, p => {
+            if (this.scene) {
+                this.scene.handleMouseUpEvent(p);
+            }
+        });
+
+        Inputs.subscribeMouse(MouseAction.LEFT_DOWN, p => {
+            if (this.scene) {
+                this.scene.handleMouseDownEvent(p);
+            }
+        });
+
+        Inputs.subscribeMouse(MouseAction.MOVE, p => {
+            if (this.scene) {
+                this.scene.handleMouseMove(p);
             }
         });
     }

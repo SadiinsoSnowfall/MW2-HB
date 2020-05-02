@@ -111,6 +111,13 @@ export class Transform {
     }
 
     /**
+     * @brief Returns the current translation.
+     */
+    public getTranslationXY(): [number, number] {
+        return [this.m31, this.m32];
+    }
+
+    /**
      * @brief Returns the current scale.
      */
     public getScale(): Vec2 {
@@ -118,6 +125,16 @@ export class Transform {
             Vec2.magnitude(this.m11, this.m12), 
             Vec2.magnitude(this.m21, this.m22)
         );
+    }
+
+    /**
+     * @brief Returns the current scale.
+     */
+    public getScaleXY(): [number, number] {
+        return [
+            Vec2.magnitude(this.m11, this.m12), 
+            Vec2.magnitude(this.m21, this.m22)
+        ]
     }
 
     /**

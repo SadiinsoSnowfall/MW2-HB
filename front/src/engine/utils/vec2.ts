@@ -152,8 +152,19 @@ export class Vec2 {
         return new Vec2(this.x, this.y);
     }
 
+    /**
+     * @brief Returns the sum of the two values of the vector
+     */
     public sum(): number {
         return this.x + this.y;
+    }
+
+
+    /**
+     * @brief Returns a tuple containing the two values of the vector
+     */
+    public XY(): [number, number] {
+        return [this.x, this.y];
     }
 
     /*

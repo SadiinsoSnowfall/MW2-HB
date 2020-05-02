@@ -139,8 +139,16 @@ export class GameObject {
         return this.transform.getTranslation();
     }
 
+    public getPositionXY(): [number, number] {
+        return this.transform.getTranslationXY();
+    }
+
     public getScale(): Vec2 {
         return this.transform.getScale();
+    }
+
+    public getScaleXY(): [number, number] {
+        return this.transform.getScaleXY();
     }
 
     public getRotation(): number {
