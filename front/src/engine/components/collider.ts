@@ -8,6 +8,7 @@ import { Shape } from '../physics';
 export class Collider extends ObjectComponent {
     protected shape: Shape;
     protected static: boolean;
+    protected coEnabled: boolean;
 
     /**
      * @brief Constructor for colliders.
@@ -18,6 +19,7 @@ export class Collider extends ObjectComponent {
         super(object);
         this.shape = shape;
         this.static = false;
+        this.coEnabled = true;
     }
 
     public setStatic(state: boolean): void {
@@ -28,7 +30,15 @@ export class Collider extends ObjectComponent {
         return this.static;
     }
 
-    public update(): void {}
+    public setCoEnabled(state: boolean): void {
+        this.coEnabled = state;
+    }
+
+    public isCoEnabled(): boolean {
+        return this.coEnabled;
+    }
+
+    public update(): void { }
 
     /**
      * @brief Returns the hitbox of this collider.

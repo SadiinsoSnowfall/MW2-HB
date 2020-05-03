@@ -1,6 +1,8 @@
 import { AABBTree } from "../physics/aabbTree";
 import { RigidBody } from "../components/rigidBody";
 import { Vec2 } from "../utils";
+import { GameObject } from "../gameObject";
+import { Collider } from "../components";
 
 
 export class PhysicsEngine {
@@ -8,6 +10,9 @@ export class PhysicsEngine {
 
     public static deltaTime: number = 1 / 60;
     public static deltaTimeSquared: number = Math.pow(RigidBody.deltaTime, 2);
+
+    // set of the colliding objects from last frame
+    public lastCollide: Set<GameObject> = new Set();
 
     constructor(tree: AABBTree) {
         this.tree = tree;
@@ -19,12 +24,17 @@ export class PhysicsEngine {
             return;
         }
 
+        const newColliders = new Set<GameObject>();
+
         // count contacts points
         for (let i = 0; i < collisions.length; ++i) {
             const c = collisions[i];
             const count = Math.max(c.getContactsOnB().length, 1);
             const ca = c.getObjectA().getCollider();
             const cb = c.getObjectB().getCollider();
+
+            // add IDs to list
+            newColliders.add(c.getObjectA()).add(c.getObjectB());
 
             if (ca instanceof RigidBody) {
                 const ra = ca as RigidBody
@@ -45,8 +55,11 @@ export class PhysicsEngine {
             const oa = c.getObjectA().id < c.getObjectB().id ? c.getObjectA() : c.getObjectB();
             const ob = c.getObjectA().id < c.getObjectB().id ? c.getObjectB() : c.getObjectA();
 
-            const oa_static = oa.getCollider() instanceof RigidBody ? (oa.getCollider() as RigidBody).isStatic() : true;
-            const ob_static = ob.getCollider() instanceof RigidBody ? (ob.getCollider() as RigidBody).isStatic() : true;
+            const oac = oa.getCollider() as Collider;
+            const obc = ob.getCollider() as Collider;
+
+            const oa_static = oac.isStatic()
+            const ob_static = obc.isStatic();
 
             // if both colliders are static, skip the collision processing
             if (oa_static && ob_static) {
@@ -93,7 +106,15 @@ export class PhysicsEngine {
 
         }
         
+        // notify new colliders
+        for (const obj of newColliders) {
+            if (!this.lastCollide.has(obj)) {
+                obj.getBehaviour()?.onCollide();
+            }
+        }
 
+        // store current colliders IDs
+        this.lastCollide = newColliders;
     }
 
 }

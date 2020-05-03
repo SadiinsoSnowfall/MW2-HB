@@ -18,6 +18,11 @@ export abstract class Behaviour extends ObjectComponent {
 
     public update(): void {}
 
+    /**
+     * Notify when a collision occue between the GO and another one
+     */
+    public onCollide(): void {}
+
     public onClick(pos: Vec2): void {}
     public onMouseDown(pos: Vec2): void {}
     public onMouseUp(pos: Vec2): void {}

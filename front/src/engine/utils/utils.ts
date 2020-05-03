@@ -94,10 +94,45 @@ export function pickOne<T>(items: T[]): T | undefined {
 }
 
 /**
+ * @return A random element from the given array
+ */
+export function pickOneRange<T>(items: T[], from: number, to: number = -1): T | undefined {
+    const len = items.length | 0;
+    if (len) {
+        if (to == -1) {
+            to = items.length - from;
+        } else {
+            --to;
+        }
+
+        if ((from < 0) || (to < (from - 1)) || ((from + to) > items.length)) {
+            return undefined;
+        } else {
+            return items[from + Math.floor(Math.random() * to)];
+        }
+    } else {
+        return undefined;
+    }
+}
+
+/**
  * @return A random element from the given array known to be non-empty
  */
 export function forcePickOne<T>(items: T[]): T {
     return items[Math.floor(Math.random() * items.length)];
+}
+
+/**
+ * @return A random element from the given array known to be non-empty
+ */
+export function forcePickOneRange<T>(items: T[], from: number, to: number = -1): T {
+    if (to == -1) {
+        to = items.length - from;
+    } else {
+        --to;
+    }
+
+    return items[from + Math.floor(Math.random() * to)];
 }
 
 /**

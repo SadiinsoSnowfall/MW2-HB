@@ -4,7 +4,7 @@ import { Collider, Display } from './engine/components';
 import { screen } from './engine/screen';
 import { Scene } from './engine/scene';
 import { FPSMetter, yoloSprite} from './game/prefabs/debugPrefabs';
-import { assert, Vec2, range } from './engine/utils';
+import { assert, Vec2, range, forcePickOneRange, pickOneRange, forcePickOne } from './engine/utils';
 import { GameObject } from './engine/gameObject';
 import { ConvexPolygon, intersection, Circle, drawCross } from './engine/physics';
 import { createGround } from './game/prefabs/basePrefabs';
@@ -35,6 +35,7 @@ async function game() {
     screen.setScene(scene);
 
     //Menus.main_menu.setVisible(true); // enable main menu
+    Menus.ig_menu.setVisible(true); // enable IG menu manually (testing only);
 
     Inputs.subscribeMouse(MouseAction.LEFT_CLICK, p => {
         //scene.instantiate(BlockPrefabs.wooden_tris_md_2, p.x, p.y);
@@ -42,7 +43,15 @@ async function game() {
     });
 
     Inputs.subscribeMouse(MouseAction.FORWARD, p => {
-        scene.instantiate(BirdPrefabs.BIRD_RED, p.x, p.y);
+        scene.instantiate(forcePickOne([
+            BirdPrefabs.BIRD_RED,
+            BirdPrefabs.BIRD_YELLOW,
+            BirdPrefabs.BIRD_BLUE,
+            BirdPrefabs.BIRD_BLACK,
+            BirdPrefabs.BIRD_WHITE,
+            BirdPrefabs.BIRD_GREEN,
+            BirdPrefabs.BIRD_BIG,
+        ]), p.x, p.y);
     });
 
     Inputs.subscribeMouse(MouseAction.RIGHT_CLICK, p => {

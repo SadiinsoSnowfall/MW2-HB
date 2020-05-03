@@ -68,5 +68,5 @@ export namespace AudioManager {
 
     function buildURI(sound: string, from: number, to?: number) {
         return ((!from && !to) ? sound : sound + `#t=${from}` + (to ? ',' + to : ''));
-}
+    }
 }

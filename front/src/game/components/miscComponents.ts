@@ -112,8 +112,9 @@ export class SlingshotBehaviour extends Behaviour {
 
     public pickBird(bird: GameObject | undefined | null) {
         if (bird) {
-            this.bird = bird.getCollider<RigidBody>();
-            this.bird?.setStatic(true);
+            this.bird = bird.getCollider() as RigidBody;
+            this.bird.setCoEnabled(false);
+            (bird.getBehaviour() as BaseBirdBehaviour).notifySelect();
         }
     }
 
@@ -143,7 +144,9 @@ export class SlingshotBehaviour extends Behaviour {
     }
 
     public onMouseDown(p: Vec2): void {
-        this.clickBegin = p.clone();
+        if (this.bird) {
+            this.clickBegin = p.clone();
+        }
     }
 
     public onMouseUp(p: Vec2): void {
@@ -155,8 +158,8 @@ export class SlingshotBehaviour extends Behaviour {
             const bird = this.bird;
 
             // set bird touched & resume physics
-            (bird.object.getBehaviour() as BaseBirdBehaviour).touched = true;
-            bird.setStatic(false);
+            (bird.object.getBehaviour() as BaseBirdBehaviour).notifyLaunch();
+            bird.setCoEnabled(true);
 
             // apply force
             bird.applyForceXY(700 * (x - bx), 800 * (y - by));

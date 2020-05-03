@@ -390,10 +390,10 @@ export class AABBTree implements Iterable<Collider> {
 
     // Private, internal method for querying
     private _query(collider: Collider, r: Collision[], set: Set<Collider>): void {
-        let bbox = bboxFromCollider(collider);
+        const bbox = bboxFromCollider(collider);
         for (const leaf of this.broadSearch(bbox)) {
-            if (!set.has(leaf.collider)) {
-                let collision = intersection(collider, leaf.collider);
+            if (leaf.collider.isCoEnabled() && !set.has(leaf.collider)) {
+                const collision = intersection(collider, leaf.collider);
                 if (collision != null) {
                     r.push(collision);
                 }
@@ -406,8 +406,12 @@ export class AABBTree implements Iterable<Collider> {
      * collider itself is not included.
      */
     public query(collider: Collider): Collision[] {
-        let r: Collision[] = [];
-        let set = new Set<Collider>();
+        if (!collider.isCoEnabled()) {
+            return [];
+        }
+
+        const r: Collision[] = [];
+        const set = new Set<Collider>();
         set.add(collider);
         this._query(collider, r, set);
         return r;
@@ -417,10 +421,10 @@ export class AABBTree implements Iterable<Collider> {
      * @brief Returns a list of all pairs of colliders that are colliding.
      */
     public queryAll(): Collision[] {
-        let r: Collision[] = [];
-        let set = new Set<Collider>();
-        for (let collider of this) {
-            if (collider.object.hasMoved()) {
+        const r: Collision[] = [];
+        const set = new Set<Collider>();
+        for (const collider of this) {
+            if (collider.object.hasMoved() && collider.isCoEnabled()) {
                 set.add(collider);
                 this._query(collider, r, set);
                 collider.object.resetMoved();

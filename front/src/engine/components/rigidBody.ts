@@ -75,6 +75,16 @@ export class RigidBody extends Collider {
         }
     }
 
+    // override
+    public setCoEnabled(state: boolean): void {
+        this.coEnabled = state;
+
+        // reset inertia if needed
+        if (state) {
+            this.prevPos = this.object.getPosition();
+        }
+    }
+
     public applyImpulse(): void {
         if (!this.impulse.isNull()) {
             this.object.move(this.impulse.x, this.impulse.y);
@@ -89,7 +99,7 @@ export class RigidBody extends Collider {
     }
 
     public update(): void {
-        if (this.static) {
+        if (this.static || !this.coEnabled) {
             return;
         }
 
