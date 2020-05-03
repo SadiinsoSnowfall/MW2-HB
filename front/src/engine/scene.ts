@@ -25,7 +25,6 @@ export class Scene {
     protected background: GameObject[] = [];
     protected tree: AABBTree;
     protected physics: PhysicsEngine;
-    static MOBYDICK: number;
     
     constructor() {
         this.tree = new AABBTree(this);
@@ -113,6 +112,7 @@ export class Scene {
         this.foreground = [];
         this.clickables = [];
         this.tree = new AABBTree(this);
+        this.physics = new PhysicsEngine(this.tree);
     }
     
     /**

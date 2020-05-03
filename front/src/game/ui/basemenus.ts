@@ -36,7 +36,7 @@ export async function init(scene: Scene) {
 
     main_menu.onHide(() => {
         sett_menu.setVisible(false);
-        if (mainMenuMusic != null) {
+        if (mainMenuMusic != null && !lvl_menu.isVisible()) {
             mainMenuMusic.pause();
             mainMenuMusic = null;
         }
@@ -56,13 +56,12 @@ export async function init(scene: Scene) {
     playShape.setAlignedMiddle();
     main_menu.add(playShape);
 
-    const settings = new Button(mss.getSprite(1, 2)).relativeTo(main_menu);
-    settings.setPositionXY(50, -50);
-    settings.onClick(() => {
+    const mm_settings = new Button(mss.getSprite(1, 2)).relativeTo(main_menu);
+    mm_settings.setPositionXY(50, -50);
+    mm_settings.onClick(() => {
         sett_menu.toggle();
     });
-
-    main_menu.add(settings);
+    main_menu.add(mm_settings);
 
 
     /*
@@ -89,7 +88,7 @@ export async function init(scene: Scene) {
         const state = await Settings.toggle(DefaultSettings.SOUND_ENABLED, false);
         if (state) {
             sm_music_overlay.setVisible(false);
-            if (main_menu.isVisible() && (mainMenuMusic === null)) {
+            if ((main_menu.isVisible() || lvl_menu.isVisible()) && (mainMenuMusic === null)) {
                 mainMenuMusic = await AudioManager.loop(Sound.MAIN_REMIX, 0.1, 50, 70.8);
             }
         } else {
@@ -138,13 +137,34 @@ export async function init(scene: Scene) {
     lvl_title.setAlignedMiddleX();
     lvl_menu.add(lvl_title);
 
+    const lvl_settings = new Button(mss.getSprite(1, 2)).relativeTo(main_menu);
+    lvl_settings.setPositionXY(50, -50);
+    lvl_settings.onClick(() => {
+        sett_menu.toggle();
+    });
+    lvl_menu.add(lvl_settings);
+
     const lvl_btn_back = new Button(mss.getSprite(2, 1)).relativeTo(lvl_menu);
-    lvl_btn_back.setPositionXY(50, -50);
+    lvl_btn_back.setPositionXY(120, -50);
     lvl_btn_back.onClick(() => {
         main_menu.setVisible(true);
         lvl_menu.setVisible(false);
     });
     lvl_menu.add(lvl_btn_back);
+
+    lvl_menu.onHide(() => {
+        sett_menu.setVisible(false);
+        if (mainMenuMusic !== null && !main_menu.isVisible()) {
+            mainMenuMusic.pause();
+            mainMenuMusic = null;
+        }
+    });
+
+    lvl_menu.onDisplay(async () => {
+        if (mainMenuMusic == null) {
+            mainMenuMusic = await AudioManager.loop(Sound.MAIN_REMIX, 0.1, 50, 70.8);
+        }
+    });
 
     Levels.getOrQueryLevelList().then(levels => {
         const baseX = 660;

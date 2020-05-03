@@ -6,7 +6,7 @@ export class MessageBox {
     private menu: Menu;
 
     constructor(message: string[], w: number, h: number, a: Alignment = Alignment.LEFT, s: Style = Style.FILL) {
-        const mss = SSManager.get(Img.BUTTONS, 5, 3);
+        const mss = SSManager.get(Img.BUTTONS, 3, 5);
         this.menu = MenuManager.createMenu(666);
         this.menu.setSizeXY(w + 10, h + 10);
         this.menu.setAlignedMiddle();
