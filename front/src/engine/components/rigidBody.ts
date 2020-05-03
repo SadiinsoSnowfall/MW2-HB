@@ -53,12 +53,26 @@ export class RigidBody extends Collider {
         this.impulse.y += y;
     }
 
+    public applyForceXY(fx: number, fy: number): void {
+        this.force.x += fx;
+        this.force.y += fy;
+    }
+
     public applyForce(force: Vec2): void {
         this.force.add(force);
     }
 
     public clearForce(): void {
         this.force.setXY(0, 0);
+    }
+
+    public setStatic(state: boolean): void {
+        this.static = state;
+
+        // reset inertia if needed
+        if (!state) {
+            this.prevPos = this.object.getPosition();
+        }
     }
 
     public applyImpulse(): void {

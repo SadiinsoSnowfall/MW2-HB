@@ -5,7 +5,7 @@ import { Img, Inputs, MouseAction } from "../../engine/res";
 import { Scene, MOBYDICK } from "../../engine/scene";
 import { BirdPrefabs } from "../prefabs/birdPrefabs";
 import { RigidBody } from "src/engine/components/rigidBody";
-import { BirdDisplay } from "./birdComponents";
+import { BirdDisplay, BaseBirdBehaviour } from "./birdComponents";
 
 
 export class SlingshotDisplay extends Display {
@@ -66,6 +66,10 @@ export class SlingshotDisplay extends Display {
 }
 
 export class SlingshotBehaviour extends Behaviour {
+    // sqared max distance to avoir math.sqrt calls
+    private static readonly maxStretch: number = 150;
+    private static readonly maxStretchSqr: number = Math.pow(SlingshotBehaviour.maxStretch, 2);
+
     private sd: SlingshotDisplay;
     private clickBegin: Vec2 | null = null;
     private bird: RigidBody | undefined = undefined;
@@ -76,43 +80,40 @@ export class SlingshotBehaviour extends Behaviour {
         this.setClickable();
     }
 
+    public getSLPosXY(): [number, number] {
+        let pos = this.object.getPositionXY();
+        pos[0] += 15;
+        pos[1] -= 55;
+        return pos;
+    }
+
     public update(): void {
         if (this.bird === undefined) {
-            const scene = this.object.getScene() as Scene;
-            const birdObject = scene.query({
-                from: MOBYDICK,
-                where: obj => BirdPrefabs.isBird(obj)
-            });
-
-            if (birdObject) {
-                this.bird = birdObject.getCollider() as RigidBody;
-                this.bird.setStatic(true);
-            }
+           this.autoPickBird();
         } else if (this.clickBegin === null) {
-            let [x, y] = this.object.getPositionXY();
-
-            // apply correction
-            x += 15;
-            y -= 55;
-
+            const [x, y] = this.getSLPosXY();
             const [bx, by] = this.bird.object.getPositionXY();
-            const dx = x - bx;
-            const dy = y - by;
+            const dx = (x - bx) / 10;
+            const dy = (y - by) / 10;
 
-            let tx = 0;
-            let ty = 0;
-
-            if (dx != 0) {
-                tx = dx / 10;
+            if ((dx != 0) || (dy != 0)) {
+                this.bird.object.translate(dx, dy);
             }
+        }
+    }
 
-            if (dy != 0) {
-                ty = dy / 10;
-            }
+    public autoPickBird() {
+        const scene = this.object.getScene() as Scene;
+        this.pickBird(scene.query({
+            from: MOBYDICK,
+            where: obj => BirdPrefabs.isBird(obj) && BirdPrefabs.isReady(obj)
+        }));
+    }
 
-            if (tx != 0 && ty != 0) {
-                this.bird.object.translate(tx, ty);
-            }
+    public pickBird(bird: GameObject | undefined | null) {
+        if (bird) {
+            this.bird = bird.getCollider<RigidBody>();
+            this.bird?.setStatic(true);
         }
     }
 
@@ -123,10 +124,20 @@ export class SlingshotBehaviour extends Behaviour {
 
     public onMouseMove(p: Vec2): void {
         if (this.clickBegin) {
-            const dp = p.XY();
-            this.sd.setDragPoint(dp);
+            let [dpx, dpy] = p.XY(); // clone vec2 data
+            const [x, y] = this.getSLPosXY();
+            const dist = Vec2.sqrDistanceXY(x, y, dpx, dpy);
+
+            if (dist >= SlingshotBehaviour.maxStretchSqr) {
+                const dr = SlingshotBehaviour.maxStretch / Math.sqrt(dist);
+                const idr = 1 - dr;
+                dpx = idr * x + dr * dpx;
+                dpy = idr * y + dr * dpy;
+            }
+
+            this.sd.setDragPoint([dpx, dpy]);
             if (this.bird) {
-                this.bird.object.place(dp[0], dp[1]);
+                this.bird.object.place(dpx, dpy);
             }
         }
     }
@@ -138,6 +149,30 @@ export class SlingshotBehaviour extends Behaviour {
     public onMouseUp(p: Vec2): void {
         this.clickBegin = null;
         this.sd.setDragPoint(null);
+        if (this.bird) {
+            const [x, y] = this.getSLPosXY();
+            const [bx, by] = this.bird.object.getPositionXY();
+            const bird = this.bird;
+
+            // set bird touched & resume physics
+            (bird.object.getBehaviour() as BaseBirdBehaviour).touched = true;
+            bird.setStatic(false);
+            
+            // compute force
+            let bfx = 500;
+            let bfy = 600;
+
+            const dx = x - bx;
+            const dy = y - by;
+
+            console.log(dx + " " + dy);
+
+            // apply force
+            bird.applyForceXY(bfx * dx, bfy * dy);
+
+            // detach bird
+            this.bird = undefined;
+        }
     }
 
 }

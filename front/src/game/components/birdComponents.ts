@@ -1,4 +1,4 @@
-import { Display } from "../../engine/components";
+import { Display, Behaviour } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { Spritesheet } from "../../engine/utils";
 
@@ -13,4 +13,14 @@ export class BirdDisplay extends Display {
     public draw(ctx: CanvasRenderingContext2D): void {
         this.sheet.getSpriteAbsolute(0).draw(ctx);
     }
+}
+
+export class BaseBirdBehaviour extends Behaviour {
+    public touched: boolean = false;
+
+    constructor(o: GameObject) {
+        super(o);
+    }
+
+
 }

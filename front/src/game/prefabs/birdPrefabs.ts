@@ -1,6 +1,6 @@
 import { PrefabsManager, Img } from "../../engine/res";
 import { Prefab } from "../../engine/prefab";
-import { BirdDisplay } from "../components/birdComponents";
+import { BirdDisplay, BaseBirdBehaviour } from "../components/birdComponents";
 import { SSManager, Vec2 } from "../../engine/utils";
 import { Collider } from "../../engine/components";
 import { Circle, ConvexPolygon } from "../../engine/physics";
@@ -11,6 +11,10 @@ export namespace BirdPrefabs {
 
     export function isBird(obj: GameObject) {
         return ((obj.prefabID >= 600) && (obj.prefabID <= 606));
+    }
+
+    export function isReady(obj: GameObject): boolean {
+        return obj.getBehaviour<BaseBirdBehaviour>()?.touched === false;
     }
 
     export function init() {
@@ -58,36 +62,43 @@ export namespace BirdPrefabs {
     export const BIRD_RED = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new BirdDisplay(obj, SSManager.get(Img.BIRD_RED, 5, 1)));
         obj.setCollider(new RigidBody(obj, RED_SHAPE, BirdWeight.RED));
+        obj.setBehaviour(new BaseBirdBehaviour(obj));
     }), 600);
 
     export const BIRD_YELLOW = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new BirdDisplay(obj, SSManager.get(Img.BIRD_YELLOW, 5, 1)));
         obj.setCollider(new Collider(obj, YELLOW_SHAPE));
+        obj.setBehaviour(new BaseBirdBehaviour(obj));
     }), 601);
 
     export const BIRD_BLUE = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new BirdDisplay(obj, SSManager.get(Img.BIRD_BLUE, 4, 1)));
         obj.setCollider(new Collider(obj, BLUE_SHAPE));
+        obj.setBehaviour(new BaseBirdBehaviour(obj));
     }), 602);
 
     export const BIRD_BLACK = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new BirdDisplay(obj, SSManager.get(Img.BIRD_BLACK, 7, 1)));
         obj.setCollider(new Collider(obj, BLACK_SHAPE));
+        obj.setBehaviour(new BaseBirdBehaviour(obj));
     }), 603);
 
     export const BIRD_WHITE = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new BirdDisplay(obj, SSManager.get(Img.BIRD_WHITE, 5, 1)));
         obj.setCollider(new Collider(obj, WHITE_SHAPE));
+        obj.setBehaviour(new BaseBirdBehaviour(obj));
     }), 604);
 
     export const BIRD_GREEN = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new BirdDisplay(obj, SSManager.get(Img.BIRD_GREEN, 5, 1)));
         obj.setCollider(new Collider(obj, GREEN_SHAPE));
+        obj.setBehaviour(new BaseBirdBehaviour(obj));
     }), 605);
 
     export const BIRD_BIG = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new BirdDisplay(obj, SSManager.get(Img.BIRD_BIG, 3, 1)));
         obj.setCollider(new Collider(obj, BIG_SHAPE));
+        obj.setBehaviour(new BaseBirdBehaviour(obj));
     }), 606);
 
 }

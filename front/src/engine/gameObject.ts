@@ -78,16 +78,16 @@ export class GameObject {
         this._scene = scene;
     }
 
-    public getDisplay(): Display | undefined {
-        return this.display;
+    public getDisplay<T extends Display = Display>(): T | undefined {
+        return this.display as T;
     }
 
     public setDisplay(display?: Display): void {
         this.display = display;
     }
 
-    public getCollider(): Collider | undefined {
-        return this.collider;
+    public getCollider<T extends Collider = Collider>(): T | undefined {
+        return this.collider as T;
     }
 
     public setCollider(collider?: Collider): void {
@@ -95,8 +95,8 @@ export class GameObject {
         this.moved = true;
     }
 
-    public getBehaviour(): Behaviour | undefined {
-        return this.behaviour;
+    public getBehaviour<T extends Behaviour = Behaviour>(): T | undefined {
+        return this.behaviour as T;
     }
 
     public setBehaviour(behaviour?: Behaviour): void {
