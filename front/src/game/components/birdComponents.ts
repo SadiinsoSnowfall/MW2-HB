@@ -2,6 +2,7 @@ import { Display, Behaviour } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { Spritesheet, pickOneRange, forcePickOneRange } from "../../engine/utils";
 import { AudioManager } from "../../engine/res";
+import { ParticleCreator } from "../prefabs/basePrefabs";
 
 export class BirdDisplay extends Display {
     protected sheet: Spritesheet;
@@ -20,15 +21,23 @@ const SELECTED: number = 0;
 const FLY: number = 1;
 
 export class BaseBirdBehaviour extends Behaviour {
+    private particle: ParticleCreator;
+
     private currentSound: HTMLAudioElement | null = null;
     private touched: boolean = false;
 
     // select, fly & hit sounds
     private sounds: string[];
 
-    constructor(o: GameObject, baseSounds: string[]) {
+    constructor(o: GameObject, baseSounds: string[], particle: ParticleCreator) {
         super(o);
         this.sounds = baseSounds;
+        this.particle = particle;
+    }
+
+    public emmitParticles(volume: number, amplitude: number, lifespanMult: number = 1): void {
+        const [x, y] = this.object.getPositionXY();
+        this.object.getScene().addObject(this.particle(x, y, volume, amplitude, lifespanMult));
     }
 
     /**
@@ -46,6 +55,7 @@ export class BaseBirdBehaviour extends Behaviour {
     public onCollide(): void {
         if (this.touched) {
             this.playSound(forcePickOneRange(this.sounds, 2), .5);
+            this.emmitParticles(5, 1.5);
         }
     }
 

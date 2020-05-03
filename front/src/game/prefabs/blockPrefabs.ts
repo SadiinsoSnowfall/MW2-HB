@@ -1,10 +1,11 @@
 import { PrefabsManager, Img, Sound } from "../../engine/res";
 import { Prefab } from "../../engine/prefab";
 import { SSManager, Vec2 } from "../../engine/utils";
-import { VSBlockDisplay, BlockBehaviour, HSBlockDisplay, ParticleDisplay } from "../components/blockComponents";
+import { VSBlockDisplay, BlockBehaviour, HSBlockDisplay } from "../components/blockComponents";
 import { ConvexPolygon, Circle, Shape } from "../../engine/physics";
 import { RigidBody } from "../../engine/components/rigidBody";
 import { GameObject } from "../../engine/gameObject";
+import { ParticleDisplay } from "../components/baseComponents";
 
 /**
  * 
