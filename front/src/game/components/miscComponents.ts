@@ -157,18 +157,9 @@ export class SlingshotBehaviour extends Behaviour {
             // set bird touched & resume physics
             (bird.object.getBehaviour() as BaseBirdBehaviour).touched = true;
             bird.setStatic(false);
-            
-            // compute force
-            let bfx = 500;
-            let bfy = 600;
-
-            const dx = x - bx;
-            const dy = y - by;
-
-            console.log(dx + " " + dy);
 
             // apply force
-            bird.applyForceXY(bfx * dx, bfy * dy);
+            bird.applyForceXY(700 * (x - bx), 800 * (y - by));
 
             // detach bird
             this.bird = undefined;

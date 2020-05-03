@@ -450,7 +450,13 @@ export class AABBTree implements Iterable<Collider> {
      */
     public update(): void {
         this.colliders.forEach((leaf, collider, map) => {
-            if (collider.object.update()) {
+            if (!collider.object.isEnabled() || AABBTree.istooFarAway(collider)) {
+                // If the object has been disabled, it must be removed
+                // Seems safe: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/forEach#Description
+                this.scene.removeClickable(collider.object);
+                this.remove(collider);
+
+            }  else if (collider.object.update()) {
                 // The object has moved
                 let bbox = bboxFromCollider(collider);
                 if (!leaf.bbox.encloses(bbox)) {
@@ -461,14 +467,14 @@ export class AABBTree implements Iterable<Collider> {
                     // We could also test if the leaf's bbox is too large
                     // (leading to poor performance)
                 }
-            } else if (!collider.object.isEnabled()) {
-                // If the object has been disabled, it must be removed
-                // Seems safe: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/forEach#Description
-                
-                this.scene.removeClickable(collider.object);
-                this.remove(collider);
             }
         });
+    }
+
+    private static istooFarAway(c: Collider) {
+        const maxDist = 10000;
+        const [x, y] = c.object.getPositionXY();
+        return ((x > maxDist) || (x < -maxDist) || (y > maxDist) || (y < -maxDist));
     }
 
     /**
