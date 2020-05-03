@@ -1,7 +1,7 @@
 import { Display, Behaviour } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { Spritesheet, pickOneRange, forcePickOneRange, randomFloatIn, randomIn } from "../../engine/utils";
-import { AudioManager } from "../../engine/res";
+import { AudioManager, Sound } from "../../engine/res";
 import { ParticleCreator } from "../prefabs/basePrefabs";
 
 export enum BirdState {
@@ -179,24 +179,38 @@ const SELECTED: number = 0;
 const FLY: number = 1;
 
 export class BaseBirdBehaviour extends Behaviour {
-    private particle: ParticleCreator;
+    private feathers: ParticleCreator;
+    private smoke: ParticleCreator;
 
     private currentSound: HTMLAudioElement | null = null;
     private state: BirdState;
 
     // select, fly & hit sounds
     private sounds: string[];
+    private lifespan: number = 400;
 
-    constructor(o: GameObject, baseSounds: string[], particle: ParticleCreator) {
+    constructor(o: GameObject, baseSounds: string[], feathers: ParticleCreator, smoke: ParticleCreator) {
         super(o);
         this.state = BirdState.READY;
         this.sounds = baseSounds;
-        this.particle = particle;
+        this.feathers = feathers;
+        this.smoke = smoke;
     }
 
-    public emmitParticles(volume: number, amplitude: number, lifespanMult: number = 1): void {
+    public update(): void {
+        if (this.state === BirdState.GROUNDED) {
+            if (--this.lifespan <= 0) {
+                this.playSound(Sound.BIRD_DESTROYED, .4);
+                this.emmitParticles(this.feathers, 20, 2);
+                this.emmitParticles(this.smoke, 5, 1.25);
+                this.object.setEnabled(false);
+            }
+        }
+    }
+
+    public emmitParticles(particle: ParticleCreator, volume: number, amplitude: number, lifespanMult: number = 1): void {
         const [x, y] = this.object.getPositionXY();
-        this.object.getScene().addObject(this.particle(x, y, volume, amplitude, lifespanMult));
+        this.object.getScene().addObject(particle(x, y, volume, amplitude, lifespanMult));
     }
 
     /**
@@ -215,7 +229,7 @@ export class BaseBirdBehaviour extends Behaviour {
         if (this.state === BirdState.FLYING) {
             this.state = BirdState.GROUNDED;
             this.playSound(forcePickOneRange(this.sounds, 2), .5);
-            this.emmitParticles(5, 1.5);
+            this.emmitParticles(this.feathers, 5, 1.5);
         }
     }
 
