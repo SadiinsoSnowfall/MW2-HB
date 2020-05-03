@@ -34,8 +34,8 @@ async function game() {
     scene.instantiate(FPSMetter, 600, 120);
     screen.setScene(scene);
 
-    Menus.main_menu.setVisible(true); // enable main menu
-    //Menus.ig_menu.setVisible(true); // enable IG menu manually (testing only);
+    //Menus.main_menu.setVisible(true); // enable main menu
+    Menus.ig_menu.setVisible(true); // enable IG menu manually (testing only);
 
     Inputs.subscribeMouse(MouseAction.LEFT_CLICK, p => {
         //scene.instantiate(BlockPrefabs.wooden_tris_md_2, p.x, p.y);

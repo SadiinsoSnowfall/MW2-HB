@@ -1,7 +1,7 @@
 import { Display, Behaviour, Collider } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { SSManager, Sprite, Vec2, inRect } from "../../engine/utils";
-import { Img, Inputs, MouseAction } from "../../engine/res";
+import { Img, Inputs, MouseAction, AudioManager, Sound } from "../../engine/res";
 import { Scene, MOBYDICK } from "../../engine/scene";
 import { BirdPrefabs } from "../prefabs/birdPrefabs";
 import { RigidBody } from "src/engine/components/rigidBody";
@@ -74,6 +74,8 @@ export class SlingshotBehaviour extends Behaviour {
     private clickBegin: Vec2 | null = null;
     private bird: RigidBody | undefined = undefined;
 
+    private playingSound: HTMLAudioElement | null = null;
+
     constructor(o: GameObject) {
         super(o);
         this.sd = o.getDisplay() as SlingshotDisplay;
@@ -123,8 +125,16 @@ export class SlingshotBehaviour extends Behaviour {
         return inRect(p.x, p.y, x - 50, y - 100, 100, 200);
     }
 
+    private async doSound(): Promise<void> {
+        if (this.playingSound === null || this.playingSound.ended) {
+            this.playingSound = await AudioManager.play(Sound.SLINGSHOT, .25);
+        }
+    }
+
     public onMouseMove(p: Vec2): void {
         if (this.clickBegin) {
+            this.doSound();
+
             let [dpx, dpy] = p.XY(); // clone vec2 data
             const [x, y] = this.getSLPosXY();
             const dist = Vec2.sqrDistanceXY(x, y, dpx, dpy);
@@ -152,6 +162,12 @@ export class SlingshotBehaviour extends Behaviour {
     public onMouseUp(p: Vec2): void {
         this.clickBegin = null;
         this.sd.setDragPoint(null);
+
+        if (this.playingSound) {
+            this.playingSound.pause();
+            this.playingSound = null;
+        }
+
         if (this.bird) {
             const [x, y] = this.getSLPosXY();
             const [bx, by] = this.bird.object.getPositionXY();
