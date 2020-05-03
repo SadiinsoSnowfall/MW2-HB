@@ -43,6 +43,7 @@ async function game() {
     });
 
     Inputs.subscribeMouse(MouseAction.FORWARD, p => {
+        
         scene.instantiate(forcePickOne([
             BirdPrefabs.BIRD_RED,
             BirdPrefabs.BIRD_YELLOW,

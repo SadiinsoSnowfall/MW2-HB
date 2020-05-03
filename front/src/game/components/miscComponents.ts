@@ -5,7 +5,7 @@ import { Img, Inputs, MouseAction } from "../../engine/res";
 import { Scene, MOBYDICK } from "../../engine/scene";
 import { BirdPrefabs } from "../prefabs/birdPrefabs";
 import { RigidBody } from "src/engine/components/rigidBody";
-import { BirdDisplay, BaseBirdBehaviour } from "./birdComponents";
+import { BirdDisplay, BaseBirdBehaviour, BirdState } from "./birdComponents";
 
 
 export class SlingshotDisplay extends Display {
@@ -106,7 +106,7 @@ export class SlingshotBehaviour extends Behaviour {
         const scene = this.object.getScene() as Scene;
         this.pickBird(scene.query({
             from: MOBYDICK,
-            where: obj => BirdPrefabs.isBird(obj) && BirdPrefabs.isReady(obj)
+            where: obj => BirdPrefabs.isBird(obj) && (obj.getBehaviour<BaseBirdBehaviour>()?.getState() === BirdState.READY)
         }));
     }
 
