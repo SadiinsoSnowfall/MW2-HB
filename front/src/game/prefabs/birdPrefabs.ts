@@ -29,7 +29,7 @@ export namespace BirdPrefabs {
         BLACK = 60,
         WHITE = 50,
         GREEN = 40,
-        BIG = 75
+        BIG = 65
     }
 
     /**
@@ -37,7 +37,6 @@ export namespace BirdPrefabs {
      */
 
     export const RED_SHAPE = new Circle(new Vec2(3, 3), 20);
-
     export const YELLOW_SHAPE = new ConvexPolygon(Vec2.Zero, [
         new Vec2(0, -25),
         new Vec2(-30, 25),
@@ -45,13 +44,9 @@ export namespace BirdPrefabs {
     ]);
 
     export const BLUE_SHAPE = new Circle(new Vec2(0, 1), 13);
-
     export const BLACK_SHAPE = new Circle(new Vec2(0, 9), 31);
-
     export const WHITE_SHAPE = new Circle(new Vec2(5, 11), 37);
-
     export const GREEN_SHAPE = new Circle(new Vec2(-15, 7), 26);
-
     export const BIG_SHAPE = new Circle(new Vec2(5, 5), 42);
 
     /**
@@ -116,10 +111,9 @@ export namespace BirdPrefabs {
         Sound.BIRD_BIG_HIT_4
     ];
 
-    // uses the same select & fly sounds as the red one
     export const BIG_SOUNDS: string[] = [
-        Sound.BIRD_RED_SELECT,
-        Sound.BIRD_RED_FLY,
+        Sound.BIRD_BIG_SELECT,
+        Sound.BIRD_BIG_FLY,
         Sound.BIRD_BIG_HIT_1,
         Sound.BIRD_BIG_HIT_2,
         Sound.BIRD_BIG_HIT_3,

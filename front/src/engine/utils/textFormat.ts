@@ -153,7 +153,7 @@ export class TextFormat {
      */
     public measureLines(ctx: CanvasRenderingContext2D, lines: string[]): Vec2 {
         this.applyTo(ctx);
-        let r = new Vec2(0, 0);
+        const r = new Vec2(0, 0);
         for (let line of lines) {
             let w = ctx.measureText(line).width;
             r.x = Math.max(r.x, w);
@@ -174,7 +174,7 @@ export class TextFormat {
 
         // Computing dimensions
         let width = 0;
-        let lines2: any[] = [];
+        const lines2: any[] = [];
         for (const line of lines) {
             let w = ctx.measureText(line).width;
             width = Math.max(width, w);
@@ -184,7 +184,7 @@ export class TextFormat {
             });
         }
         width = Math.min(width, maxLength);
-        let height = lines.length * this.size + (lines.length - 1) * this.interline;
+        const height = lines.length * this.size + (lines.length - 1) * this.interline;
 
         // Drawing
         drawText(ctx, this, lines2, width, height, maxLength);

@@ -71,7 +71,8 @@ export class RigidBody extends Collider {
 
         // reset inertia if needed
         if (!state) {
-            this.prevPos = this.object.getPosition();
+            const [x, y] = this.object.getPositionXY();
+            this.prevPos.setXY(x, y);
         }
     }
 
@@ -81,7 +82,8 @@ export class RigidBody extends Collider {
 
         // reset inertia if needed
         if (state) {
-            this.prevPos = this.object.getPosition();
+            const [x, y] = this.object.getPositionXY();
+            this.prevPos.setXY(x, y);
         }
     }
 

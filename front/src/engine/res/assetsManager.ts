@@ -164,10 +164,12 @@ export const Sound = Object.freeze({
     BIRD_GREEN_ACTIVATE: require('assets/music/birds/specific/green/boomerang_activate.ogg'),
     BIRD_GREEN_SWISH: require('assets/music/birds/specific/green/boomerang_swish.ogg'),
 
-    BIRD_BIG_HIT_1: require('assets/music/birds/specific/red/bird_01_collision_1_low.ogg'),
-    BIRD_BIG_HIT_2: require('assets/music/birds/specific/red/bird_01_collision_2_low.ogg'),
-    BIRD_BIG_HIT_3: require('assets/music/birds/specific/red/bird_01_collision_3_low.ogg'),
-    BIRD_BIG_HIT_4: require('assets/music/birds/specific/red/bird_01_collision_4_low.ogg'),
+    BIRD_BIG_FLY: require('assets/music/birds/specific/big/bird_01_flying_low.ogg'),
+    BIRD_BIG_SELECT: require('assets/music/birds/specific/big/bird_01_select_low.ogg'),
+    BIRD_BIG_HIT_1: require('assets/music/birds/specific/big/bird_01_collision_1_low.ogg'),
+    BIRD_BIG_HIT_2: require('assets/music/birds/specific/big/bird_01_collision_2_low.ogg'),
+    BIRD_BIG_HIT_3: require('assets/music/birds/specific/big/bird_01_collision_3_low.ogg'),
+    BIRD_BIG_HIT_4: require('assets/music/birds/specific/big/bird_01_collision_4_low.ogg'),
 
     /**
      * BLOCKS

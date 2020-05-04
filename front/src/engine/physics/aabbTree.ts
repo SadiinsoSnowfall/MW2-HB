@@ -5,8 +5,8 @@ import PriorityQueue from "../utils/priorityQueue";
 import { Scene } from "../scene";
 
 function bboxFromCollider(collider: Collider): Rectangle {
-    let t = collider.object.getTransform();
-    let b = collider.getShape().boundingBox(t);
+    const t = collider.object.getTransform();
+    const b = collider.getShape().boundingBox(t);
     return b;
 }
 
@@ -88,7 +88,7 @@ class NodeData {
     public checkEncloses(): void {
         this.left.checkEncloses();
         this.right.checkEncloses();
-        let expected = this.left.bbox.merge(this.right.bbox);
+        const expected = this.left.bbox.merge(this.right.bbox);
         assert(this.bbox.encloses(expected), "Node " + this.id + " violates enclosure");
     }
 }
@@ -188,15 +188,15 @@ export class AABBTree implements Iterable<Collider> {
 
     private swapLoss(parent: NodeData, child: Node, grandchild: Node): number {
         // Will never be null since it has two grandchildren
-        let otherChild = (grandchild.parent as NodeData);
-        let currentCost = otherChild.area;
-        let swapCost = child.bbox.mergedArea(otherChild.getSibling(grandchild).bbox);
+        const otherChild = (grandchild.parent as NodeData);
+        const currentCost = otherChild.area;
+        const swapCost = child.bbox.mergedArea(otherChild.getSibling(grandchild).bbox);
         return swapCost - currentCost;
     }
 
     // Swaps child with grandchild
     private swap(parent: NodeData, child: Node, grandchild: Node): void {
-        let otherChild = (grandchild.parent as NodeData);
+        const otherChild = (grandchild.parent as NodeData);
 
         // Swapping child and grandchild
         otherChild.setNode(grandchild, child);
@@ -211,10 +211,10 @@ export class AABBTree implements Iterable<Collider> {
         let child: Node | null = null;
         let grandchild: Node | null = null;
         let min = 0;
-        let _this = this;
+        const _this = this;
 
         function setMin(_child: Node, _grandchild: Node): void {
-            let loss = _this.swapLoss(node, _child, _grandchild);
+            const loss = _this.swapLoss(node, _child, _grandchild);
             if (loss < min) {
                 min = loss;
                 child = _child;
@@ -223,13 +223,13 @@ export class AABBTree implements Iterable<Collider> {
         }
 
         if (!node.left.isLeaf()) {
-            let left = node.left as NodeData;
+            const left = node.left as NodeData;
             setMin(node.right, left.left);
             setMin(node.right, left.right);
         }
 
         if (!node.right.isLeaf()) {
-            let right = node.right as NodeData;
+            const right = node.right as NodeData;
             setMin(node.left, right.left);
             setMin(node.left, right.right);
         }
@@ -267,14 +267,14 @@ export class AABBTree implements Iterable<Collider> {
 
     private pickBest(leaf: LeafData): InsertInfo {
         // This method is only called by insertLeaf ; we already know that root != null
-        let root = this.root as Node;
-        let r = new InsertInfo(root, leaf);
+        const root = this.root as Node;
+        const r = new InsertInfo(root, leaf);
 
         // Sibling#cost has a dual meaning:
         // r.best.cost is the actual cost of the best sibling, while on any other Sibling,
         // it is the inheritedCost. These two values are different for the same node.
         // https://box2d.org/files/ErinCatto_DynamicBVH_GDC2019.pdf slide 46
-        let queue = new PriorityQueue<Sibling>({comparator: Sibling.compare});
+        const queue = new PriorityQueue<Sibling>({comparator: Sibling.compare});
 
         // This is not r.best because of the dual meaning of Sibling#cost
         // The inherited cost of the root is obviously 0
@@ -316,11 +316,11 @@ export class AABBTree implements Iterable<Collider> {
             this.root = leaf;
         } else {
             // Looking for the best sibling to pair leaf with
-            let r = this.pickBest(leaf);
+            const r = this.pickBest(leaf);
 
             // Adding the leaf
-            let parent = r.best.sibling.parent;
-            let node = new NodeData(parent, leaf, r.best.sibling);
+            const parent = r.best.sibling.parent;
+            const node = new NodeData(parent, leaf, r.best.sibling);
 
             if (parent == null) {
                 this.root = node;
@@ -338,17 +338,17 @@ export class AABBTree implements Iterable<Collider> {
         if (this.colliders.get(collider) != undefined) {
             throw new Error("AABBTree#insert: can not insert a collider that is already contained");
         }
-        let leaf = new LeafData(collider, this.fatFactor);
+        const leaf = new LeafData(collider, this.fatFactor);
         this.colliders.set(collider, leaf);
         this.insertLeaf(leaf);
     }
 
     private removeLeaf(leaf: LeafData): void {
-        let parent = leaf.parent;
+        const parent = leaf.parent;
         if (parent == null) {
             this.root = null;
         } else {
-            let sibling = parent.getSibling(leaf);
+            const sibling = parent.getSibling(leaf);
             if (parent.parent == null) {
                 this.root = sibling;
                 sibling.parent = null;
@@ -365,7 +365,7 @@ export class AABBTree implements Iterable<Collider> {
      * @brief Removes a collider from the tree.
      */
     public remove(collider: Collider): void {
-        let leaf = this.colliders.get(collider);
+        const leaf = this.colliders.get(collider);
         if (leaf == undefined) {
             throw new Error("AABBTree#remove: the tree does not contain the given collider");
         } else {
@@ -381,7 +381,7 @@ export class AABBTree implements Iterable<Collider> {
      *********************************************************************************************/
 
     private broadSearch(rect: Rectangle): LeafData[] {
-        let r: LeafData[] = [];
+        const r: LeafData[] = [];
         if (this.root != null) {
             this.root.broadSearch(rect, r);
         }
@@ -462,7 +462,7 @@ export class AABBTree implements Iterable<Collider> {
 
             }  else if (collider.object.update()) {
                 // The object has moved
-                let bbox = bboxFromCollider(collider);
+                const bbox = bboxFromCollider(collider);
                 if (!leaf.bbox.encloses(bbox)) {
                     // The leaf's bbox no longer encloses the object's
                     this.removeLeaf(leaf);
