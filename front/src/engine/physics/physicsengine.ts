@@ -18,6 +18,10 @@ export class PhysicsEngine {
         this.tree = tree;
     }
 
+    public setTree(tree: AABBTree) {
+        this.tree = tree;
+    }
+
     public update() {
         const collisions = this.tree.queryAll();
         if (collisions.length == 0) {

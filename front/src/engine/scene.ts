@@ -112,7 +112,7 @@ export class Scene {
         this.foreground = [];
         this.clickables = [];
         this.tree = new AABBTree(this);
-        this.physics = new PhysicsEngine(this.tree);
+        this.physics.setTree(this.tree);
     }
     
     /**

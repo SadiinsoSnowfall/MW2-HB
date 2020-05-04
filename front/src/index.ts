@@ -15,11 +15,13 @@ import { ShapeDisplay, CollisionDisplay } from './game/components/debugComponent
 import { Prefab } from './engine/prefab';
 import { slingshot } from './game/prefabs/miscPrefabs';
 import { BirdPrefabs } from './game/prefabs/birdPrefabs';
+import { PigPrefabs } from './game/prefabs/pigPrefabs';
 
 async function game() {
     await Assets.load();// load assets
     BlockPrefabs.init();
     BirdPrefabs.init();
+    PigPrefabs.init();
 
     const ctx = screen.getContext();
     ctx.fillStyle = 'white';
@@ -43,7 +45,6 @@ async function game() {
     });
 
     Inputs.subscribeMouse(MouseAction.FORWARD, p => {
-        
         scene.instantiate(forcePickOne([
             BirdPrefabs.BIRD_RED,
             BirdPrefabs.BIRD_YELLOW,
@@ -52,6 +53,17 @@ async function game() {
             BirdPrefabs.BIRD_WHITE,
             BirdPrefabs.BIRD_GREEN,
             BirdPrefabs.BIRD_BIG,
+        ]), p.x, p.y);
+    });
+
+    Inputs.subscribeMouse(MouseAction.BACKWARD, p => {
+        scene.instantiate(forcePickOne([
+            //PigPrefabs.pig_king,
+            //PigPrefabs.pig_mustache,
+            //PigPrefabs.pig_helmet,
+            //PigPrefabs.pig_lg,
+            PigPrefabs.pig_md,
+            //PigPrefabs.pig_sm,
         ]), p.x, p.y);
     });
 
