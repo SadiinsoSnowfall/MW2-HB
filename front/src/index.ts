@@ -58,12 +58,12 @@ async function game() {
 
     Inputs.subscribeMouse(MouseAction.BACKWARD, p => {
         scene.instantiate(forcePickOne([
-            //PigPrefabs.pig_king,
-            //PigPrefabs.pig_mustache,
-            //PigPrefabs.pig_helmet,
-            //PigPrefabs.pig_lg,
+            PigPrefabs.pig_king,
+            PigPrefabs.pig_mustache,
+            PigPrefabs.pig_helmet,
+            PigPrefabs.pig_lg,
             PigPrefabs.pig_md,
-            //PigPrefabs.pig_sm,
+            PigPrefabs.pig_sm,
         ]), p.x, p.y);
     });
 

@@ -1,4 +1,4 @@
-import { PrefabsManager, Img } from "../../engine/res";
+import { PrefabsManager, Img, Sound } from "../../engine/res";
 import { Prefab } from "../../engine/prefab";
 import { PigDisplay, PigBehaviour } from "../components/pigComponents";
 import { SSManager, Vec2 } from "../../engine/utils";
@@ -36,6 +36,51 @@ export namespace PigPrefabs {
     }
 
     /**
+     * SOUNDS
+     */
+
+    export const hit_sounds: string[] = [
+        Sound.PIG_HIT_1,
+        Sound.PIG_HIT_2,
+        Sound.PIG_HIT_3,
+        Sound.PIG_HIT_4,
+        Sound.PIG_HIT_5,
+        Sound.PIG_HIT_6,
+        Sound.PIG_HIT_7,
+        Sound.PIG_HIT_8
+    ];
+
+    export const damage_sounds: string[] = [
+        Sound.PIG_DAMAGE_1,
+        Sound.PIG_DAMAGE_2,
+        Sound.PIG_DAMAGE_3,
+        Sound.PIG_DAMAGE_4,
+        Sound.PIG_DAMAGE_5,
+        Sound.PIG_DAMAGE_6,
+        Sound.PIG_DAMAGE_7,
+        Sound.PIG_DAMAGE_8
+    ];
+
+    export const destroy_sounds: string[] = [
+        Sound.PIG_DESTROYED
+    ];
+
+    export const talk_sounds: string[] = [
+        Sound.PIG_OINK_1,
+        Sound.PIG_OINK_2,
+        Sound.PIG_OINK_3,
+        Sound.PIG_OINK_4,
+        Sound.PIG_OINK_5,
+        Sound.PIG_OINK_6,
+        Sound.PIG_OINK_7,
+        Sound.PIG_OINK_8,
+        Sound.PIG_OINK_9,
+        Sound.PIG_OINK_10,
+        Sound.PIG_HI_1,
+        Sound.PIG_HI_2
+    ]
+
+    /**
      * SHAPES
      */
 
@@ -53,37 +98,37 @@ export namespace PigPrefabs {
     export const pig_king = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new PigDisplay(obj, SSManager.get(Img.PIG_KING, 23, 1)));
         obj.setCollider(new RigidBody(obj, king_shape, PigWeight.KING));
-        obj.setBehaviour(new PigBehaviour(obj, PigHealth.KING));
+        obj.setBehaviour(new PigBehaviour(obj, PigHealth.KING, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
     }), 500);
 
     export const pig_mustache = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new PigDisplay(obj, SSManager.get(Img.PIG_MUSTACHE, 23, 1)));
         obj.setCollider(new RigidBody(obj, mustache_shape, PigWeight.MUSTACHE));
-        obj.setBehaviour(new PigBehaviour(obj, PigHealth.MUSTACHE));
+        obj.setBehaviour(new PigBehaviour(obj, PigHealth.MUSTACHE, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
     }), 501);
 
     export const pig_helmet = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new PigDisplay(obj, SSManager.get(Img.PIG_HELMET, 23, 1)));
         obj.setCollider(new RigidBody(obj, helmet_shape, PigWeight.HELMET));
-        obj.setBehaviour(new PigBehaviour(obj, PigHealth.HELMET));
+        obj.setBehaviour(new PigBehaviour(obj, PigHealth.HELMET, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
     }), 502);
 
     export const pig_lg = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new PigDisplay(obj, SSManager.get(Img.PIG_LG, 23, 1)));
         obj.setCollider(new RigidBody(obj, lg_shape, PigWeight.LG));
-        obj.setBehaviour(new PigBehaviour(obj, PigHealth.LG));
+        obj.setBehaviour(new PigBehaviour(obj, PigHealth.LG, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
     }), 503);
 
     export const pig_md = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new PigDisplay(obj, SSManager.get(Img.PIG_MD, 23, 1)));
         obj.setCollider(new RigidBody(obj, md_shape, PigWeight.MD));
-        obj.setBehaviour(new PigBehaviour(obj, PigHealth.MD));
+        obj.setBehaviour(new PigBehaviour(obj, PigHealth.MD, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
     }), 504);
 
     export const pig_sm = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new PigDisplay(obj, SSManager.get(Img.PIG_SM, 23, 1)));
         obj.setCollider(new RigidBody(obj, sm_shape, PigWeight.SM));
-        obj.setBehaviour(new PigBehaviour(obj, PigHealth.SM));
+        obj.setBehaviour(new PigBehaviour(obj, PigHealth.SM, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
     }), 505);
 
 }
