@@ -1,11 +1,11 @@
-import { Display, Behaviour, Collider } from "../../engine/components";
+import { Display, Behaviour } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
 import { SSManager, Sprite, Vec2, inRect } from "../../engine/utils";
-import { Img, Inputs, MouseAction, AudioManager, Sound } from "../../engine/res";
+import { Img, AudioManager, Sound } from "../../engine/res";
 import { Scene, MOBYDICK } from "../../engine/scene";
 import { BirdPrefabs } from "../prefabs/birdPrefabs";
 import { RigidBody } from "src/engine/components/rigidBody";
-import { BirdDisplay, BaseBirdBehaviour, BirdState } from "./birdComponents";
+import { BaseBirdBehaviour, BirdState } from "./birdComponents";
 
 
 export class SlingshotDisplay extends Display {
@@ -78,7 +78,7 @@ export class SlingshotBehaviour extends Behaviour {
 
     constructor(o: GameObject) {
         super(o);
-        this.sd = o.getDisplay() as SlingshotDisplay;
+        this.sd = o.fgetDisplay<SlingshotDisplay>();
         this.setClickable();
     }
 
@@ -108,15 +108,15 @@ export class SlingshotBehaviour extends Behaviour {
         const scene = this.object.getScene() as Scene;
         this.pickBird(scene.query({
             from: MOBYDICK,
-            where: obj => BirdPrefabs.isBird(obj) && (obj.getBehaviour<BaseBirdBehaviour>()?.getState() === BirdState.READY)
+            where: obj => BirdPrefabs.isBird(obj) && (obj.fgetBehaviour<BaseBirdBehaviour>().getState() === BirdState.READY)
         }));
     }
 
     public pickBird(bird: GameObject | undefined | null) {
         if (bird) {
-            this.bird = bird.getCollider() as RigidBody;
+            this.bird = bird.fgetCollider<RigidBody>();
             this.bird.setCoEnabled(false);
-            (bird.getBehaviour() as BaseBirdBehaviour).notifySelect();
+            bird.fgetBehaviour<BaseBirdBehaviour>().notifySelect();
         }
     }
 
@@ -174,7 +174,7 @@ export class SlingshotBehaviour extends Behaviour {
             const bird = this.bird;
 
             // set bird touched & resume physics
-            (bird.object.getBehaviour() as BaseBirdBehaviour).notifyLaunch();
+            bird.object.fgetBehaviour<BaseBirdBehaviour>().notifyLaunch();
             bird.setCoEnabled(true);
 
             // apply force

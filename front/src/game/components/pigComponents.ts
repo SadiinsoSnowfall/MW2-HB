@@ -23,8 +23,11 @@ export class PigDisplay extends Display {
 }
 
 export class PigBehaviour extends Damagable {
+    private pd: PigDisplay;
+
     constructor(o: GameObject, health: number, hitSounds: string[] = [], damageSound: string[] = [], destroySound: string[] = []) {
         super(o, health, hitSounds, damageSound, destroySound);
+        this.pd = this.object.fgetDisplay<PigDisplay>();
     }
 
     public update(): void {}

@@ -38,7 +38,7 @@ export class RedBirdDisplay extends BirdDisplay {
     }
 
     public update(): void {
-        const bb = this.object.getBehaviour() as BaseBirdBehaviour;
+        const bb = this.object.fgetBehaviour<BaseBirdBehaviour>();
         const state = bb.getState();
 
         if (state !== this.lastState) {
@@ -74,7 +74,7 @@ export class BlueBirdDisplay extends BirdDisplay {
     }
 
     public update(): void {
-        const bb = this.object.getBehaviour() as BaseBirdBehaviour;
+        const bb = this.object.fgetBehaviour<BaseBirdBehaviour>();
         const state = bb.getState();
 
         if (state !== this.lastState) {
@@ -109,7 +109,7 @@ export class GreenBirdDisplay extends BirdDisplay {
     }
 
     public update(): void {
-        const bb = this.object.getBehaviour() as BaseBirdBehaviour;
+        const bb = this.object.fgetBehaviour<BaseBirdBehaviour>();
         const state = bb.getState();
 
         if (state !== this.lastState) {
@@ -145,7 +145,7 @@ export class BigBirdDisplay extends BirdDisplay {
     }
 
     public update(): void {
-        const bb = this.object.getBehaviour() as BaseBirdBehaviour;
+        const bb = this.object.fgetBehaviour<BaseBirdBehaviour>();
         const state = bb.getState();
 
         if (state !== this.lastState) {

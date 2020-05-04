@@ -82,11 +82,19 @@ export class GameObject {
         return this.display as T;
     }
 
+    public fgetDisplay<T extends Display = Display>(): T {
+        return this.display as T;
+    }
+
     public setDisplay(display?: Display): void {
         this.display = display;
     }
 
     public getCollider<T extends Collider = Collider>(): T | undefined {
+        return this.collider as T;
+    }
+
+    public fgetCollider<T extends Collider = Collider>(): T {
         return this.collider as T;
     }
 
@@ -96,6 +104,10 @@ export class GameObject {
     }
 
     public getBehaviour<T extends Behaviour = Behaviour>(): T | undefined {
+        return this.behaviour as T;
+    }
+
+    public fgetBehaviour<T extends Behaviour = Behaviour>(): T {
         return this.behaviour as T;
     }
 

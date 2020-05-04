@@ -4,8 +4,9 @@ import { Spritesheet, Sprite, randomIn, randomFloatIn } from "../../engine/utils
 import { Damagable } from "./baseComponents";
 import { ParticleCreator } from "../prefabs/basePrefabs";
 
-export interface BlockDisplay {
+export interface BlockDisplay extends Display {
     useSprite(id: number): void;
+    draw(ctx: CanvasRenderingContext2D): void;
 };
 
 /**
@@ -68,7 +69,7 @@ export class BlockBehaviour extends Damagable {
     constructor(o: GameObject, health: number, particle: ParticleCreator, hitSounds: string[] = [], damageSound: string[] = [], destroySound: string[] = []) {
         super(o, health, hitSounds, damageSound, destroySound);
         this.spriteIndex = 0;
-        this.display = (o.getDisplay() as any) as BlockDisplay;
+        this.display = o.fgetDisplay<BlockDisplay>();
         this.particle = particle;
     }
 
