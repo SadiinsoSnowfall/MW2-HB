@@ -44,5 +44,6 @@ export namespace Settings {
 }
 
 export enum DefaultSettings {
-    SOUND_ENABLED
+    SOUND_ENABLED,
+    SOUND_VOLUME
 }

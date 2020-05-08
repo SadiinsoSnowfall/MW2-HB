@@ -148,10 +148,10 @@ export class PigBehaviour extends Damagable {
 
         // need cleanup
         if (tick % 200 == 0) {
-            if (Math.random() > 0.85) { // 1/8
+            if (Math.random() > 0.85) {
                 this.pd.playAnimation(forcePickOne(talk_animations));
                 this.playSound(forcePickOne(this.talkSounds), .4);
-            } else if (Math.random() > 0.5) { // 7/16
+            } else if (Math.random() > 0.5) {
                 this.pd.playAnimation(blink_animation);
             } else if (Math.random() > 0.85) {
                 this.pd.playAnimation(sleep_animation);

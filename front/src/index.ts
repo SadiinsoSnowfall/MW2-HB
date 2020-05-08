@@ -9,7 +9,7 @@ import { GameObject } from './engine/gameObject';
 import { ConvexPolygon, intersection, Circle, drawCross } from './engine/physics';
 import { createGround } from './game/prefabs/basePrefabs';
 import * as Menus from './game/ui/basemenus';
-import { Levels, Assets, Img, Inputs, MouseAction } from './engine/res';
+import { Levels, Assets, Img, Inputs, MouseAction, Sound, AudioManager } from './engine/res';
 import { BlockPrefabs } from './game/prefabs/blockPrefabs';
 import { ShapeDisplay, CollisionDisplay } from './game/components/debugComponents';
 import { Prefab } from './engine/prefab';
@@ -19,6 +19,9 @@ import { PigPrefabs } from './game/prefabs/pigPrefabs';
 
 async function game() {
     await Assets.load();// load assets
+    await AudioManager.init(); // init sound
+
+    // prefabs list
     BlockPrefabs.init();
     BirdPrefabs.init();
     PigPrefabs.init();

@@ -1,4 +1,5 @@
 import { Settings, DefaultSettings } from "./settingsManager";
+import { clamp } from "../utils";
 
 export namespace AudioManager {
 
@@ -7,6 +8,19 @@ export namespace AudioManager {
     * track is finished each audio frame
     */
     const alwaysWatchTimeUpdate: boolean = false;
+    const masterAudioCoef: number = 0.5;
+    
+    // modifiable
+    let masterAudioVolume: number = 1.0;
+
+    export async function init() {
+        masterAudioVolume = await Settings.getOrSet(DefaultSettings.SOUND_VOLUME, 1.0);
+    }
+
+    export async function setMasterAudioVolume(volume: number) {
+        masterAudioVolume = clamp(volume, 0.0, 1.0);
+        await Settings.set(DefaultSettings.SOUND_VOLUME, masterAudioVolume);
+    }
 
     export async function playIfDefined(sound: string | undefined, volume: number = 1.0, from: number = 0, to?: number): Promise<HTMLAudioElement | null> {
         return sound ? await play(sound, volume, from, to) : null;
@@ -16,7 +30,7 @@ export namespace AudioManager {
         const enabled = await Settings.get(DefaultSettings.SOUND_ENABLED, true);
         if (enabled) {
             const audio = new Audio(buildURI(sound, from, to));
-            audio.volume = volume;
+            audio.volume = volume * masterAudioCoef * masterAudioVolume;
             audio.play();
             return audio;
         } else {
@@ -31,7 +45,7 @@ export namespace AudioManager {
         }
 
         const audio = new Audio(sound);
-        audio.volume = volume;
+        audio.volume = volume * masterAudioCoef * masterAudioVolume;
         
         if (!to) {
             if (alwaysWatchTimeUpdate) {
