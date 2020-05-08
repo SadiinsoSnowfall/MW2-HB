@@ -454,13 +454,18 @@ export class AABBTree implements Iterable<Collider> {
      */
     public update(): void {
         this.colliders.forEach((leaf, collider, map) => {
-            if (!collider.object.isEnabled() || AABBTree.istooFarAway(collider)) {
+            if (!collider.object.isEnabled()) {
                 // If the object has been disabled, it must be removed
                 // Seems safe: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/forEach#Description
                 this.scene.removeClickable(collider.object);
                 this.remove(collider);
 
-            }  else if (collider.object.update()) {
+            } else if (AABBTree.istooFarAway(collider)) {
+                this.scene.removeClickable(collider.object);
+                this.remove(collider);
+                collider.object.setEnabled(false);
+                
+            } else if (collider.object.update()) {
                 // The object has moved
                 const bbox = bboxFromCollider(collider);
                 if (!leaf.bbox.encloses(bbox)) {
