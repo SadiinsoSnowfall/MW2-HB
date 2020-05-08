@@ -291,7 +291,7 @@ export class Vec2 {
      * Return the distance between two vectors
      */
     public static distance(a: Vec2, b: Vec2): number {
-        return Math.sqrt(Vec2.distance(a, b));
+        return Math.sqrt(Vec2.sqrDistance(a, b));
     }
 
     /**
@@ -307,7 +307,7 @@ export class Vec2 {
      * Return the distance between two vectors
      */
     public static distanceXY(x1: number, y1: number, x2: number, y2: number): number {
-        return Math.sqrt(Vec2.distanceXY(x1,y1, x2, y2));
+        return Math.sqrt(Vec2.sqrDistanceXY(x1,y1, x2, y2));
     }
 
     /**

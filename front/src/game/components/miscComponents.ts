@@ -173,15 +173,18 @@ export class SlingshotBehaviour extends Behaviour {
             const [bx, by] = this.bird.object.getPositionXY();
             const bird = this.bird;
 
-            // set bird touched & resume physics
-            bird.object.fgetBehaviour<BaseBirdBehaviour>().notifyLaunch();
-            bird.setCoEnabled(true);
+            // cancel launch if distance is two short
+            if (Vec2.distanceXY(x, y, bx, by) > 50) {
+                // set bird touched & resume physics
+                bird.object.fgetBehaviour<BaseBirdBehaviour>().notifyLaunch();
+                bird.setCoEnabled(true);
 
-            // apply force
-            bird.applyForceXY(700 * (x - bx), 800 * (y - by));
+                // apply force
+                bird.applyForceXY(700 * (x - bx), 800 * (y - by));
 
-            // detach bird
-            this.bird = undefined;
+                // detach bird
+                this.bird = undefined;
+            }
         }
     }
 
