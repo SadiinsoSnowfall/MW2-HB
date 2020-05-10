@@ -1,6 +1,7 @@
 import { get, set, del } from 'idb-keyval';
-import { http, PrefabsManager } from '.';
+import { http } from './XHRHelper';
 import { Scene } from '../scene';
+import { PrefabsManager } from './prefabsManager';
 
 export namespace Levels {
 

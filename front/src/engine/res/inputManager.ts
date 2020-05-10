@@ -1,7 +1,6 @@
 
-import { Vec2, assert } from "../utils";
-import { MenuManager } from "../ui";
-import { canvas } from '../screen';
+import { assert } from "../utils/utils";
+import { Vec2 } from "../utils/vec2";
 
 export interface InputListener {
     keys: string[];
@@ -34,13 +33,15 @@ export namespace Inputs {
     */
     type MouseListener = (p: Vec2) => void;
 
-    let canvasRef: HTMLCanvasElement = undefined as any as HTMLCanvasElement;
+    let canvas: HTMLCanvasElement = undefined as any as HTMLCanvasElement;
     let initialized: boolean = false;
 
-    export function init(): void {
+    export function init(canvasRef: HTMLCanvasElement): void {
         assert(!initialized, "InputManager#init called twice");
         initialized = true;
         
+        canvas = canvasRef;
+
         addEventListener('keydown', onKeyDown);
         addEventListener('keyup', onKeyUp);
         
@@ -225,12 +226,11 @@ export namespace Inputs {
             lastMousePos.set(eventPos);
         }
         
-        if (!MenuManager.captureEvent(e, a, eventPos)) { // check menus first
-            const listeners = mouseListeners.get(a);
-            if (listeners !== undefined) {
-                for (const listener of listeners) {
-                    listener(eventPos);
-                }
+        
+        const listeners = mouseListeners.get(a);
+        if (listeners !== undefined) {
+            for (const listener of listeners) {
+                listener(eventPos);
             }
         }
     }

@@ -1,8 +1,11 @@
-import { Display, Behaviour } from "../../engine/components";
+import { Display } from "../../engine/components/display";
+import { Behaviour } from "../../engine/components/behaviour";
 import { GameObject } from "../../engine/gameObject";
-import { Spritesheet, pickOneRange, forcePickOneRange, randomFloatIn, randomIn } from "../../engine/utils";
-import { AudioManager, Sound } from "../../engine/res";
+import { AudioManager } from "../../engine/res/audioManager";
+import { Sound } from "../../engine/res/assetsManager";
 import { ParticleCreator } from "../prefabs/basePrefabs";
+import { Spritesheet } from "../../engine/utils/spritesheet";
+import { randomIn, forcePickOneRange } from "../../engine/utils/utils";
 
 export enum BirdState {
     READY,
@@ -225,7 +228,7 @@ export class BaseBirdBehaviour extends Behaviour {
         this.currentSound = await AudioManager.play(sound, volume);
     }
 
-    public onCollide(): void {
+    public onCollide(mag: number): void {
         if (this.state === BirdState.FLYING) {
             this.state = BirdState.GROUNDED;
             this.playSound(forcePickOneRange(this.sounds, 2), .5);

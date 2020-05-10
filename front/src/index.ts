@@ -1,21 +1,26 @@
 import './assets/stylesheets/styles.scss';
 
-import { Collider, Display } from './engine/components';
+import { Collider } from './engine/components/collider';
 import { screen } from './engine/screen';
 import { Scene } from './engine/scene';
-import { FPSMetter, yoloSprite} from './game/prefabs/debugPrefabs';
-import { assert, Vec2, range, forcePickOneRange, pickOneRange, forcePickOne } from './engine/utils';
+import { FPSMetter} from './game/prefabs/debugPrefabs';
 import { GameObject } from './engine/gameObject';
-import { ConvexPolygon, intersection, Circle, drawCross } from './engine/physics';
 import { createGround } from './game/prefabs/basePrefabs';
 import * as Menus from './game/ui/basemenus';
-import { Levels, Assets, Img, Inputs, MouseAction, Sound, AudioManager } from './engine/res';
 import { BlockPrefabs } from './game/prefabs/blockPrefabs';
 import { ShapeDisplay, CollisionDisplay } from './game/components/debugComponents';
-import { Prefab } from './engine/prefab';
 import { slingshot } from './game/prefabs/miscPrefabs';
 import { BirdPrefabs } from './game/prefabs/birdPrefabs';
 import { PigPrefabs } from './game/prefabs/pigPrefabs';
+import { BackgroundPrefabs } from './game/prefabs/backgroundPrefabs';
+import { Assets, Img } from './engine/res/assetsManager';
+import { AudioManager } from './engine/res/audioManager';
+import { Inputs, MouseAction } from './engine/res/inputManager';
+import { intersection } from './engine/physics/collision';
+import { ConvexPolygon } from './engine/physics/convexPolygon';
+import { Circle } from './engine/physics/circle';
+import { forcePickOne, range, assert } from './engine/utils/utils';
+import { Vec2 } from './engine/utils/vec2';
 
 async function game() {
     await Assets.load();// load assets
@@ -41,6 +46,8 @@ async function game() {
 
     //Menus.main_menu.setVisible(true); // enable main menu
     Menus.ig_menu.setVisible(true); // enable IG menu manually (testing only);
+
+    scene.instantiateBackground(BackgroundPrefabs.back_test, 0, 0);
 
     Inputs.subscribeMouse(MouseAction.LEFT_CLICK, p => {
         //scene.instantiate(BlockPrefabs.wooden_tris_md_2, p.x, p.y);
@@ -73,7 +80,11 @@ async function game() {
     Inputs.subscribeMouse(MouseAction.RIGHT_CLICK, p => {
         for (let x of range(5)) {
             for (let y of range(4)) {
-                scene.instantiate(BlockPrefabs.wooden_cube_hl_2, x * 120 + 600, y * 120 + 200);
+                scene.instantiate(forcePickOne([
+                    //BlockPrefabs.ice_tris_hl_2,
+                    BlockPrefabs.wooden_cube_hl_2,
+                    //BlockPrefabs.sand_ball_md
+                ]), x * 120 + 600, y * 120 + 300);
             }
         }
     });
@@ -85,8 +96,8 @@ async function game() {
         }
     });
 
-    scene.instantiate(slingshot, 300, 575);
-    scene.addObject(createGround(675, 700, 1200, 50));
+    scene.instantiate(slingshot, 300, 675);
+    scene.addObject(createGround(1000, 800, 2000, 50, "#69696900"));
 
     //obj = createGround(675, 300, 1200, 50);
     //scene.addObject(obj);

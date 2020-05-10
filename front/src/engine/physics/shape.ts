@@ -1,5 +1,6 @@
-import { Vec2, Transform } from "../utils";
-import { Rectangle } from ".";
+import { Rectangle } from "./rectangle";
+import { Vec2 } from "../utils/vec2";
+import { Transform } from "../utils/transform";
 
 /**
  * @brief A class used by Shape to generate contact points.

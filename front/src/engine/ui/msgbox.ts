@@ -1,6 +1,11 @@
-import { MenuManager, Menu, TextBox, Button, CoverShape } from ".";
-import { Alignment, Style, SSManager } from "../utils";
-import { Img } from "../res";
+import { Img } from "../res/assetsManager";
+import { Alignment, Style } from "../utils/textFormat";
+import { SSManager } from "../utils/spritesheet";
+import { Menu } from "./menu";
+import { MenuManager } from "./menumanager";
+import { CoverShape } from "./covershape";
+import { TextBox } from "./textbox";
+import { Button } from "./button";
 
 export class MessageBox {
     private menu: Menu;

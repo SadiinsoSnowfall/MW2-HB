@@ -1,5 +1,5 @@
 import { Settings, DefaultSettings } from "./settingsManager";
-import { clamp } from "../utils";
+import { clamp } from "../utils/utils";
 
 export namespace AudioManager {
 

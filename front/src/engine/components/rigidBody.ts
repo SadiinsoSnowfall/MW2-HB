@@ -1,7 +1,7 @@
 import { GameObject } from '../gameObject';
 import { Collider } from './collider';
-import { Vec2 } from '../utils';
-import { Shape } from '../physics';
+import { Vec2 } from '../utils/vec2';
+import { Shape } from '../physics/shape';
 
 /**
  * ObjectComponent for physics simulation
@@ -98,6 +98,14 @@ export class RigidBody extends Collider {
                 this.impulse.mul(0.8);
             }
         }
+    }
+
+    public getVelocity(): Vec2 {
+        return this.velocity;
+    }
+
+    public getVelocityMag(): number {
+        return this.velocity.magnitude();
     }
 
     public update(): void {

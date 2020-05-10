@@ -1,6 +1,8 @@
-import { Vec2, Transform, assert } from "../utils";
-import { Shape, drawCross, Rectangle } from '.';
-import { defaultBoundingBox } from "./shape";
+import { defaultBoundingBox, Shape, drawCross } from "./shape";
+import { Rectangle } from "./rectangle";
+import { Vec2 } from "../utils/vec2";
+import { assert } from "../utils/utils";
+import { Transform } from "../utils/transform";
 
 /**
  * @brief A circle.

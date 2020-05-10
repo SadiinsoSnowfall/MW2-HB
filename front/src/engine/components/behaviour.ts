@@ -1,6 +1,6 @@
 import { GameObject } from '../gameObject';
-import { ObjectComponent } from "./";
-import { Vec2 } from '../utils';
+import { ObjectComponent } from "./objectComponent";
+import { Vec2 } from '../utils/vec2';
 
 /**
  * ObjectComponent for scripting objects
@@ -21,7 +21,7 @@ export abstract class Behaviour extends ObjectComponent {
     /**
      * Notify when a collision occue between the GO and another one
      */
-    public onCollide(): void {}
+    public onCollide(mag: number): void {}
 
     public onClick(pos: Vec2): void {}
     public onMouseDown(pos: Vec2): void {}

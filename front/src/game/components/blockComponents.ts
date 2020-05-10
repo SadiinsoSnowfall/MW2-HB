@@ -1,6 +1,6 @@
-import { Display } from "../../engine/components";
+import { Display } from "../../engine/components/display";
 import { GameObject } from "../../engine/gameObject";
-import { Spritesheet, Sprite, randomIn, randomFloatIn } from "../../engine/utils";
+import { Spritesheet, Sprite } from "../../engine/utils/spritesheet";
 import { Damagable } from "./baseComponents";
 import { ParticleCreator } from "../prefabs/basePrefabs";
 

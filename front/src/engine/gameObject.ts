@@ -1,6 +1,9 @@
-import { Transform, Vec2 } from './utils';
-import { Display, Collider, Behaviour } from './components';
 import { Scene } from './scene';
+import { Transform } from './utils/transform';
+import { Vec2 } from './utils/vec2';
+import { Display } from './components/display';
+import { Collider } from './components/collider';
+import { Behaviour } from './components/behaviour';
 
 export class GameObject {
     private static currentId: number = 0;

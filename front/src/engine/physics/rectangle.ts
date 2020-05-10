@@ -1,4 +1,5 @@
-import { Vec2, assert } from "../utils";
+import { Vec2 } from "../utils/vec2";
+import { assert } from "../utils/utils";
 
 /**
  * @brief Class for axis-aligned bounding boxes.

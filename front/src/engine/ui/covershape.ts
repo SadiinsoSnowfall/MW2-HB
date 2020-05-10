@@ -1,4 +1,4 @@
-import { Widget } from ".";
+import { Widget } from "./widget";
 import { drawRoundRect } from "../utils/drawutils";
 
 export class CoverShape extends Widget {

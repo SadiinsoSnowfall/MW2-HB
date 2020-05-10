@@ -1,11 +1,15 @@
-import { inRectVec2, inRect, EMPTY_FUNCTION, Vec2 } from "../utils";
-import { MenuManager, Element, Widget } from ".";
-import { screen } from "../screen";
-import { MouseAction } from "../res";
+import { MouseAction } from "../res/inputManager";
+import { Vec2 } from "../utils/vec2";
+import { inRectVec2, inRect } from "../utils/utils";
+import { Widget } from "./widget";
+import { Element } from './element'
 
 export class Menu extends Element {
     private widgets: Widget[];
     private background: string | HTMLImageElement;
+
+    private static screenWidth: number = 1920;
+    private static screenHeight: number = 1080;
 
     // keep track of the widget hovered on
     private lastHoverWidget: Widget | null = null;
@@ -25,13 +29,13 @@ export class Menu extends Element {
         if (x >= 0 && !Object.is(x, -0)) {
             this.pos.x = x;
         } else {
-            this.pos.x = screen.width + x;
+            this.pos.x = Menu.screenWidth + x;
         }
 
         if (y >= 0 && !Object.is(y, -0)) {
             this.pos.y = y;
         } else {
-            this.pos.y = screen.height + y;
+            this.pos.y = Menu.screenHeight + y;
         }
 
         return this;
@@ -75,7 +79,7 @@ export class Menu extends Element {
         }
     }
 
-    public captureEvent(e: MouseEvent, type: number, pos: Vec2): boolean {
+    public captureEvent(type: number, pos: Vec2): boolean {
         // fast check against menu boundaries
         if (!this.visible || !this.doCaptureEvent || !inRectVec2(pos, this.pos, this.size)) {
             return false;
@@ -128,12 +132,6 @@ export class Menu extends Element {
             this.lastHoverWidget.hoverLeft();
             this.lastHoverWidget = null;
         }
-    }
-
-    public setZIndex(zIndex: number): Menu {
-        this.zIndex = zIndex;
-        MenuManager.resort();
-        return this;
     }
     
     public resort(): void {

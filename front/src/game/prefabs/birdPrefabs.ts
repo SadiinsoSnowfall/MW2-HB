@@ -1,11 +1,14 @@
-import { PrefabsManager, Img, Sound } from "../../engine/res";
 import { Prefab } from "../../engine/prefab";
-import { BirdDisplay, BaseBirdBehaviour, RedBirdDisplay, BigBirdDisplay, BlueBirdDisplay, GreenBirdDisplay } from "../components/birdComponents";
-import { SSManager, Vec2 } from "../../engine/utils";
-import { Circle, ConvexPolygon } from "../../engine/physics";
+import { BaseBirdBehaviour, RedBirdDisplay, BigBirdDisplay, BlueBirdDisplay, GreenBirdDisplay } from "../components/birdComponents";
 import { RigidBody } from "../../engine/components/rigidBody";
 import { GameObject } from "../../engine/gameObject";
 import { ParticleDisplay } from "../components/baseComponents";
+import { Circle } from "../../engine/physics/circle";
+import { ConvexPolygon } from "../../engine/physics/convexPolygon";
+import { Sound, Img } from "../../engine/res/assetsManager";
+import { PrefabsManager } from "../../engine/res/prefabsManager";
+import { Vec2 } from "../../engine/utils/vec2";
+import { SSManager } from "../../engine/utils/spritesheet";
 
 export namespace BirdPrefabs {
 

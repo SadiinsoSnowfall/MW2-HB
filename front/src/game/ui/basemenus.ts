@@ -1,9 +1,16 @@
-import { MenuManager, Button, CoverShape, CoverImg, MessageBox, TextBox } from "../../engine/ui";
-import { SSManager, Alignment } from "../../engine/utils";
-import { Img, Assets, Sound, AudioManager, Levels } from '../../engine/res';
 import { Settings, DefaultSettings } from "../../engine/res/settingsManager";
-import { Scene } from "src/engine/scene";
-import { del } from "idb-keyval";
+import { Scene } from "../../engine/scene";
+import { Img, Assets, Sound } from "../../engine/res/assetsManager";
+import { AudioManager } from "../../engine/res/audioManager";
+import { Levels } from "../../engine/res/levelsManager";
+import { SSManager } from "../../engine/utils/spritesheet";
+import { Alignment } from "../../engine/utils/textFormat";
+import { MenuManager } from "../../engine/ui/menumanager";
+import { Button } from "../../engine/ui/button";
+import { CoverImg } from "../../engine/ui/coverimg";
+import { MessageBox } from "../../engine/ui/msgbox";
+import { CoverShape } from "../../engine/ui/covershape";
+import { TextBox } from "../../engine/ui/textbox";
 
 export const main_menu = MenuManager.createMenu();
 export const sett_menu = MenuManager.createMenu();
@@ -230,6 +237,11 @@ export async function init(scene: Scene) {
         Levels.loadLevel(currentLevel, scene);
     });
     ig_menu.add(ig_reload);
+
+
+
+    // sort by z-index
+    MenuManager.resort();
 
 }
 

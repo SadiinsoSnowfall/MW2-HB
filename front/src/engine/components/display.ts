@@ -1,5 +1,5 @@
 import { GameObject } from '../gameObject';
-import { ObjectComponent } from "./";
+import { ObjectComponent } from "./objectComponent";
 
 /**
  * ObjectComponent for graphic display

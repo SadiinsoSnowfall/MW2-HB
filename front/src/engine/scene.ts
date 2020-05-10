@@ -1,9 +1,9 @@
 import { GameObject } from "./gameObject";
 import { CScreen } from "./screen";
 import { Prefab } from "./prefab";
-import { AABBTree } from "./physics";
-import { Vec2, inRect } from "./utils";
-import { Collider, Behaviour } from "./components";
+import { AABBTree } from "./physics/aabbTree";
+import { Vec2 } from "./utils/vec2";
+import { Behaviour } from "./components/behaviour";
 import { PhysicsEngine } from "./physics/physicsengine";
 
 export const BACKGROUND:    number = 0;
@@ -122,7 +122,7 @@ export class Scene {
     * @param y The y position of the object
     */
     public instantiate(prefab: Prefab, x: number, y: number): GameObject {
-        let obj = new GameObject(x, y, prefab.id);
+        const obj = new GameObject(x, y, prefab.id);
         prefab.applyTo(obj);
         return this.addObject(obj);
     }
@@ -134,6 +134,18 @@ export class Scene {
     */
     public instantiateVec2(prefab: Prefab, position: Vec2): GameObject {
         return this.instantiate(prefab, position.x, position.y);
+    }
+
+    public instantiateBackground(prefab: Prefab, x: number, y: number): GameObject {
+        const obj = new GameObject(x, y, prefab.id);
+        prefab.applyTo(obj);
+        return this.addBackground(obj);
+    }
+
+    public addBackground(obj: GameObject): GameObject {
+        obj.setScene(this);
+        this.background.push(obj);
+        return obj;
     }
     
     /**
@@ -176,7 +188,7 @@ export class Scene {
             this.foreground[i].draw(ctx);
         }
 
-        this.tree.draw(ctx); // debug only
+        //this.tree.draw(ctx); // debug only
     }
     
     protected filterDisabled(base: GameObject[], count: number): GameObject[] {

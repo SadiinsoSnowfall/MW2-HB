@@ -4,6 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const JSObfuscator = require('webpack-obfuscator');
 const CompressionPlugin = require('compression-webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin')
 
 const {
     NODE_ENV = 'production',
@@ -112,6 +113,19 @@ module.exports = {
             threshold: 10240, // only compress assets were size > 10KB
             minRatio: 0.8, // only compress assets were compression_ratio > 0.8
             deleteOriginalAssets: false,
+        }),
+        false ? false : new CircularDependencyPlugin({
+            // exclude detection of files based on a RegExp
+            exclude: /a\.js|node_modules/,
+            // include specific files based on a RegExp
+            include: /src/,
+            // add errors to webpack instead of warnings
+            failOnError: true,
+            // allow import cycles that include an asyncronous import,
+            // e.g. via import(/* webpackMode: "weak" */ './file.js')
+            allowAsyncCycles: false,
+            // set the current working directory for displaying module paths
+            cwd: process.cwd(),
         })
     ].filter(Boolean),
     optimization: {

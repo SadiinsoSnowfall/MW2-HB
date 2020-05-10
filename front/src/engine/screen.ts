@@ -1,6 +1,6 @@
 import { Scene } from "./scene";
-import { Inputs, MouseAction } from "./res";
-import { MenuManager } from "./ui";
+import { Inputs, MouseAction } from "./res/inputManager";
+import { MenuManager } from "./ui/menumanager";
 
 export class CScreen {
     private static readonly AVG_FRAMETIME_COUNT = 15;
@@ -53,20 +53,26 @@ export class CScreen {
         });
 
         Inputs.subscribeMouse(MouseAction.LEFT_CLICK, p => {
-            if (this.scene) {
-                this.scene.handleMouseUpEvent(p);
+            if (!MenuManager.captureEvent(MouseAction.LEFT_CLICK, p)) {
+                if (this.scene) {
+                    this.scene.handleMouseUpEvent(p);
+                }
             }
         });
 
         Inputs.subscribeMouse(MouseAction.LEFT_DOWN, p => {
-            if (this.scene) {
-                this.scene.handleMouseDownEvent(p);
+            if (!MenuManager.captureEvent(MouseAction.LEFT_DOWN, p)) {
+                if (this.scene) {
+                    this.scene.handleMouseDownEvent(p);
+                }
             }
         });
 
         Inputs.subscribeMouse(MouseAction.MOVE, p => {
-            if (this.scene) {
-                this.scene.handleMouseMove(p);
+            if (!MenuManager.captureEvent(MouseAction.MOVE, p)) {
+                if (this.scene) {
+                    this.scene.handleMouseMove(p);
+                }
             }
         });
     }
@@ -171,5 +177,5 @@ export class CScreen {
 }
 
 export const canvas = document.getElementsByTagName('canvas')[0];
-Inputs.init();
+Inputs.init(canvas);
 export const screen: CScreen = new CScreen(canvas, 1080, 16 / 9);

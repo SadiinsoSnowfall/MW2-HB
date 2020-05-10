@@ -1,4 +1,4 @@
-import { assert } from "../utils";
+import { assert } from "../utils/utils";
 
 interface FontDef {
     name: string,
@@ -329,5 +329,16 @@ export const Img = Object.freeze({
     POINTER: require('assets/images/menu/pointer.png'),
     SPLASH: require('assets/images/menu/splash.jpg'),
     LEVELS_ICON: require('assets/images/menu/levels_icon.png'),
+
+    /**
+     * BACKGROUNDS
+     */
+
+    // beach
+    BEACH_BACK_1: require('assets/images/background/beach/back_1.png'),
+    BEACH_BACK_2: require('assets/images/background/beach/back_2.png'),
+    BEACH_PARA_1: require('assets/images/background/beach/parallax_1.png'),
+    BEACH_PARA_2: require('assets/images/background/beach/parallax_2.png'),
+    BEACH_PARA_3: require('assets/images/background/beach/parallax_3.png'),
      
 });

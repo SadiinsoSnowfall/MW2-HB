@@ -1,5 +1,6 @@
-import { Widget } from ".";
-import { Sprite, Vec2 } from "../utils";
+import { Widget } from "./widget";
+import { Sprite } from "../utils/spritesheet";
+import { Vec2 } from "../utils/vec2";
 
 export class CoverImg extends Widget {
     private sprite: Sprite;

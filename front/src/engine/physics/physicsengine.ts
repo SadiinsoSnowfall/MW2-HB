@@ -1,8 +1,7 @@
 import { AABBTree } from "../physics/aabbTree";
 import { RigidBody } from "../components/rigidBody";
-import { Vec2 } from "../utils";
 import { GameObject } from "../gameObject";
-import { Collider } from "../components";
+import { Collider } from "../components/collider";
 
 
 export class PhysicsEngine {
@@ -12,7 +11,7 @@ export class PhysicsEngine {
     public static deltaTimeSquared: number = Math.pow(RigidBody.deltaTime, 2);
 
     // set of the colliding objects from last frame
-    public lastCollide: Set<GameObject> = new Set();
+    public lastCollide: Set<[GameObject, GameObject]> = new Set();
 
     constructor(tree: AABBTree) {
         this.tree = tree;
@@ -28,7 +27,9 @@ export class PhysicsEngine {
             return;
         }
 
-        const newColliders = new Set<GameObject>();
+        const notifyCollisionForce = 5;
+
+        const newColliders = new Set<[GameObject, GameObject]>();
 
         // count contacts points
         for (let i = 0; i < collisions.length; ++i) {
@@ -38,19 +39,32 @@ export class PhysicsEngine {
             const cb = c.getObjectB().getCollider();
 
             // add IDs to list
-            newColliders.add(c.getObjectA()).add(c.getObjectB());
+            newColliders.add([c.getObjectA(), c.getObjectB()]);
+
+            let av, bv;
 
             if (ca instanceof RigidBody) {
                 const ra = ca as RigidBody
                 ra.contacts += count
                 ra.clearForce();
+                av = ra.getVelocity().magnitude();
+            } else {
+                av = 0;
             }
 
             if (cb instanceof RigidBody) {
                 const rb = cb as RigidBody;
                 rb.contacts += count
                 rb.clearForce();
+                bv = rb.getVelocity().magnitude();
+            } else {
+                bv = 0;
             }
+
+            if (av > notifyCollisionForce || bv > notifyCollisionForce) {
+                console.log(av + " " + bv);
+            }
+            
         }
 
         // perform update
@@ -103,7 +117,7 @@ export class PhysicsEngine {
             }
         }
 
-        // compute velocity change
+        // compute velocity change (WIP)
         for (let i = 0; i < collisions.length; ++i) {
             const c = collisions[i];
 
@@ -111,9 +125,11 @@ export class PhysicsEngine {
         }
         
         // notify new colliders
-        for (const obj of newColliders) {
-            if (!this.lastCollide.has(obj)) {
-                obj.getBehaviour()?.onCollide();
+        for (const pair of newColliders) {
+            if (!this.lastCollide.has(pair)) {
+                const [a, b] = pair;
+                a.getBehaviour()?.onCollide(b.fgetCollider().getVelocityMag());
+                b.getBehaviour()?.onCollide(a.fgetCollider().getVelocityMag());
             }
         }
 

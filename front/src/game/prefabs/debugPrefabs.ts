@@ -1,8 +1,9 @@
 import { Prefab } from "../../engine/prefab";
 import { SpinnyDisplay, SpinnyBehaviour, WigglyDisplay, WigglyBehaviour, FPSMetterDisplay, ImageDisplay, SpriteDisplay, YoloSpritesheetDisplay, CircleBehaviour, WandererBehaviour } from "../components/debugComponents";
-import { Alignment, Style, Spritesheet } from "../../engine/utils";
 import { Scene } from "../../engine/scene";
-import { Assets, Img } from "../../engine/res";
+import { Assets, Img } from "../../engine/res/assetsManager";
+import { Alignment, Style } from "../../engine/utils/textFormat";
+import { Spritesheet } from "../../engine/utils/spritesheet";
 
 export const wigglyThingy = new Prefab(obj => {
     obj.setDisplay(new WigglyDisplay(obj, "#008000", 100, 55));

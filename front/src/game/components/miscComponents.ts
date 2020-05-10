@@ -1,11 +1,15 @@
-import { Display, Behaviour } from "../../engine/components";
 import { GameObject } from "../../engine/gameObject";
-import { SSManager, Sprite, Vec2, inRect } from "../../engine/utils";
-import { Img, AudioManager, Sound } from "../../engine/res";
 import { Scene, MOBYDICK } from "../../engine/scene";
 import { BirdPrefabs } from "../prefabs/birdPrefabs";
-import { RigidBody } from "src/engine/components/rigidBody";
+import { RigidBody } from "../../engine/components/rigidBody";
 import { BaseBirdBehaviour, BirdState } from "./birdComponents";
+import { Img, Sound } from "../../engine/res/assetsManager";
+import { AudioManager } from "../../engine/res/audioManager";
+import { Sprite, SSManager } from "../../engine/utils/spritesheet";
+import { Vec2 } from "../../engine/utils/vec2";
+import { inRect } from "../../engine/utils/utils";
+import { Display } from "../../engine/components/display";
+import { Behaviour } from "../../engine/components/behaviour";
 
 
 export class SlingshotDisplay extends Display {

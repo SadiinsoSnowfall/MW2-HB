@@ -1,9 +1,11 @@
-import { PrefabsManager, Img, Sound } from "../../engine/res";
 import { Prefab } from "../../engine/prefab";
 import { PigDisplay, PigBehaviour } from "../components/pigComponents";
-import { SSManager, Vec2 } from "../../engine/utils";
 import { RigidBody } from "../../engine/components/rigidBody";
-import { Circle } from "../../engine/physics";
+import { Circle } from "../../engine/physics/circle";
+import { Sound, Img } from "../../engine/res/assetsManager";
+import { PrefabsManager } from "../../engine/res/prefabsManager";
+import { Vec2 } from "../../engine/utils/vec2";
+import { SSManager } from "../../engine/utils/spritesheet";
 
 
 export namespace PigPrefabs {

@@ -1,5 +1,5 @@
-import { Assets } from "../res";
-import { Vec2 } from ".";
+import { Assets } from "../res/assetsManager";
+import { Vec2 } from "./vec2";
 
 /**
  * @brief Represents a spritesheet.

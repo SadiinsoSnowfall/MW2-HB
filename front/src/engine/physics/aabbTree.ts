@@ -1,8 +1,9 @@
-import { Shape, Rectangle, Collision, intersection } from "./";
-import { Collider } from '../components';
-import { assert, Vec2 } from "../utils";
+import { Collider } from '../components/collider';
+import { assert } from "../utils/utils";
 import PriorityQueue from "../utils/priorityQueue";
 import { Scene } from "../scene";
+import { Rectangle } from './rectangle';
+import { Collision, intersection } from './collision';
 
 function bboxFromCollider(collider: Collider): Rectangle {
     const t = collider.object.getTransform();

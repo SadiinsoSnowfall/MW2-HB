@@ -1,5 +1,5 @@
 import { GameObject } from "./gameObject";
-import { assert } from "./utils";
+import { assert } from "./utils/utils";
 
 export class Prefab {
     private _init: (_ : GameObject) => void;

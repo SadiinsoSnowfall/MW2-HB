@@ -1,5 +1,5 @@
-import { Menu } from ".";
-import { Vec2 } from "../utils";
+import { Menu } from "./menu";
+import { Vec2 } from "../utils/vec2";
 
 export namespace MenuManager {
     let menus: Menu[] = [];
@@ -22,11 +22,11 @@ export namespace MenuManager {
     /**
      * Try capture the event in z-index descending order
      */
-    export function captureEvent(e: MouseEvent, type: number, pos: Vec2): boolean {
+    export function captureEvent(type: number, pos: Vec2): boolean {
         let captured: Menu | undefined = undefined;
 
         for (let i = 0; i < menus.length; ++i) {
-            if (menus[i].captureEvent(e, type, pos)) {
+            if (menus[i].captureEvent(type, pos)) {
                 captured = menus[i];
                 break;
             }

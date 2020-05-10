@@ -1,6 +1,7 @@
 import { GameObject } from '../gameObject';
-import { ObjectComponent } from "./";
-import { Shape } from '../physics';
+import { ObjectComponent } from "./objectComponent";
+import { Shape } from '../physics/shape';
+import { Vec2 } from '../utils/vec2';
 
 /**
  * ObjectComponent for basic hitbox management
@@ -28,6 +29,14 @@ export class Collider extends ObjectComponent {
 
     public isStatic(): boolean {
         return this.static;
+    }
+
+    public getVelocity(): Vec2 {
+        return Vec2.Zero;
+    }
+
+    public getVelocityMag(): number {
+        return 0;
     }
 
     public setCoEnabled(state: boolean): void {

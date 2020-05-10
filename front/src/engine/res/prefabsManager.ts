@@ -1,5 +1,5 @@
 import { Prefab } from "../prefab";
-import { assert } from "../utils";
+import { assert } from "../utils/utils";
 
 /**
 * Wrapper class for the Prefab Map

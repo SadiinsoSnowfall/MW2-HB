@@ -1,4 +1,4 @@
-import { Vec2, EMPTY_FUNCTION } from "../utils";
+import { Vec2 } from "../utils/vec2";
 
 export class Element {
     protected visible: boolean;
@@ -15,7 +15,7 @@ export class Element {
         this.size = size;
         this.zIndex = zIndex;
         this.visible = visible;
-        this.onDisplayCallback = this.onHideCallback = EMPTY_FUNCTION;
+        this.onDisplayCallback = this.onHideCallback = () => {};
         this.doCaptureEvent = true;
     }
 

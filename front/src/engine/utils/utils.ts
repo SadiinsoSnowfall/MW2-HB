@@ -1,4 +1,4 @@
-import { Vec2 } from "./";
+import { Vec2 } from "./vec2";
 
 /**
  * An empty function

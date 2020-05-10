@@ -1,9 +1,10 @@
-import { Display } from "../../engine/components";
-import { Spritesheet, Sprite, forcePickOne, randomIn, pickOne } from "../../engine/utils";
+import { Display } from "../../engine/components/display";
+import { forcePickOne, randomIn } from "../../engine/utils/utils";
 import { GameObject } from "../../engine/gameObject";
 import { Damagable } from "./baseComponents";
 import { ParticleCreator } from "../prefabs/basePrefabs";
-import { AudioManager } from "../../engine/res";
+import { AudioManager } from "../../engine/res/audioManager";
+import { Spritesheet, Sprite } from "../../engine/utils/spritesheet";
 
 export interface AnimationData {
     data: [number, number][];

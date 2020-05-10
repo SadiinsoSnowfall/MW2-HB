@@ -1,7 +1,7 @@
 import { GameObject } from "../gameObject";
-import { Vec2 } from "../utils";
-import { Collider } from "../components";
-import { Shape, Edge, drawCross, affineSupport } from ".";
+import { Vec2 } from "../utils/vec2";
+import { Collider } from "../components/collider";
+import { drawCross, affineSupport, Edge } from "./shape";
 
 export class Collision {
     /**

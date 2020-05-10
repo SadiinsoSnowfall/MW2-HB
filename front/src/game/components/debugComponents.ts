@@ -1,9 +1,11 @@
-import { Display, Behaviour, Collider } from "../../engine/components";
+import { Display } from "../../engine/components/display";
+import { Behaviour } from "../../engine/components/behaviour";
 import { GameObject } from "../../engine/gameObject";
-import { Vec2, TextFormat, Alignment, Style, Text, randomIn } from "../../engine/utils";
 import { Spritesheet, Sprite } from "../../engine/utils/spritesheet";
-import { ConvexPolygon, Shape, Collision } from "../../engine/physics";
-import { Assets, Img } from "../../engine/res";
+import { Assets, Img } from "../../engine/res/assetsManager";
+import { Shape } from "../../engine/physics/shape";
+import { Collision } from "../../engine/physics/collision";
+import { Alignment, Style, TextFormat, Text } from "../../engine/utils/textFormat";
 
 export class WigglyBehaviour extends Behaviour {
     public rotation: number;
