@@ -18,6 +18,10 @@ export namespace PigPrefabs {
          */
     }
 
+    export function isPig(o: GameObject) {
+        return (o.prefabID >= 500) && (o.prefabID <= 505);
+    }
+
     /**
      * STATS
      */

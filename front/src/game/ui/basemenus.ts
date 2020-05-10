@@ -4,7 +4,7 @@ import { Img, Assets, Sound } from "../../engine/res/assetsManager";
 import { AudioManager } from "../../engine/res/audioManager";
 import { Levels } from "../../engine/res/levelsManager";
 import { SSManager } from "../../engine/utils/spritesheet";
-import { Alignment } from "../../engine/utils/textFormat";
+import { Alignment, Text } from "../../engine/utils/textFormat";
 import { MenuManager } from "../../engine/ui/menumanager";
 import { Button } from "../../engine/ui/button";
 import { CoverImg } from "../../engine/ui/coverimg";
@@ -16,6 +16,9 @@ export const main_menu = MenuManager.createMenu();
 export const sett_menu = MenuManager.createMenu();
 export const lvl_menu = MenuManager.createMenu();
 export const ig_menu = MenuManager.createMenu();
+
+export const win_menu = MenuManager.createMenu();
+export const lose_menu = MenuManager.createMenu();
 
 let lvlQueryPromise: Promise<any> | undefined = undefined;
 let currentLevel: number = 0;
@@ -246,6 +249,73 @@ export async function init(scene: Scene) {
     });
     ig_menu.add(ig_reload);
 
+    /**
+     * WIN
+     */
+
+    win_menu.setSizeXY(500 + 10, 200 + 10);
+    win_menu.setAlignedMiddle();
+    win_menu.translateXY(0, -100);
+
+    const wm_backshape0 = new CoverShape('#FFFFFFFF').rounded(60).setCentered(true).relativeTo(win_menu);
+    wm_backshape0.setSizeXY(500, 200);
+    wm_backshape0.setAlignedMiddle();
+    win_menu.add(wm_backshape0);
+
+    const wm_backshape1 = new CoverShape('#ffbd31FF').rounded(60).setCentered(true).relativeTo(win_menu);
+    wm_backshape1.setSizeXY(500 - 10, 200 - 10);
+    wm_backshape1.setAlignedMiddle();
+    win_menu.add(wm_backshape1);
+    
+    const wm_text = new TextBox([
+        "You Win"
+    ], 60).relativeTo(win_menu);
+    wm_text.setAlignedMiddle();
+    wm_text.translateXY(0, 50);
+    win_menu.add(wm_text);
+
+    const wm_closebtn = new Button(mss.getSprite(0, 2)).relativeTo(win_menu);
+    wm_closebtn.setPositionXY(-25, 25);
+    wm_closebtn.onClick(() => {
+        scene.clear();
+        win_menu.setVisible(false);
+        lvl_menu.setVisible(true);
+    });
+    win_menu.add(wm_closebtn);
+
+    /**
+     * LOOSE
+     */
+
+    lose_menu.setSizeXY(500 + 10, 200 + 10);
+    lose_menu.setAlignedMiddle();
+    lose_menu.translateXY(0, -100);
+
+    const lm_backshape0 = new CoverShape('#FFFFFFFF').rounded(60).setCentered(true).relativeTo(lose_menu);
+    lm_backshape0.setSizeXY(500, 200);
+    lm_backshape0.setAlignedMiddle();
+    lose_menu.add(lm_backshape0);
+
+    const lm_backshape1 = new CoverShape('#ffbd31FF').rounded(60).setCentered(true).relativeTo(lose_menu);
+    lm_backshape1.setSizeXY(500 - 10, 200 - 10);
+    lm_backshape1.setAlignedMiddle();
+    lose_menu.add(lm_backshape1);
+    
+    const lm_text = new TextBox([
+        "You lose"
+    ], 60).relativeTo(lose_menu);
+    lm_text.setAlignedMiddle();
+    lm_text.translateXY(0, 50);
+    lose_menu.add(lm_text);
+
+    const lm_closebtn = new Button(mss.getSprite(0, 2)).relativeTo(lose_menu);
+    lm_closebtn.setPositionXY(-25, 25);
+    lm_closebtn.onClick(() => {
+        scene.clear();
+        lose_menu.setVisible(false);
+        lvl_menu.setVisible(true);
+    });
+    lose_menu.add(lm_closebtn);
 
 
     // sort by z-index

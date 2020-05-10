@@ -5,9 +5,9 @@ export class TextBox extends Widget {
     private text: Text;
     private init: boolean;
 
-    constructor(message: string[], a: Alignment = Alignment.LEFT, s: Style = Style.FILL) {
+    constructor(message: string[], size: number = 42, a: Alignment = Alignment.LEFT, s: Style = Style.FILL) {
         super();
-        const tf = TextFormat.using(a, s).setFont('AngryBirds');
+        const tf = TextFormat.using(a, s).setFont('AngryBirds').setSize(size);
         this.text = new Text(tf, message);
         this.init = false;
         this.doCaptureEvent = false;

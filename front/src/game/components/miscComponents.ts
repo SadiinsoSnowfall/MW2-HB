@@ -7,10 +7,27 @@ import { Img, Sound } from "../../engine/res/assetsManager";
 import { AudioManager } from "../../engine/res/audioManager";
 import { Sprite, SSManager } from "../../engine/utils/spritesheet";
 import { Vec2 } from "../../engine/utils/vec2";
-import { inRect } from "../../engine/utils/utils";
+import { inRect, forcePickOne } from "../../engine/utils/utils";
 import { Display } from "../../engine/components/display";
 import { Behaviour } from "../../engine/components/behaviour";
+import { PigPrefabs } from "../prefabs/pigPrefabs";
+import * as Menus from '../ui/basemenus';
 
+
+const startSound: string[] = [
+    Sound.LEVEL_START_1,
+    Sound.LEVEL_START_2,
+];
+
+const winSounds: string[] = [
+    Sound.LEVEL_CLEAR_1,
+    Sound.LEVEL_CLEAR_2,
+];
+
+const looseSounds: string[] = [
+    Sound.LEVEL_FAILED_1,
+    Sound.LEVEL_FAILED_2,
+];
 
 export class SlingshotDisplay extends Display {
     private s_neutral: Sprite;
@@ -74,6 +91,8 @@ export class SlingshotBehaviour extends Behaviour {
     private static readonly maxStretch: number = 150;
     private static readonly maxStretchSqr: number = Math.pow(SlingshotBehaviour.maxStretch, 2);
 
+    private gameEnded: boolean = false;
+
     private sd: SlingshotDisplay;
     private clickBegin: Vec2 | null = null;
     private bird: RigidBody | undefined = undefined;
@@ -93,7 +112,36 @@ export class SlingshotBehaviour extends Behaviour {
         return pos;
     }
 
+    private updateCheck(): void {
+        const scene = this.object.getScene() as Scene;
+        const birds = scene.queryAll({
+            from: MOBYDICK,
+            where: obj => BirdPrefabs.isBird(obj)
+        });
+
+        const pigs = scene.queryAll({
+            from: MOBYDICK,
+            where: obj => PigPrefabs.isPig(obj)
+        });
+
+        if (pigs.length == 0) { // win
+            AudioManager.play(forcePickOne(winSounds));
+            Menus.win_menu.setVisible(true);
+            this.gameEnded = true;
+        } else if (birds.length == 0) { // lose
+            AudioManager.play(forcePickOne(looseSounds));
+            Menus.lose_menu.setVisible(true);
+            this.gameEnded = true;
+        }
+
+
+    }
+
     public update(): void {
+        if (!this.gameEnded) {
+            this.updateCheck();
+        }
+
         if (this.bird === undefined) {
            this.autoPickBird();
         } else if (this.clickBegin === null) {

@@ -10,7 +10,7 @@ import { Button } from "./button";
 export class MessageBox {
     private menu: Menu;
 
-    constructor(message: string[], w: number, h: number, a: Alignment = Alignment.LEFT, s: Style = Style.FILL) {
+    constructor(message: string[], w: number, h: number, size: number = 12, a: Alignment = Alignment.LEFT, s: Style = Style.FILL) {
         const mss = SSManager.get(Img.BUTTONS, 3, 5);
         this.menu = MenuManager.createMenu(666);
         this.menu.setSizeXY(w + 10, h + 10);
@@ -26,7 +26,7 @@ export class MessageBox {
         backshape1.setAlignedMiddle();
         this.menu.add(backshape1);
         
-        const text = new TextBox(message, a, s).relativeTo(this.menu);
+        const text = new TextBox(message, size, a, s).relativeTo(this.menu);
         text.setAlignedMiddle();
         text.translateXY(0, 20);
         this.menu.add(text);

@@ -9,7 +9,7 @@ import { createGround } from './game/prefabs/basePrefabs';
 import * as Menus from './game/ui/basemenus';
 import { BlockPrefabs } from './game/prefabs/blockPrefabs';
 import { ShapeDisplay, CollisionDisplay } from './game/components/debugComponents';
-import { slingshot } from './game/prefabs/miscPrefabs';
+import { MiscPrefabs } from './game/prefabs/miscPrefabs';
 import { BirdPrefabs } from './game/prefabs/birdPrefabs';
 import { PigPrefabs } from './game/prefabs/pigPrefabs';
 import { BackgroundPrefabs } from './game/prefabs/backgroundPrefabs';
@@ -27,6 +27,7 @@ async function game() {
     await AudioManager.init(); // init sound
 
     // prefabs list
+    MiscPrefabs.init();
     BlockPrefabs.init();
     BirdPrefabs.init();
     PigPrefabs.init();
@@ -44,11 +45,12 @@ async function game() {
     scene.instantiate(FPSMetter, 600, 120);
     screen.setScene(scene);
 
-    //Menus.main_menu.setVisible(true); // enable main menu
-    Menus.ig_menu.setVisible(true); // enable IG menu manually (testing only);
+    Menus.main_menu.setVisible(true); // enable main menu
+    //Menus.ig_menu.setVisible(true); // enable IG menu manually (testing only);
 
     scene.instantiateBackground(BackgroundPrefabs.back_test, 0, 0);
 
+    
     Inputs.subscribeMouse(MouseAction.LEFT_CLICK, p => {
         //scene.instantiate(BlockPrefabs.wooden_tris_md_2, p.x, p.y);
         //scene.instantiate(BirdPrefabs.BIRD_BIG, p.x, p.y);
@@ -98,9 +100,10 @@ async function game() {
         }
     });
     
+    
 
-    scene.instantiate(slingshot, 300, 675);
-    scene.addObject(createGround(1000, 825, 2000, 100, "#696969F0"));
+    //scene.instantiate(slingshot, 300, 675);
+    //scene.addObject(createGround(1000, 825, 2000, 100, "#696969F0"));
 
     //obj = createGround(675, 300, 1200, 50);
     //scene.addObject(obj);

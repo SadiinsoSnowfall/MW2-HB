@@ -3,7 +3,15 @@ import { SlingshotDisplay, SlingshotBehaviour } from "../components/miscComponen
 import { PrefabsManager } from "../../engine/res/prefabsManager";
 
 
-export const slingshot = PrefabsManager.register(new Prefab(obj => {
-    obj.setDisplay(new SlingshotDisplay(obj));
-    obj.setBehaviour(new SlingshotBehaviour(obj));
-}), 10);
+export namespace MiscPrefabs {
+
+    export function init() {
+        
+    }
+
+    export const slingshot = PrefabsManager.register(new Prefab(obj => {
+        obj.setDisplay(new SlingshotDisplay(obj));
+        obj.setBehaviour(new SlingshotBehaviour(obj));
+    }), 10);
+
+}
