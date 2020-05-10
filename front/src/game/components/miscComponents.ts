@@ -88,7 +88,7 @@ export class SlingshotDisplay extends Display {
 
 export class SlingshotBehaviour extends Behaviour {
     // sqared max distance to avoir math.sqrt calls
-    private static readonly maxStretch: number = 150;
+    private static readonly maxStretch: number = 130;
     private static readonly maxStretchSqr: number = Math.pow(SlingshotBehaviour.maxStretch, 2);
 
     private gameEnded: boolean = false;

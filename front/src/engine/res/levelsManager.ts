@@ -7,7 +7,8 @@ import { Prefab } from '../prefab';
 
 export namespace Levels {
 
-    const serverURL = 'http://localhost:4321';
+    const serverURL = 'localhost:3456';
+    //const serverURL = 'https://sadiinso.shadowpie.net:3456';
 
     interface LevelWrapper {
         id: number,

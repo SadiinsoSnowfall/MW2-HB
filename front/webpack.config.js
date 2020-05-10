@@ -142,6 +142,7 @@ module.exports = {
                         toplevel: true,
                         keep_fnames: false,
                         keep_classnames: false,
+                        /*
                         properties: {
                             builtins: false,
                             reserved: [
@@ -159,12 +160,14 @@ module.exports = {
                                 'ideographicBaseline'
                             ]
                         }, // /!\ MAY CAUSE INSTABILITY /!\
+                        */
                     } : false,
                     compress: {
                         passes: 3,
                         toplevel: true,
                         evaluate: true,
                         pure_getters: true,
+                        
                         unused: true,
                         sequences: false,
                         dead_code: true,
@@ -176,7 +179,7 @@ module.exports = {
                         unsafe: true,
                         unsafe_arrows: true,
                         unsafe_comps: true,
-                        unsafe_Function: true,
+                        unsafe_Function: false,
                         unsafe_math: true,
                         unsafe_methods: true,
                         unsafe_proto: true,
