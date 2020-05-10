@@ -1,4 +1,5 @@
 import { Prefab } from "../../engine/prefab";
+import { PrefabsManager } from '../../engine/res/prefabsManager';
 import { BackgroundDisplay } from "../components/backgroundComponent";
 import { Img } from "../../engine/res/assetsManager";
 
@@ -13,8 +14,8 @@ export namespace BackgroundPrefabs {
         Img.BEACH_PARA_3,
     ]
 
-    export const back_test = new Prefab(obj => {
+    export const back_test = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new BackgroundDisplay(obj, beach_images));
-    });
+    }), 11);
 
 }

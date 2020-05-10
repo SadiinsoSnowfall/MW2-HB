@@ -75,7 +75,15 @@ export async function init(scene: Scene) {
         QUICK SETTINGS MENU (on main menu)
     */
 
-    const info_msgbox = new MessageBox(["Master Weeb 2:", "Hungry Board", "", "(c) 2020 MAO Limited"], 700, 400, Alignment.CENTERED);
+    const info_msgbox = new MessageBox([
+        "Master Weeb 2:", 
+        "Hungry Board", 
+        "",
+        "(c) 2020 MAO Limited",
+        "",
+        "All assets created and owned",
+        "by Rovio Entertainment Ltd"
+    ], 700, 450, Alignment.CENTERED);
 
     sett_menu.setZIndex(2);
     sett_menu.setSizeXY(50, 150);

@@ -2,6 +2,8 @@ import { get, set, del } from 'idb-keyval';
 import { http } from './XHRHelper';
 import { Scene } from '../scene';
 import { PrefabsManager } from './prefabsManager';
+import { createGround } from '../../game/prefabs/basePrefabs';
+import { Prefab } from '../prefab';
 
 export namespace Levels {
 
@@ -14,6 +16,8 @@ export namespace Levels {
     }
 
     interface LevelData {
+        background: number;
+        ground: [number, number, number, number][]; // array of (x, y, h, w)
         elements: [number, number, number][]; // array of (id, x, y)
     }
 
@@ -64,12 +68,22 @@ export namespace Levels {
             throw new Error("Unable to load the level " + id);
         }
 
+        // clear scene
+        scene.clear();
+
         // instantiate all elements
         try {
-            for (let i = 0; i < data.elements.length; ++i) {
-                const e = data.elements[i];
-                scene.instantiate(PrefabsManager.get(e[0]), e[1], e[2]);
+            for (let i = 0; i < data.ground.length; ++i) {
+                const [x, y, w, h] = data.ground[i];
+                scene.addObject(createGround(x, y, w, h, "transparent"));
             }
+
+            for (let i = 0; i < data.elements.length; ++i) {
+                const [id, x, y] = data.elements[i];
+                scene.instantiate(PrefabsManager.get(id), x, y);
+            }
+
+            scene.instantiateBackground(PrefabsManager.get(data.background), 0, 0);
         } catch (e) { 
             // invalidate the level cache and rethrow the exception
             invalidateCache(id);

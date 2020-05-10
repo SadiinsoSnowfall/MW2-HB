@@ -39,32 +39,21 @@ export class PhysicsEngine {
             const cb = c.getObjectB().getCollider();
 
             // add IDs to list
-            newColliders.add([c.getObjectA(), c.getObjectB()]);
-
-            let av, bv;
+            const pair: [GameObject, GameObject] = [c.getObjectA(), c.getObjectB()];
+            newColliders.add(pair);
 
             if (ca instanceof RigidBody) {
                 const ra = ca as RigidBody
                 ra.contacts += count
                 ra.clearForce();
-                av = ra.getVelocity().magnitude();
-            } else {
-                av = 0;
             }
 
             if (cb instanceof RigidBody) {
                 const rb = cb as RigidBody;
                 rb.contacts += count
                 rb.clearForce();
-                bv = rb.getVelocity().magnitude();
-            } else {
-                bv = 0;
             }
 
-            if (av > notifyCollisionForce || bv > notifyCollisionForce) {
-                console.log(av + " " + bv);
-            }
-            
         }
 
         // perform update
@@ -123,18 +112,45 @@ export class PhysicsEngine {
 
 
         }
-        
-        // notify new colliders
-        for (const pair of newColliders) {
-            if (!this.lastCollide.has(pair)) {
-                const [a, b] = pair;
-                a.getBehaviour()?.onCollide(b.fgetCollider().getVelocityMag());
-                b.getBehaviour()?.onCollide(a.fgetCollider().getVelocityMag());
+
+        let newPairs: [GameObject, GameObject][] = [];
+        mainloop: for (const [a, b] of newColliders) {
+            const [ai, bi] = [a.id, b.id];
+            for (const [oa, ob] of this.lastCollide) {
+                const [oai, obi] = [oa.id, ob.id];
+                if ((ai == oai && bi == obi) || (ai == obi && bi == oai)) {
+                    continue mainloop;
+                }
             }
+
+            newPairs.push([a, b]);
         }
 
+        // notify new colliders
+        for (const [a, b] of newPairs) {
+            const ac = a.fgetCollider();
+
+            const acm = ac instanceof RigidBody ? this.computeForceMass(ac as RigidBody) : 0;
+
+            const bc = b.fgetCollider();
+            const bcm = bc instanceof RigidBody ? this.computeForceMass(bc as RigidBody) : 0;
+
+            // compute velocity x mass
+            const fa = Math.sqrt(ac.getVelocityMag() * acm);
+            const fb = Math.sqrt(bc.getVelocityMag() * bcm);
+
+            const totalForce = fa + fb;
+
+            a.getBehaviour()?.onCollide(totalForce);
+            b.getBehaviour()?.onCollide(totalForce);
+        }
+        
         // store current colliders IDs
         this.lastCollide = newColliders;
+    }
+
+    private computeForceMass(r: RigidBody): number {
+        return (r.getMass() / 2) * r.collcoef;
     }
 
 }

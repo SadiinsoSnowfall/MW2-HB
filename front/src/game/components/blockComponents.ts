@@ -104,4 +104,10 @@ export class BlockBehaviour extends Damagable {
         }
     }
 
+    public onCollide(force: number): void {
+        if (force >= 10) {
+            this.applyDamage(force);
+        }
+    }
+
 }

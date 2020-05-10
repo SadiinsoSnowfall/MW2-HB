@@ -9,8 +9,10 @@ import { assert } from "../utils/utils";
 * 0-9: [reserved]
 *
 * 10: slingshot
-*
-* 10-99: [reserved]
+* 
+* 11-20: backgrounds
+* 
+* 21-99: [reserved]
 * 
 * 100-109: balls_md
 * 110-119: balls_sm

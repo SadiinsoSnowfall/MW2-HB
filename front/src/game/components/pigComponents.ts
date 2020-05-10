@@ -62,6 +62,40 @@ const smile_animation: AnimationGenerator = () => ({
     final: 0
 });
 
+const blink_damaged_animation: AnimationData = {
+    data: [
+        [16, 13],
+    ],
+    repeat: 0,
+    final: 15
+};
+
+const talk_animation_damaged: AnimationData = {
+    data: [
+        [17, 7],
+        [18, 7]
+    ],
+    repeat: 4,
+    final: 15
+};
+
+const blink_damaged_animation_2: AnimationData = {
+    data: [
+        [20, 13],
+    ],
+    repeat: 0,
+    final: 19
+};
+
+const talk_animation_damaged_2: AnimationData = {
+    data: [
+        [21, 7],
+        [22, 7]
+    ],
+    repeat: 4,
+    final: 19
+};
+
 export class PigDisplay extends Display {
     private sheet: Spritesheet;
     private sprite: Sprite;
@@ -85,6 +119,10 @@ export class PigDisplay extends Display {
 
     public useSprite(id: number): void {
         this.sprite = this.sheet.getSpriteAbsolute(id);
+    }
+
+    public stopAnimation(): void {
+        this.ca = null;
     }
 
     public update(): void {
@@ -119,12 +157,16 @@ export class PigBehaviour extends Damagable {
     private talkSounds: string[];
     private pd: PigDisplay;
     private seed: number;
+    private smoke: ParticleCreator;
+    private damageLevel: number;
 
-    constructor(o: GameObject, health: number, talkSounds: string[], hitSounds: string[], damageSound: string[], destroySound: string[]) {
+    constructor(o: GameObject, health: number, smoke: ParticleCreator, talkSounds: string[], hitSounds: string[], damageSound: string[], destroySound: string[]) {
         super(o, health, hitSounds, damageSound, destroySound);
         this.pd = this.object.fgetDisplay<PigDisplay>();
         this.talkSounds = talkSounds;
         this.seed = randomIn(0, 150);
+        this.smoke = smoke;
+        this.damageLevel = 0;
     }
 
     public emmitParticles(particle: ParticleCreator, volume: number, amplitude: number, lifespanMult: number = 1): void {
@@ -144,10 +186,7 @@ export class PigBehaviour extends Damagable {
         this.currentSound = await AudioManager.play(sound, volume);
     }
 
-    public update(): void {
-        const tick = this.tick() + this.seed;
-
-        // need cleanup
+    private animationDamagelevel0(tick: number): void {
         if (tick % 200 == 0) {
             if (Math.random() > 0.85) {
                 this.pd.playAnimation(forcePickOne(talk_animations));
@@ -159,6 +198,77 @@ export class PigBehaviour extends Damagable {
             } else if (Math.random() > 0.5) {
                 this.pd.playAnimation(smile_animation());
             }
+        }
+    }
+
+    private animationDamagelevel2(tick: number): void {
+        if (tick % 200 == 0) {
+            if (Math.random() > 0.85) {
+                this.pd.playAnimation(talk_animation_damaged);
+                this.playSound(forcePickOne(this.talkSounds), .4);
+            } else if (Math.random() > 0.5) {
+                this.pd.playAnimation(blink_damaged_animation);
+            } else if (Math.random() > 0.85) {
+                
+            }
+        }
+    }
+
+    private animationDamagelevel3(tick: number): void {
+        if (tick % 200 == 0) {
+            if (Math.random() > 0.85) {
+                this.pd.playAnimation(talk_animation_damaged_2);
+                this.playSound(forcePickOne(this.talkSounds), .4);
+            } else if (Math.random() > 0.5) {
+                this.pd.playAnimation(blink_damaged_animation_2);
+            } else if (Math.random() > 0.85) {
+                
+            }
+        }
+    }
+
+    public update(): void {
+        const tick = this.tick() + this.seed;
+
+        if (this.damageLevel <= 1) {
+            this.animationDamagelevel0(tick);
+        } else if (this.damageLevel == 2) {
+            this.animationDamagelevel2(tick);
+        } else {
+            this.animationDamagelevel3(tick);
+        }
+    }
+
+    public applyDamage(damage: number): void {
+        this.health -= damage;
+
+        if (this.health <= 0) {
+            this.emmitParticles(this.smoke, 5, 1);
+            this.onDestroyed();
+        } else {
+            // find the quarter to use and update the sprite accordingly 
+            const quarter = 4 - Math.ceil((this.health / (this.maxHealth / 4)));
+            this.pd.stopAnimation();
+
+            if (this.damageLevel != quarter) {
+                this.damageLevel = quarter;
+
+                if (this.damageLevel > 2) {
+                    this.pd.useSprite(19);
+                } else if (this.damageLevel > 1) {
+                    this.pd.useSprite(15)
+                }
+
+                this.onDamage();
+            } else {
+                this.onHit();
+            }
+        }
+    }
+
+    public onCollide(force: number): void {
+        if (force >= 10) {
+            this.applyDamage(force);
         }
     }
 

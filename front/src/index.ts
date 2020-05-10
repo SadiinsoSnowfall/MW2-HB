@@ -54,6 +54,7 @@ async function game() {
         //scene.instantiate(BirdPrefabs.BIRD_BIG, p.x, p.y);
     });
 
+    
     Inputs.subscribeMouse(MouseAction.FORWARD, p => {
         scene.instantiate(forcePickOne([
             BirdPrefabs.BIRD_RED,
@@ -84,7 +85,8 @@ async function game() {
                     //BlockPrefabs.ice_tris_hl_2,
                     BlockPrefabs.wooden_cube_hl_2,
                     //BlockPrefabs.sand_ball_md
-                ]), x * 120 + 600, y * 120 + 300);
+                ]), x * 120 + 600, y + 460);
+                //console.log("[" + BlockPrefabs.wooden_cube_hl_2.id + ", " + (x * 120 + 600) + ", " + (y * 120 + 360) + "]")
             }
         }
     });
@@ -95,9 +97,10 @@ async function game() {
             console.log(c.object.id);
         }
     });
+    
 
     scene.instantiate(slingshot, 300, 675);
-    scene.addObject(createGround(1000, 800, 2000, 50, "#69696900"));
+    scene.addObject(createGround(1000, 825, 2000, 100, "#696969F0"));
 
     //obj = createGround(675, 300, 1200, 50);
     //scene.addObject(obj);

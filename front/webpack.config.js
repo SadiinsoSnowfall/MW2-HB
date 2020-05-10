@@ -114,7 +114,7 @@ module.exports = {
             minRatio: 0.8, // only compress assets were compression_ratio > 0.8
             deleteOriginalAssets: false,
         }),
-        false ? false : new CircularDependencyPlugin({
+        new CircularDependencyPlugin({
             // exclude detection of files based on a RegExp
             exclude: /a\.js|node_modules/,
             // include specific files based on a RegExp

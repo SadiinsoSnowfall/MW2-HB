@@ -35,6 +35,16 @@ export namespace BirdPrefabs {
         BIG = 65
     }
 
+    export enum BirdCoef {
+        RED = 15,
+        YELLOW = 15,
+        BLUE = 15,
+        BLACK = 15,
+        WHITE = 15,
+        GREEN = 15,
+        BIG = 100
+    }
+
     /**
      * SHAPES
      */
@@ -175,43 +185,43 @@ export namespace BirdPrefabs {
 
     export const BIRD_RED = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new RedBirdDisplay(obj, SSManager.get(Img.BIRD_RED, 5, 1)));
-        obj.setCollider(new RigidBody(obj, RED_SHAPE, BirdWeight.RED));
+        obj.setCollider(new RigidBody(obj, RED_SHAPE, BirdWeight.RED, BirdCoef.RED));
         obj.setBehaviour(new BaseBirdBehaviour(obj, RED_SOUNDS, red_particle, bird_smoke));
     }), 600);
 
     export const BIRD_YELLOW = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new RedBirdDisplay(obj, SSManager.get(Img.BIRD_YELLOW, 5, 1)));
-        obj.setCollider(new RigidBody(obj, YELLOW_SHAPE, BirdWeight.YELLOW));
+        obj.setCollider(new RigidBody(obj, YELLOW_SHAPE, BirdWeight.YELLOW, BirdCoef.YELLOW));
         obj.setBehaviour(new BaseBirdBehaviour(obj, YELLOW_SOUNDS, yellow_particle, bird_smoke));
     }), 601);
 
     export const BIRD_BLUE = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new BlueBirdDisplay(obj, SSManager.get(Img.BIRD_BLUE, 4, 1)));
-        obj.setCollider(new RigidBody(obj, BLUE_SHAPE, BirdWeight.BLUE));
+        obj.setCollider(new RigidBody(obj, BLUE_SHAPE, BirdWeight.BLUE, BirdCoef.BLUE));
         obj.setBehaviour(new BaseBirdBehaviour(obj, BLUE_SOUNDS, blue_particle, bird_smoke));
     }), 602);
 
     export const BIRD_BLACK = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new BlueBirdDisplay(obj, SSManager.get(Img.BIRD_BLACK, 7, 1)));
-        obj.setCollider(new RigidBody(obj, BLACK_SHAPE, BirdWeight.BLACK));
+        obj.setCollider(new RigidBody(obj, BLACK_SHAPE, BirdWeight.BLACK, BirdCoef.BLACK));
         obj.setBehaviour(new BaseBirdBehaviour(obj, BLACK_SOUNDS, black_particle, bird_smoke));
     }), 603);
 
     export const BIRD_WHITE = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new BlueBirdDisplay(obj, SSManager.get(Img.BIRD_WHITE, 5, 1)));
-        obj.setCollider(new RigidBody(obj, WHITE_SHAPE, BirdWeight.WHITE));
+        obj.setCollider(new RigidBody(obj, WHITE_SHAPE, BirdWeight.WHITE, BirdCoef.WHITE));
         obj.setBehaviour(new BaseBirdBehaviour(obj, WHITE_SOUNDS, white_particle, bird_smoke));
     }), 604);
 
     export const BIRD_GREEN = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new GreenBirdDisplay(obj, SSManager.get(Img.BIRD_GREEN, 5, 1)));
-        obj.setCollider(new RigidBody(obj, GREEN_SHAPE, BirdWeight.GREEN));
+        obj.setCollider(new RigidBody(obj, GREEN_SHAPE, BirdWeight.GREEN, BirdCoef.GREEN));
         obj.setBehaviour(new BaseBirdBehaviour(obj, GREEN_SOUNDS, green_particle, bird_smoke));
     }), 605);
 
     export const BIRD_BIG = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new BigBirdDisplay(obj, SSManager.get(Img.BIRD_BIG, 3, 1)));
-        obj.setCollider(new RigidBody(obj, BIG_SHAPE, BirdWeight.BIG));
+        obj.setCollider(new RigidBody(obj, BIG_SHAPE, BirdWeight.BIG, BirdCoef.BIG));
         obj.setBehaviour(new BaseBirdBehaviour(obj, BIG_SOUNDS, red_particle, bird_smoke));
     }), 606);
 

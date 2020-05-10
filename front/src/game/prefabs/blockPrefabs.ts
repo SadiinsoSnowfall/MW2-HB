@@ -55,7 +55,7 @@ export namespace BlockPrefabs {
     }
 
     export enum BlockWeight {
-        WOOD = 300,
+        WOOD = 15,
         STONE = 20,
         ICE = 10,
         SAND = 10

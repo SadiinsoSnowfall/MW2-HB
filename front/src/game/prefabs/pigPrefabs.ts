@@ -6,6 +6,8 @@ import { Sound, Img } from "../../engine/res/assetsManager";
 import { PrefabsManager } from "../../engine/res/prefabsManager";
 import { Vec2 } from "../../engine/utils/vec2";
 import { SSManager } from "../../engine/utils/spritesheet";
+import { GameObject } from "../../engine/gameObject";
+import { ParticleDisplay } from "../components/baseComponents";
 
 
 export namespace PigPrefabs {
@@ -29,12 +31,12 @@ export namespace PigPrefabs {
     }
 
     export enum PigWeight {
-        KING = 100,
-        MUSTACHE = 80,
-        HELMET = 80,
-        LG = 60,
-        MD = 40,
-        SM = 30,
+        KING = 50,
+        MUSTACHE = 35,
+        HELMET = 40,
+        LG = 30,
+        MD = 20,
+        SM = 10,
     }
 
     /**
@@ -94,43 +96,53 @@ export namespace PigPrefabs {
     export const sm_shape = new Circle(new Vec2(-1, 1), 21);
 
     /**
+     * PARTICLES
+     */
+
+    export function pig_smoke(x: number, y: number, amount: number, amplitude: number, lifeSpanMult: number = 1): GameObject {
+        const obj = new GameObject(x, y);
+        obj.setDisplay(new ParticleDisplay(obj, SSManager.get(Img.SMOKE, 6, 3), 2, 2, amount, amplitude, lifeSpanMult));
+        return obj;
+    }
+
+    /**
      * PREFABS
      */
 
     export const pig_king = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new PigDisplay(obj, SSManager.get(Img.PIG_KING, 23, 1)));
         obj.setCollider(new RigidBody(obj, king_shape, PigWeight.KING));
-        obj.setBehaviour(new PigBehaviour(obj, PigHealth.KING, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
+        obj.setBehaviour(new PigBehaviour(obj, PigHealth.KING, pig_smoke, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
     }), 500);
 
     export const pig_mustache = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new PigDisplay(obj, SSManager.get(Img.PIG_MUSTACHE, 23, 1)));
         obj.setCollider(new RigidBody(obj, mustache_shape, PigWeight.MUSTACHE));
-        obj.setBehaviour(new PigBehaviour(obj, PigHealth.MUSTACHE, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
+        obj.setBehaviour(new PigBehaviour(obj, PigHealth.MUSTACHE, pig_smoke, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
     }), 501);
 
     export const pig_helmet = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new PigDisplay(obj, SSManager.get(Img.PIG_HELMET, 23, 1)));
         obj.setCollider(new RigidBody(obj, helmet_shape, PigWeight.HELMET));
-        obj.setBehaviour(new PigBehaviour(obj, PigHealth.HELMET, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
+        obj.setBehaviour(new PigBehaviour(obj, PigHealth.HELMET, pig_smoke, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
     }), 502);
 
     export const pig_lg = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new PigDisplay(obj, SSManager.get(Img.PIG_LG, 23, 1)));
         obj.setCollider(new RigidBody(obj, lg_shape, PigWeight.LG));
-        obj.setBehaviour(new PigBehaviour(obj, PigHealth.LG, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
+        obj.setBehaviour(new PigBehaviour(obj, PigHealth.LG, pig_smoke, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
     }), 503);
 
     export const pig_md = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new PigDisplay(obj, SSManager.get(Img.PIG_MD, 23, 1)));
         obj.setCollider(new RigidBody(obj, md_shape, PigWeight.MD));
-        obj.setBehaviour(new PigBehaviour(obj, PigHealth.MD, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
+        obj.setBehaviour(new PigBehaviour(obj, PigHealth.MD, pig_smoke, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
     }), 504);
 
     export const pig_sm = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new PigDisplay(obj, SSManager.get(Img.PIG_SM, 23, 1)));
         obj.setCollider(new RigidBody(obj, sm_shape, PigWeight.SM));
-        obj.setBehaviour(new PigBehaviour(obj, PigHealth.SM, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
+        obj.setBehaviour(new PigBehaviour(obj, PigHealth.SM, pig_smoke, talk_sounds, hit_sounds, damage_sounds, destroy_sounds));
     }), 505);
 
 }
