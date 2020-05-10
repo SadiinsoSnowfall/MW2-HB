@@ -5,9 +5,7 @@ import { PrefabsManager } from "../../engine/res/prefabsManager";
 
 export namespace MiscPrefabs {
 
-    export function init() {
-        
-    }
+    export function init() {}
 
     export const slingshot = PrefabsManager.register(new Prefab(obj => {
         obj.setDisplay(new SlingshotDisplay(obj));

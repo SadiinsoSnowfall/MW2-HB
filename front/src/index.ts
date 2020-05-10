@@ -2,8 +2,8 @@ import './assets/stylesheets/styles.scss';
 
 import { Collider } from './engine/components/collider';
 import { screen } from './engine/screen';
-import { Scene } from './engine/scene';
-import { FPSMetter} from './game/prefabs/debugPrefabs';
+import { Scene, FOREGROUND } from './engine/scene';
+import { DebugPrefabs} from './game/prefabs/debugPrefabs';
 import { GameObject } from './engine/gameObject';
 import { createGround } from './game/prefabs/basePrefabs';
 import * as Menus from './game/ui/basemenus';
@@ -27,6 +27,7 @@ async function game() {
     await AudioManager.init(); // init sound
 
     // prefabs list
+    DebugPrefabs.init();
     MiscPrefabs.init();
     BlockPrefabs.init();
     BirdPrefabs.init();
@@ -42,7 +43,7 @@ async function game() {
     screen.setCursor(Assets.img(Img.CURSOR));
     screen.setUseCustomCursor(true); // set to true to enable custom cursor support
 
-    scene.instantiate(FPSMetter, 600, 120);
+    scene.instantiate(DebugPrefabs.FPSMetter, 600, 120);
     screen.setScene(scene);
 
     Menus.main_menu.setVisible(true); // enable main menu
@@ -50,7 +51,19 @@ async function game() {
 
     scene.instantiateBackground(BackgroundPrefabs.back_test, 0, 0);
 
-    
+    Inputs.subscribe("f", () => {
+        const fpsmetter = scene.query({
+            from: FOREGROUND,
+            where: obj => obj.prefabID == DebugPrefabs.FPSMetter.id
+        });
+
+        if (!fpsmetter) {
+            scene.instantiate(DebugPrefabs.FPSMetter, 330, 120);
+        } else {
+            fpsmetter.setEnabled(false);
+        }
+    });
+
     Inputs.subscribeMouse(MouseAction.LEFT_CLICK, p => {
         //scene.instantiate(BlockPrefabs.wooden_tris_md_2, p.x, p.y);
         //scene.instantiate(BirdPrefabs.BIRD_BIG, p.x, p.y);

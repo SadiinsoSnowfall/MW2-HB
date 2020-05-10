@@ -29,10 +29,10 @@ export namespace BirdPrefabs {
         RED = 40,
         YELLOW = 40,
         BLUE = 30,
-        BLACK = 60,
-        WHITE = 50,
+        BLACK = 50,
+        WHITE = 45,
         GREEN = 40,
-        BIG = 65
+        BIG = 10
     }
 
     export enum BirdCoef {
@@ -42,7 +42,7 @@ export namespace BirdPrefabs {
         BLACK = 20,
         WHITE = 17,
         GREEN = 15,
-        BIG = 100
+        BIG = 1000
     }
 
     /**

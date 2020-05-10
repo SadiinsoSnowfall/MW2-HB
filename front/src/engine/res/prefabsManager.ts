@@ -7,7 +7,7 @@ import { assert } from "../utils/utils";
 * the prefabs IDs are assigned as follow:
 * 
 * 0-9: [reserved]
-*
+* 9: FPS_metter
 * 10: slingshot
 * 
 * 11-20: backgrounds
@@ -48,7 +48,7 @@ import { assert } from "../utils/utils";
 * 603: bird_black
 * 604: bird_white
 * 605: bird_green
-* 607: bird_big
+* 606: bird_big
 * 
 */
 

@@ -86,7 +86,7 @@ export async function init(scene: Scene) {
         "",
         "All assets created and owned",
         "by Rovio Entertainment Ltd"
-    ], 700, 450, Alignment.CENTERED);
+    ], 700, 450, 42, Alignment.CENTERED);
 
     sett_menu.setZIndex(2);
     sett_menu.setSizeXY(50, 150);
